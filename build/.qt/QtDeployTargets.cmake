@@ -1,2 +1,0 @@
-set(__QT_DEPLOY_TARGET_GUI_FILE /Users/mukuyo/ws/ssl/GUI/build/GUI)
-set(__QT_DEPLOY_TARGET_GUI_TYPE EXECUTABLE)

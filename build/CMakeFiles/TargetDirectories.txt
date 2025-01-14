@@ -1,5 +1,0 @@
-/Users/mukuyo/ws/ssl/GUI/build/CMakeFiles/GUI.dir
-/Users/mukuyo/ws/ssl/GUI/build/CMakeFiles/edit_cache.dir
-/Users/mukuyo/ws/ssl/GUI/build/CMakeFiles/rebuild_cache.dir
-/Users/mukuyo/ws/ssl/GUI/build/CMakeFiles/GUI_autogen_timestamp_deps.dir
-/Users/mukuyo/ws/ssl/GUI/build/CMakeFiles/GUI_autogen.dir
