@@ -5,7 +5,6 @@
 #include <Qt3DExtras/QConeMesh>
 #include <Qt3DExtras/QCylinderMesh>
 #include <Qt3DExtras/QCuboidMesh>
-#include <QColor>
 
 void create_fileds(Qt3DCore::QEntity *rootEntity)
 {
@@ -14,7 +13,7 @@ void create_fileds(Qt3DCore::QEntity *rootEntity)
     fieldMesh->setWidth(12.6f);  // 12000mm = 12.0m
     fieldMesh->setHeight(9.6f);  // 9000mm = 9.0m
     Qt3DExtras::QPhongMaterial *fieldMaterial = new Qt3DExtras::QPhongMaterial();
-    fieldMaterial->setDiffuse(QColor(Qt::gray));
+    fieldMaterial->setDiffuse(QColor(0, 100, 0));
     Qt3DCore::QEntity *fieldEntity = new Qt3DCore::QEntity(rootEntity);
     fieldEntity->addComponent(fieldMesh);
     fieldEntity->addComponent(fieldMaterial);
@@ -269,7 +268,7 @@ void create_lines(Qt3DCore::QEntity *rootEntity)
     _circleMesh->setRadius(0.49f);  // 半径 1000mm = 1m の場合、半径は0.5f
     _circleMesh->setLength(0.001f); // 円の高さ（薄くする）
     Qt3DExtras::QPhongMaterial *_circleMaterial = new Qt3DExtras::QPhongMaterial();
-    _circleMaterial->setDiffuse(QColor(Qt::gray));  // 青色
+    _circleMaterial->setDiffuse(QColor(0, 100, 0));  // 青色
     Qt3DCore::QEntity *_circleEntity = new Qt3DCore::QEntity(rootEntity);
     _circleEntity->addComponent(_circleMesh);
     _circleEntity->addComponent(_circleMaterial);

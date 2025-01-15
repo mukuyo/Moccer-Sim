@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "qorbitcameracontroller": "cpp",
+        "qphongmaterial": "cpp",
+        "qgeometryrenderer": "cpp"
+    }
+}
