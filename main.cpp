@@ -20,13 +20,13 @@ void addOBJModel(Qt3DCore::QEntity *rootEntity, const QString &objFilePath, Qt3D
     Qt3DRender::QMesh *mesh = new Qt3DRender::QMesh();
     mesh->setSource(QUrl::fromLocalFile(objFilePath));
 
-    QObject::connect(mesh, &Qt3DRender::QMesh::statusChanged, [](Qt3DRender::QMesh::Status status) {
-        if (status == Qt3DRender::QMesh::Status::Ready) {
-            qDebug() << "OBJ model loaded successfully!";
-        } else if (status == Qt3DRender::QMesh::Status::Error) {
-            qDebug() << "Failed to load OBJ model.";
-        }
-    });
+    // QObject::connect(mesh, &Qt3DRender::QMesh::statusChanged, [](Qt3DRender::QMesh::Status status) {
+    //     if (status == Qt3DRender::QMesh::Status::Ready) {
+    //         qDebug() << "OBJ model loaded successfully!";
+    //     } else if (status == Qt3DRender::QMesh::Status::Error) {
+    //         qDebug() << "Failed to load OBJ model.";
+    //     }
+    // });
 
     objEntity->addComponent(mesh);
     objEntity->addComponent(transform);
@@ -58,35 +58,50 @@ int main(int argc, char **argv)
 
     QVector<Qt3DCore::QTransform*> baseTransforms;
     QVector<QVector<Qt3DCore::QTransform*>> wheelTransforms;
+    QVector<Qt3DCore::QTransform*> topCenterTransforms;
+    QVector<QVector<Qt3DCore::QTransform*>> topOutTransforms;
 
     for (int i = 0; i < numModels; ++i) {
         Qt3DCore::QTransform *baseTransform = new Qt3DCore::QTransform();
-        baseTransform->setScale(0.001f);
-        baseTransform->setTranslation(QVector3D(1.0f + i * 1.5f, 0.0f, 0.0f));
+        baseTransform->setScale(0.01f);
+        baseTransform->setTranslation(QVector3D(1.0f + i * 1.5f, 0.027f, 0.0f));
         baseTransform->setRotationX(-90.0f);
         baseTransform->setRotationY(-90.0f);
         baseTransforms.append(baseTransform);
-
-        // addOBJModel(rootEntity, "../model/unit/black.obj", baseTransform, QColor(60, 60, 60));
-        // addOBJModel(rootEntity, "../model/unit/white.obj", baseTransform, QColor(QColor(200, 200, 200)));
+        addOBJModel(rootEntity, "../model/unit/black.obj", baseTransform, QColor(60, 60, 60));
+        addOBJModel(rootEntity, "../model/unit/white.obj", baseTransform, QColor(QColor(200, 200, 200)));
 
         // ホイールの追加 (4つ)
         QVector<Qt3DCore::QTransform*> singleWheelTransforms;
-        for (int j = 0; j < 1; ++j) {
+        for (int j = 0; j < 4; ++j) {
             Qt3DCore::QTransform *wheelTransform = new Qt3DCore::QTransform();
-            wheelTransform->setScale(0.001f);
+            wheelTransform->setScale(0.01f);
             wheelTransform->setTranslation(baseTransform->translation());
-            // wheelTransform->setRotationX(-90.0f);
-            // wheelTransform->setRotationY(-90.0f);
             singleWheelTransforms.append(wheelTransform);
-
-            // QString sidePath = QString("../model/wheel/side.obj");
-            QString framePath = QString("../model/wheel/frame.obj");
-
-            // addOBJModel(rootEntity, sidePath, wheelTransform, QColor(Qt::yellow));
-            addOBJModel(rootEntity, framePath, wheelTransform, QColor(Qt::white));
+            addOBJModel(rootEntity, "../model/wheel/side.obj", wheelTransform, QColor(Qt::yellow));
+            addOBJModel(rootEntity, "../model/wheel/frame.obj", wheelTransform, QColor(Qt::white));
         }
         wheelTransforms.append(singleWheelTransforms);
+
+        // center Top marker
+        Qt3DCore::QTransform *topCenterTransform = new Qt3DCore::QTransform();
+        topCenterTransform->setScale(0.001f);
+        topCenterTransform->setTranslation(baseTransform->translation());
+        topCenterTransforms.append(topCenterTransform);
+        addOBJModel(rootEntity, "../model/top/center.obj", topCenterTransform, QColor(Qt::blue));
+        
+
+        // outside Top marker
+        QVector<Qt3DCore::QTransform*> singleTopOutTransforms;
+        QColor colorList[4] = {QColor(221, 67, 169), Qt::green, Qt::green, Qt::green};
+        for (int k = 0; k < 4; ++k) {
+            Qt3DCore::QTransform *topOutTransform = new Qt3DCore::QTransform();
+            topOutTransform->setScale(0.001f);
+            topOutTransform->setTranslation(baseTransform->translation());
+            singleTopOutTransforms.append(topOutTransform);
+            addOBJModel(rootEntity, "../model/top/outside.obj", topOutTransform, QColor(colorList[k]));
+        }
+        topOutTransforms.append(singleTopOutTransforms);
     }
 
     // カメラ設定
@@ -109,6 +124,7 @@ int main(int argc, char **argv)
 
     // 円運動のためのパラメータ
     const float radius = 0.5f;
+    const float wheel_angles[4] = {35.0, -45.0, -135.0, 145.0};
     QVector<float> angles(numModels, 0.0f);
     QVector<float> wheelAngles(numModels, 0.0f);
 
@@ -118,17 +134,39 @@ int main(int argc, char **argv)
     QObject::connect(timer, &QTimer::timeout, [&]() {
         for (int i = 0; i < numModels; ++i) {
             angles[i] += 1.0f * (i + 0.005);
-            wheelAngles[i] += 5.0f;
+            wheelAngles[i] += 2.0f;
 
             float x = radius * cos(angles[i]);
             float z = radius * sin(angles[i]);
-            QVector3D newPosition(x + i * 0.2f, 0.0f, z + i * 0.2f);
+            QVector3D newPosition(x + i * 0.2f, 0.0052, z + i * 0.2f);
 
-            // baseTransforms[i]->setTranslation(newPosition);
+            baseTransforms[i]->setTranslation(newPosition);
 
-            for (int j = 0; j < 1; ++j) {
-                // wheelTransforms[i][j]->setTranslation(newPosition);
-                wheelTransforms[i][j]->setRotationY(wheelAngles[i]);
+            float r = 0.0815f;
+            for (int j = 0; j < 4; ++j) {
+                QQuaternion rotationY = QQuaternion::fromAxisAndAngle(QVector3D(0, 1, 0), wheelAngles[i]); // Y軸に回転
+                QQuaternion rotationX = QQuaternion::fromAxisAndAngle(QVector3D(1, 0, 0), 90.0f); // X軸に90度回転
+                QQuaternion additionalRotationX = QQuaternion::fromAxisAndAngle(QVector3D(0, 0, 1), wheel_angles[j]); // X軸に35度回転
+
+                QQuaternion combinedRotation = rotationX * additionalRotationX * rotationY; // 順番に適用
+                wheelTransforms[i][j]->setRotation(combinedRotation);
+
+                newPosition = QVector3D(x+r*cos((270+wheel_angles[j])*3.14/180.0), 0.027f, z+r*sin((270+wheel_angles[j])*3.14/180.0));
+                wheelTransforms[i][j]->setTranslation(newPosition);
+            }
+
+            // center Top marker
+            newPosition = QVector3D(x, 0.145f, z);
+            topCenterTransforms[i]->setTranslation(newPosition);
+            topCenterTransforms[i]->setRotationX(-90.0f);
+
+            // outside Top marker
+            float xPosition[4] = {0.035, -0.054772, -0.054772, 0.035};
+            float zPosition[4] = {-0.054772, -0.035,  0.035, 0.054772};
+            for (int k = 0; k < 4; ++k) {
+                newPosition = QVector3D(x + xPosition[k], 0.145f, z + zPosition[k]);
+                topOutTransforms[i][k]->setTranslation(newPosition);
+                topOutTransforms[i][k]->setRotationX(-90.0f);
             }
         }
     });
