@@ -2,3 +2,5 @@
 /model/
 /texture/
 /.vscode/
+
+.DS_Store
