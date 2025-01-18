@@ -5,15 +5,30 @@
 #include <Qt3DExtras/QConeMesh>
 #include <Qt3DExtras/QCylinderMesh>
 #include <Qt3DExtras/QCuboidMesh>
+#include <Qt3DExtras/QDiffuseMapMaterial>
+#include <Qt3DCore/QEntity>
+#include <Qt3DRender/QTexture>
+#include <QUrl>
+#include <Qt3DRender/QTextureImage>
+// #include <Qt3DCore/QTextureTransform>
 
 void create_fileds(Qt3DCore::QEntity *rootEntity)
 {
-    // フィールドの作成
     Qt3DExtras::QPlaneMesh *fieldMesh = new Qt3DExtras::QPlaneMesh();
     fieldMesh->setWidth(12.6f);  // 12000mm = 12.0m
     fieldMesh->setHeight(9.6f);  // 9000mm = 9.0m
-    Qt3DExtras::QPhongMaterial *fieldMaterial = new Qt3DExtras::QPhongMaterial();
-    fieldMaterial->setDiffuse(QColor(0, 100, 0));
+
+    // マテリアルの作成
+    Qt3DExtras::QDiffuseMapMaterial *fieldMaterial = new Qt3DExtras::QDiffuseMapMaterial();
+
+    // テクスチャの読み込み
+    Qt3DRender::QTexture2D *texture = new Qt3DRender::QTexture2D();
+    Qt3DRender::QTextureImage *textureImage = new Qt3DRender::QTextureImage();
+    textureImage->setSource(QUrl::fromLocalFile("../field_texture.jpg")); // テクスチャ画像のパス
+    texture->addTextureImage(textureImage);
+    fieldMaterial->setDiffuse(texture);
+
+    // エンティティの設定
     Qt3DCore::QEntity *fieldEntity = new Qt3DCore::QEntity(rootEntity);
     fieldEntity->addComponent(fieldMesh);
     fieldEntity->addComponent(fieldMaterial);
@@ -252,27 +267,4 @@ void create_lines(Qt3DCore::QEntity *rootEntity)
     rightUpVerticalPenaltyTransform->setTranslation(QVector3D(4.2f, 0.001f, 0));  // 右端
     rightUpVerticalPenaltyEntity->addComponent(rightUpVerticalPenaltyTransform);
 
-    Qt3DExtras::QCylinderMesh *circleMesh = new Qt3DExtras::QCylinderMesh();
-    circleMesh->setRadius(0.5f);  // 半径 1000mm = 1m の場合、半径は0.5f
-    circleMesh->setLength(0.001f); // 円の高さ（薄くする）
-    Qt3DExtras::QPhongMaterial *circleMaterial = new Qt3DExtras::QPhongMaterial();
-    circleMaterial->setDiffuse(QColor(Qt::white));  // 青色
-    Qt3DCore::QEntity *circleEntity = new Qt3DCore::QEntity(rootEntity);
-    circleEntity->addComponent(circleMesh);
-    circleEntity->addComponent(circleMaterial);
-    Qt3DCore::QTransform *circleTransform = new Qt3DCore::QTransform();
-    circleTransform->setTranslation(QVector3D(0, 0.0001f, 0));  // フィールドの中央に配置
-    circleEntity->addComponent(circleTransform);
-
-    Qt3DExtras::QCylinderMesh *_circleMesh = new Qt3DExtras::QCylinderMesh();
-    _circleMesh->setRadius(0.49f);  // 半径 1000mm = 1m の場合、半径は0.5f
-    _circleMesh->setLength(0.001f); // 円の高さ（薄くする）
-    Qt3DExtras::QPhongMaterial *_circleMaterial = new Qt3DExtras::QPhongMaterial();
-    _circleMaterial->setDiffuse(QColor(0, 100, 0));  // 青色
-    Qt3DCore::QEntity *_circleEntity = new Qt3DCore::QEntity(rootEntity);
-    _circleEntity->addComponent(_circleMesh);
-    _circleEntity->addComponent(_circleMaterial);
-    Qt3DCore::QTransform *_circleTransform = new Qt3DCore::QTransform();
-    _circleTransform->setTranslation(QVector3D(0, 0.0004f, 0));  // フィールドの中央に配置
-    _circleEntity->addComponent(_circleTransform);
 }

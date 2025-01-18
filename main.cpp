@@ -52,9 +52,13 @@ int main(int argc, char **argv)
     create_fileds(rootEntity);
     create_lines(rootEntity);
     addLightingToRoot(rootEntity);
+    
+    // Qt3DCore::QTransform *fieldTransform = new Qt3DCore::QTransform();
+    // fieldTransform->setScale(1);
+    // addOBJModel(rootEntity, "../model/field/field.obj", fieldTransform, QColor(Qt::green));
 
     // GLTFモデルを追加
-    const int numModels = 1; // モデルの数
+    const int numModels = 2; // モデルの数
 
     QVector<Qt3DCore::QTransform*> baseTransforms;
     QVector<QVector<Qt3DCore::QTransform*>> wheelTransforms;
@@ -123,9 +127,11 @@ int main(int argc, char **argv)
     container->show();
 
     // 円運動のためのパラメータ
-    const float radius = 0.5f;
+    const float radius = 0.3f;
     const float wheel_angles[4] = {35.0, -45.0, -135.0, 145.0};
-    QVector<float> angles(numModels, 0.0f);
+    // QVector<float> angles(numModels, 0.0f);
+    float angle = 0.0;
+    QVector<float> angles = {0.0f, 180.0f};
     QVector<float> wheelAngles(numModels, 0.0f);
 
     // QTimerの設定 (60fps)
@@ -133,12 +139,12 @@ int main(int argc, char **argv)
     timer->setInterval(1000 / 60); // 60fps
     QObject::connect(timer, &QTimer::timeout, [&]() {
         for (int i = 0; i < numModels; ++i) {
-            angles[i] += 1.0f * (i + 0.005);
-            wheelAngles[i] += 2.0f;
+            angle += angles[i] + 1.5;
+            wheelAngles[i] += 20.0f;
 
-            float x = radius * cos(angles[i]);
-            float z = radius * sin(angles[i]);
-            QVector3D newPosition(x + i * 0.2f, 0.0052, z + i * 0.2f);
+            float x = radius * cos(angle/180*3.14);
+            float z = radius * sin(angle/180*3.14);
+            QVector3D newPosition(x, 0.0052, z);
 
             baseTransforms[i]->setTranslation(newPosition);
 
