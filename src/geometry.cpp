@@ -1,4 +1,4 @@
-#include "geometry.h"
+#include "include/geometry.h"
 #include <Qt3DExtras/QPlaneMesh>
 #include <Qt3DExtras/QPhongMaterial>
 #include <Qt3DCore/QTransform>
@@ -24,7 +24,7 @@ void create_fileds(Qt3DCore::QEntity *rootEntity)
     // テクスチャの読み込み
     Qt3DRender::QTexture2D *texture = new Qt3DRender::QTexture2D();
     Qt3DRender::QTextureImage *textureImage = new Qt3DRender::QTextureImage();
-    textureImage->setSource(QUrl::fromLocalFile("../field_texture.jpg")); // テクスチャ画像のパス
+    textureImage->setSource(QUrl::fromLocalFile("../assets/textures/field2.jpg")); // テクスチャ画像のパス
     texture->addTextureImage(textureImage);
     fieldMaterial->setDiffuse(texture);
 

@@ -1,6 +1,7 @@
-/build/
-/model/
-/texture/
 /.vscode/
-
 .DS_Store
+
+/build/
+/assets/
+
+

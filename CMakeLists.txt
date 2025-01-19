@@ -8,7 +8,7 @@ set(CMAKE_AUTOUIC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets 3DCore 3DExtras 3DRender)
 
-add_executable(GUI main.cpp geometry.cpp lighting.cpp)
+add_executable(GUI main.cpp src/geometry.cpp src/lighting.cpp src/robot.cpp)
 
 target_link_libraries(GUI
     Qt6::Core 
