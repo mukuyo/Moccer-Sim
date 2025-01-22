@@ -69,34 +69,17 @@
 // }
 #include <QApplication>
 #include <QQmlApplicationEngine>
-#include <Qt3DExtras/Qt3DWindow>
-#include <Qt3DExtras/QForwardRenderer>
-#include <Qt3DRender/QCamera>
-#include <Qt3DExtras/QOrbitCameraController>
-#include <Qt3DRender/QMesh>
-#include <Qt3DCore/QTransform>
-#include <Qt3DExtras/QDiffuseSpecularMaterial>
-#include <QLoggingCategory>
 #include <QDebug>
-#include <QTimer>
 #include "src/include/geometry.h"
+#include "src/include/robot.h"
 
 class Moccer {
 public:
     Moccer(QQmlApplicationEngine &engine) {
-        // Qt3D ウィンドウのセットアップ
-        // Qt3DExtras::Qt3DWindow *view = new Qt3DExtras::Qt3DWindow();
-        // Qt3DExtras::QForwardRenderer *frameGraph = view->defaultFrameGraph();
-        // frameGraph->setClearColor(QColor(QRgb(0x4d4d4f)));
+        // qmlRegisterType<Geometry>("MOC", 1, 0, "Geometry");
+        qmlRegisterType<Robot>("MOC", 1, 0, "Robot");
 
-        // // ルートエンティティの作成
-        // Qt3DCore::QEntity *rootEntity = new Qt3DCore::QEntity();
-
-        // QML 型の登録
-        qmlRegisterType<Geometry>("MOC", 1, 0, "Geometry");
-
-        // QML をロード
-        engine.load(QUrl(QStringLiteral("../src/qml/main.qml")));
+        engine.load(QUrl(QStringLiteral("../src/qml/Main.qml")));
 
         if (engine.rootObjects().isEmpty()) {
             qWarning() << "Failed to load QML file.";
@@ -110,10 +93,8 @@ public:
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
-    // QML エンジンの作成
     QQmlApplicationEngine engine;
 
-    // Moccer インスタンスの作成
     Moccer moccer(engine);
 
     return app.exec();

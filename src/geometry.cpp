@@ -16,19 +16,8 @@
 #include <QUrl>
 #include <Qt3DRender/QTextureImage>
 #include <iostream>
-#include <Qt3DRender/QCamera>
-#include <Qt3DExtras/QOrbitCameraController>
 Geometry::Geometry(Qt3DCore::QEntity *rootEntity) : Qt3DCore::QEntity(rootEntity) {
     // addCube(0.0f, 0.0f, 0.0f);
-    Qt3DRender::QCamera *camera = view->camera();
-    camera->lens()->setPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
-    camera->setPosition(QVector3D(0, 10.0f, 10.0f));
-    camera->setViewCenter(QVector3D(0, 0, 0));
-
-    Qt3DExtras::QOrbitCameraController *cameraController = new Qt3DExtras::QOrbitCameraController(rootEntity);
-    cameraController->setLinearSpeed(50.0f);
-    cameraController->setLookSpeed(180.0f);
-    cameraController->setCamera(camera);
     create_fileds(rootEntity);
 }
 
@@ -84,6 +73,8 @@ void Geometry::create_fileds(Qt3DCore::QEntity *rootEntity)
 
     // エンティティの設定
     Qt3DCore::QEntity *fieldEntity = new Qt3DCore::QEntity(rootEntity);
+    // rootEntity->addComponent(fieldMesh);
+    // rootEntity->addComponent(fieldMaterial);
     fieldEntity->addComponent(fieldMesh);
     fieldEntity->addComponent(fieldMaterial);
 
