@@ -1,3 +1,8 @@
+// #include "include/geometry.h"
+// #include <Qt3DExtras/QCuboidMesh>
+// #include <Qt3DCore/QTransform>
+// #include <Qt3DExtras/QDiffuseSpecularMaterial>
+// #include <iostream>
 #include "include/geometry.h"
 #include <Qt3DExtras/QPlaneMesh>
 #include <Qt3DExtras/QPhongMaterial>
@@ -10,13 +15,62 @@
 #include <Qt3DRender/QTexture>
 #include <QUrl>
 #include <Qt3DRender/QTextureImage>
-// #include <Qt3DCore/QTextureTransform>
+#include <iostream>
+#include <Qt3DRender/QCamera>
+#include <Qt3DExtras/QOrbitCameraController>
+Geometry::Geometry(Qt3DCore::QEntity *rootEntity) : Qt3DCore::QEntity(rootEntity) {
+    // addCube(0.0f, 0.0f, 0.0f);
+    Qt3DRender::QCamera *camera = view->camera();
+    camera->lens()->setPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
+    camera->setPosition(QVector3D(0, 10.0f, 10.0f));
+    camera->setViewCenter(QVector3D(0, 0, 0));
 
-void create_fileds(Qt3DCore::QEntity *rootEntity)
+    Qt3DExtras::QOrbitCameraController *cameraController = new Qt3DExtras::QOrbitCameraController(rootEntity);
+    cameraController->setLinearSpeed(50.0f);
+    cameraController->setLookSpeed(180.0f);
+    cameraController->setCamera(camera);
+    create_fileds(rootEntity);
+}
+
+Geometry::~Geometry() = default;
+
+// void Geometry::addCube(float x, float y, float z) {
+//     std::cout << "Geometry::addCube()" << std::endl;
+//     // 立方体のエンティティを作成
+//     auto *cube = new Qt3DCore::QEntity(this);
+//     auto *mesh = new Qt3DExtras::QCuboidMesh();
+//     auto *transform = new Qt3DCore::QTransform();
+//     auto *material = new Qt3DExtras::QDiffuseSpecularMaterial();
+
+//     cube->addComponent(mesh);
+//     cube->addComponent(transform);
+//     cube->addComponent(material);
+
+//     // 座標を設定
+//     transform->setTranslation(QVector3D(x, y, z));
+// }
+
+
+
+
+
+// Geometry::Geometry(Qt3DCore::QEntity* rootEntity) : Qt3DCore::QEntity(rootEntity)
+// {
+//     std::cout << "Geometry::Geometry()" << std::endl;
+//     create_fileds(rootEntity);
+//     create_lines(rootEntity);
+// }
+
+// Geometry::~Geometry()
+// {
+// }
+
+void Geometry::create_fileds(Qt3DCore::QEntity *rootEntity)
 {
+    std::cout<<"Geometry::create_fileds()"<<std::endl;
     Qt3DExtras::QPlaneMesh *fieldMesh = new Qt3DExtras::QPlaneMesh();
-    fieldMesh->setWidth(12.6f);  // 12000mm = 12.0m
-    fieldMesh->setHeight(9.6f);  // 9000mm = 9.0m
+    fieldMesh->setWidth(15.6f);  // 12000mm = 12.0m
+    fieldMesh->setHeight(16.6f);  // 9000mm = 9.0m
 
     // マテリアルの作成
     Qt3DExtras::QDiffuseMapMaterial *fieldMaterial = new Qt3DExtras::QDiffuseMapMaterial();
@@ -160,111 +214,111 @@ void create_fileds(Qt3DCore::QEntity *rootEntity)
 
 }
 
-void create_lines(Qt3DCore::QEntity *rootEntity)
-{
-    // ライン（中央線）の作成
-    Qt3DExtras::QPlaneMesh *centerLineMesh = new Qt3DExtras::QPlaneMesh();
-    centerLineMesh->setWidth(0.01f);
-    centerLineMesh->setHeight(9.0f);  // 中央線の高さもフィールドに合わせる
-    Qt3DExtras::QPhongMaterial *lineMaterial = new Qt3DExtras::QPhongMaterial();
-    lineMaterial->setDiffuse(QColor(Qt::white));
-    Qt3DCore::QEntity *centerLineEntity = new Qt3DCore::QEntity(rootEntity);
-    centerLineEntity->addComponent(centerLineMesh);
-    centerLineEntity->addComponent(lineMaterial);
-    Qt3DCore::QTransform *lineTransform = new Qt3DCore::QTransform();
-    lineTransform->setTranslation(QVector3D(0, 0.001f, 0));  // 中央に配置
-    centerLineEntity->addComponent(lineTransform);
+// void Geometry::create_lines(Qt3DCore::QEntity *rootEntity)
+// {
+//     // ライン（中央線）の作成
+//     Qt3DExtras::QPlaneMesh *centerLineMesh = new Qt3DExtras::QPlaneMesh();
+//     centerLineMesh->setWidth(0.01f);
+//     centerLineMesh->setHeight(9.0f);  // 中央線の高さもフィールドに合わせる
+//     Qt3DExtras::QPhongMaterial *lineMaterial = new Qt3DExtras::QPhongMaterial();
+//     lineMaterial->setDiffuse(QColor(Qt::white));
+//     Qt3DCore::QEntity *centerLineEntity = new Qt3DCore::QEntity(rootEntity);
+//     centerLineEntity->addComponent(centerLineMesh);
+//     centerLineEntity->addComponent(lineMaterial);
+//     Qt3DCore::QTransform *lineTransform = new Qt3DCore::QTransform();
+//     lineTransform->setTranslation(QVector3D(0, 0.001f, 0));  // 中央に配置
+//     centerLineEntity->addComponent(lineTransform);
 
-    // 横ラインの作成（新たに追加）
-    Qt3DExtras::QPlaneMesh *horizontalLineMesh = new Qt3DExtras::QPlaneMesh();
-    horizontalLineMesh->setWidth(12.0f);  // 横ラインの幅をフィールドの幅に合わせる
-    horizontalLineMesh->setHeight(0.01f);  // 厚さは薄く設定
-    Qt3DCore::QEntity *horizontalLineEntity = new Qt3DCore::QEntity(rootEntity);
-    horizontalLineEntity->addComponent(horizontalLineMesh);
-    horizontalLineEntity->addComponent(lineMaterial);
-    Qt3DCore::QTransform *horizontalLineTransform = new Qt3DCore::QTransform();
-    horizontalLineTransform->setTranslation(QVector3D(0, 0.001f, 0));  // 中央に配置
-    horizontalLineEntity->addComponent(horizontalLineTransform);
-    Qt3DExtras::QPlaneMesh *rectangleEdgeMesh = new Qt3DExtras::QPlaneMesh();
-    rectangleEdgeMesh->setWidth(12.0f);  // 幅はフィールドの幅に微調整
-    rectangleEdgeMesh->setHeight(0.01f);  // 枠の厚さ
+//     // 横ラインの作成（新たに追加）
+//     Qt3DExtras::QPlaneMesh *horizontalLineMesh = new Qt3DExtras::QPlaneMesh();
+//     horizontalLineMesh->setWidth(12.0f);  // 横ラインの幅をフィールドの幅に合わせる
+//     horizontalLineMesh->setHeight(0.01f);  // 厚さは薄く設定
+//     Qt3DCore::QEntity *horizontalLineEntity = new Qt3DCore::QEntity(rootEntity);
+//     horizontalLineEntity->addComponent(horizontalLineMesh);
+//     horizontalLineEntity->addComponent(lineMaterial);
+//     Qt3DCore::QTransform *horizontalLineTransform = new Qt3DCore::QTransform();
+//     horizontalLineTransform->setTranslation(QVector3D(0, 0.001f, 0));  // 中央に配置
+//     horizontalLineEntity->addComponent(horizontalLineTransform);
+//     Qt3DExtras::QPlaneMesh *rectangleEdgeMesh = new Qt3DExtras::QPlaneMesh();
+//     rectangleEdgeMesh->setWidth(12.0f);  // 幅はフィールドの幅に微調整
+//     rectangleEdgeMesh->setHeight(0.01f);  // 枠の厚さ
 
-    Qt3DCore::QEntity *topEdgeEntity = new Qt3DCore::QEntity(rootEntity);
-    topEdgeEntity->addComponent(rectangleEdgeMesh);
-    topEdgeEntity->addComponent(lineMaterial);
-    Qt3DCore::QTransform *topEdgeTransform = new Qt3DCore::QTransform();
-    topEdgeTransform->setTranslation(QVector3D(0, 0.001f, -4.495f));  // 上端
-    topEdgeEntity->addComponent(topEdgeTransform);
+//     Qt3DCore::QEntity *topEdgeEntity = new Qt3DCore::QEntity(rootEntity);
+//     topEdgeEntity->addComponent(rectangleEdgeMesh);
+//     topEdgeEntity->addComponent(lineMaterial);
+//     Qt3DCore::QTransform *topEdgeTransform = new Qt3DCore::QTransform();
+//     topEdgeTransform->setTranslation(QVector3D(0, 0.001f, -4.495f));  // 上端
+//     topEdgeEntity->addComponent(topEdgeTransform);
 
-    Qt3DCore::QEntity *bottomEdgeEntity = new Qt3DCore::QEntity(rootEntity);
-    bottomEdgeEntity->addComponent(rectangleEdgeMesh);
-    bottomEdgeEntity->addComponent(lineMaterial);
-    Qt3DCore::QTransform *bottomEdgeTransform = new Qt3DCore::QTransform();
-    bottomEdgeTransform->setTranslation(QVector3D(0, 0.001f, 4.495f));  // 下端
-    bottomEdgeEntity->addComponent(bottomEdgeTransform);
+//     Qt3DCore::QEntity *bottomEdgeEntity = new Qt3DCore::QEntity(rootEntity);
+//     bottomEdgeEntity->addComponent(rectangleEdgeMesh);
+//     bottomEdgeEntity->addComponent(lineMaterial);
+//     Qt3DCore::QTransform *bottomEdgeTransform = new Qt3DCore::QTransform();
+//     bottomEdgeTransform->setTranslation(QVector3D(0, 0.001f, 4.495f));  // 下端
+//     bottomEdgeEntity->addComponent(bottomEdgeTransform);
 
-    Qt3DExtras::QPlaneMesh *verticalEdgeMesh = new Qt3DExtras::QPlaneMesh();
-    verticalEdgeMesh->setWidth(0.01f);  // 厚さ
-    verticalEdgeMesh->setHeight(9.0f);  // 高さはフィールドの高さに合わせる
-    Qt3DCore::QEntity *leftEdgeEntity = new Qt3DCore::QEntity(rootEntity);
-    leftEdgeEntity->addComponent(verticalEdgeMesh);
-    leftEdgeEntity->addComponent(lineMaterial);
-    Qt3DCore::QTransform *leftEdgeTransform = new Qt3DCore::QTransform();
-    leftEdgeTransform->setTranslation(QVector3D(-5.995f, 0.001f, 0));  // 左端
-    leftEdgeEntity->addComponent(leftEdgeTransform);
-    Qt3DCore::QEntity *rightEdgeEntity = new Qt3DCore::QEntity(rootEntity);
-    rightEdgeEntity->addComponent(verticalEdgeMesh);
-    rightEdgeEntity->addComponent(lineMaterial);
-    Qt3DCore::QTransform *rightEdgeTransform = new Qt3DCore::QTransform();
-    rightEdgeTransform->setTranslation(QVector3D(5.995f, 0.001f, 0));  // 右端
-    rightEdgeEntity->addComponent(rightEdgeTransform);
+//     Qt3DExtras::QPlaneMesh *verticalEdgeMesh = new Qt3DExtras::QPlaneMesh();
+//     verticalEdgeMesh->setWidth(0.01f);  // 厚さ
+//     verticalEdgeMesh->setHeight(9.0f);  // 高さはフィールドの高さに合わせる
+//     Qt3DCore::QEntity *leftEdgeEntity = new Qt3DCore::QEntity(rootEntity);
+//     leftEdgeEntity->addComponent(verticalEdgeMesh);
+//     leftEdgeEntity->addComponent(lineMaterial);
+//     Qt3DCore::QTransform *leftEdgeTransform = new Qt3DCore::QTransform();
+//     leftEdgeTransform->setTranslation(QVector3D(-5.995f, 0.001f, 0));  // 左端
+//     leftEdgeEntity->addComponent(leftEdgeTransform);
+//     Qt3DCore::QEntity *rightEdgeEntity = new Qt3DCore::QEntity(rootEntity);
+//     rightEdgeEntity->addComponent(verticalEdgeMesh);
+//     rightEdgeEntity->addComponent(lineMaterial);
+//     Qt3DCore::QTransform *rightEdgeTransform = new Qt3DCore::QTransform();
+//     rightEdgeTransform->setTranslation(QVector3D(5.995f, 0.001f, 0));  // 右端
+//     rightEdgeEntity->addComponent(rightEdgeTransform);
 
-    Qt3DExtras::QPlaneMesh *horizontalPenaltyMesh = new Qt3DExtras::QPlaneMesh();
-    horizontalPenaltyMesh->setWidth(1.8f);  // 厚さ
-    horizontalPenaltyMesh->setHeight(0.01f);  // 高さはフィールドの高さに合わせる
-    Qt3DCore::QEntity *leftUpHorizontalPenaltyEntity = new Qt3DCore::QEntity(rootEntity);
-    leftUpHorizontalPenaltyEntity->addComponent(horizontalPenaltyMesh);
-    leftUpHorizontalPenaltyEntity->addComponent(lineMaterial);
-    Qt3DCore::QTransform *leftUpHorizontalPenaltyTransform = new Qt3DCore::QTransform();
-    leftUpHorizontalPenaltyTransform->setTranslation(QVector3D(-5.095f, 0.001f, -1.8f));  // 左端
-    leftUpHorizontalPenaltyEntity->addComponent(leftUpHorizontalPenaltyTransform);
-    Qt3DCore::QEntity *rightUpHorizontalPenaltyEntity = new Qt3DCore::QEntity(rootEntity);
-    rightUpHorizontalPenaltyEntity->addComponent(horizontalPenaltyMesh);
-    rightUpHorizontalPenaltyEntity->addComponent(lineMaterial);
-    Qt3DCore::QTransform *rightUpHorizontalPenaltyTransform = new Qt3DCore::QTransform();
-    rightUpHorizontalPenaltyTransform->setTranslation(QVector3D(5.095f, 0.001f, -1.8f));  // 右端
-    rightUpHorizontalPenaltyEntity->addComponent(rightUpHorizontalPenaltyTransform);
+//     Qt3DExtras::QPlaneMesh *horizontalPenaltyMesh = new Qt3DExtras::QPlaneMesh();
+//     horizontalPenaltyMesh->setWidth(1.8f);  // 厚さ
+//     horizontalPenaltyMesh->setHeight(0.01f);  // 高さはフィールドの高さに合わせる
+//     Qt3DCore::QEntity *leftUpHorizontalPenaltyEntity = new Qt3DCore::QEntity(rootEntity);
+//     leftUpHorizontalPenaltyEntity->addComponent(horizontalPenaltyMesh);
+//     leftUpHorizontalPenaltyEntity->addComponent(lineMaterial);
+//     Qt3DCore::QTransform *leftUpHorizontalPenaltyTransform = new Qt3DCore::QTransform();
+//     leftUpHorizontalPenaltyTransform->setTranslation(QVector3D(-5.095f, 0.001f, -1.8f));  // 左端
+//     leftUpHorizontalPenaltyEntity->addComponent(leftUpHorizontalPenaltyTransform);
+//     Qt3DCore::QEntity *rightUpHorizontalPenaltyEntity = new Qt3DCore::QEntity(rootEntity);
+//     rightUpHorizontalPenaltyEntity->addComponent(horizontalPenaltyMesh);
+//     rightUpHorizontalPenaltyEntity->addComponent(lineMaterial);
+//     Qt3DCore::QTransform *rightUpHorizontalPenaltyTransform = new Qt3DCore::QTransform();
+//     rightUpHorizontalPenaltyTransform->setTranslation(QVector3D(5.095f, 0.001f, -1.8f));  // 右端
+//     rightUpHorizontalPenaltyEntity->addComponent(rightUpHorizontalPenaltyTransform);
 
-    // 左下水平ペナルティライン
-    Qt3DCore::QEntity *leftUnderHorizontalPenaltyEntity = new Qt3DCore::QEntity(rootEntity);
-    leftUnderHorizontalPenaltyEntity->addComponent(horizontalPenaltyMesh);
-    leftUnderHorizontalPenaltyEntity->addComponent(lineMaterial);
-    Qt3DCore::QTransform *leftUnderHorizontalPenaltyTransform = new Qt3DCore::QTransform();
-    leftUnderHorizontalPenaltyTransform->setTranslation(QVector3D(-5.095f, 0.001f, 1.8f));  // 左端 (Z座標を-1.8fに変更)
-    leftUnderHorizontalPenaltyEntity->addComponent(leftUnderHorizontalPenaltyTransform);
+//     // 左下水平ペナルティライン
+//     Qt3DCore::QEntity *leftUnderHorizontalPenaltyEntity = new Qt3DCore::QEntity(rootEntity);
+//     leftUnderHorizontalPenaltyEntity->addComponent(horizontalPenaltyMesh);
+//     leftUnderHorizontalPenaltyEntity->addComponent(lineMaterial);
+//     Qt3DCore::QTransform *leftUnderHorizontalPenaltyTransform = new Qt3DCore::QTransform();
+//     leftUnderHorizontalPenaltyTransform->setTranslation(QVector3D(-5.095f, 0.001f, 1.8f));  // 左端 (Z座標を-1.8fに変更)
+//     leftUnderHorizontalPenaltyEntity->addComponent(leftUnderHorizontalPenaltyTransform);
 
-    // 右下水平ペナルティライン
-    Qt3DCore::QEntity *rightUnderHorizontalPenaltyEntity = new Qt3DCore::QEntity(rootEntity);
-    rightUnderHorizontalPenaltyEntity->addComponent(horizontalPenaltyMesh);
-    rightUnderHorizontalPenaltyEntity->addComponent(lineMaterial);
-    Qt3DCore::QTransform *rightUnderHorizontalPenaltyTransform = new Qt3DCore::QTransform();
-    rightUnderHorizontalPenaltyTransform->setTranslation(QVector3D(5.095f, 0.001f, 1.8f));  // 右端 (Z座標を-1.8fに変更)
-    rightUnderHorizontalPenaltyEntity->addComponent(rightUnderHorizontalPenaltyTransform);
+//     // 右下水平ペナルティライン
+//     Qt3DCore::QEntity *rightUnderHorizontalPenaltyEntity = new Qt3DCore::QEntity(rootEntity);
+//     rightUnderHorizontalPenaltyEntity->addComponent(horizontalPenaltyMesh);
+//     rightUnderHorizontalPenaltyEntity->addComponent(lineMaterial);
+//     Qt3DCore::QTransform *rightUnderHorizontalPenaltyTransform = new Qt3DCore::QTransform();
+//     rightUnderHorizontalPenaltyTransform->setTranslation(QVector3D(5.095f, 0.001f, 1.8f));  // 右端 (Z座標を-1.8fに変更)
+//     rightUnderHorizontalPenaltyEntity->addComponent(rightUnderHorizontalPenaltyTransform);
 
-    Qt3DExtras::QPlaneMesh *verticalPenaltyMesh = new Qt3DExtras::QPlaneMesh();
-    verticalPenaltyMesh->setWidth(0.01f);  // 厚さ
-    verticalPenaltyMesh->setHeight(3.6f);  // 高さはフィールドの高さに合わせる
-    Qt3DCore::QEntity *leftUpVerticalPenaltyEntity = new Qt3DCore::QEntity(rootEntity);
-    leftUpVerticalPenaltyEntity->addComponent(verticalPenaltyMesh);
-    leftUpVerticalPenaltyEntity->addComponent(lineMaterial);
-    Qt3DCore::QTransform *leftUpVerticalPenaltyTransform = new Qt3DCore::QTransform();
-    leftUpVerticalPenaltyTransform->setTranslation(QVector3D(-4.2f, 0.001f, 0));  // 左端
-    leftUpVerticalPenaltyEntity->addComponent(leftUpVerticalPenaltyTransform);
-    Qt3DCore::QEntity *rightUpVerticalPenaltyEntity = new Qt3DCore::QEntity(rootEntity);
-    rightUpVerticalPenaltyEntity->addComponent(verticalPenaltyMesh);
-    rightUpVerticalPenaltyEntity->addComponent(lineMaterial);
-    Qt3DCore::QTransform *rightUpVerticalPenaltyTransform = new Qt3DCore::QTransform();
-    rightUpVerticalPenaltyTransform->setTranslation(QVector3D(4.2f, 0.001f, 0));  // 右端
-    rightUpVerticalPenaltyEntity->addComponent(rightUpVerticalPenaltyTransform);
+//     Qt3DExtras::QPlaneMesh *verticalPenaltyMesh = new Qt3DExtras::QPlaneMesh();
+//     verticalPenaltyMesh->setWidth(0.01f);  // 厚さ
+//     verticalPenaltyMesh->setHeight(3.6f);  // 高さはフィールドの高さに合わせる
+//     Qt3DCore::QEntity *leftUpVerticalPenaltyEntity = new Qt3DCore::QEntity(rootEntity);
+//     leftUpVerticalPenaltyEntity->addComponent(verticalPenaltyMesh);
+//     leftUpVerticalPenaltyEntity->addComponent(lineMaterial);
+//     Qt3DCore::QTransform *leftUpVerticalPenaltyTransform = new Qt3DCore::QTransform();
+//     leftUpVerticalPenaltyTransform->setTranslation(QVector3D(-4.2f, 0.001f, 0));  // 左端
+//     leftUpVerticalPenaltyEntity->addComponent(leftUpVerticalPenaltyTransform);
+//     Qt3DCore::QEntity *rightUpVerticalPenaltyEntity = new Qt3DCore::QEntity(rootEntity);
+//     rightUpVerticalPenaltyEntity->addComponent(verticalPenaltyMesh);
+//     rightUpVerticalPenaltyEntity->addComponent(lineMaterial);
+//     Qt3DCore::QTransform *rightUpVerticalPenaltyTransform = new Qt3DCore::QTransform();
+//     rightUpVerticalPenaltyTransform->setTranslation(QVector3D(4.2f, 0.001f, 0));  // 右端
+//     rightUpVerticalPenaltyEntity->addComponent(rightUpVerticalPenaltyTransform);
 
-}
+// }

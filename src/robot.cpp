@@ -6,8 +6,18 @@
 #include <Qt3DRender/QMesh>
 #include <Qt3DCore/QTransform>
 #include <Qt3DExtras/QDiffuseSpecularMaterial>
-
-
+#include <Qt3DExtras/QPlaneMesh>
+#include <Qt3DExtras/QPhongMaterial>
+#include <Qt3DCore/QTransform>
+#include <Qt3DExtras/QConeMesh>
+#include <Qt3DExtras/QCylinderMesh>
+#include <Qt3DExtras/QCuboidMesh>
+#include <Qt3DExtras/QDiffuseMapMaterial>
+#include <Qt3DCore/QEntity>
+#include <Qt3DRender/QTexture>
+#include <QUrl>
+#include <Qt3DRender/QTextureImage>
+#include <Qt3DExtras/QTextureMaterial>
 // Function to add an OBJ model to the scene
 void addOBJModel(Qt3DCore::QEntity *rootEntity, const QString &objFilePath, Qt3DCore::QTransform *transform, const QColor &color) {
     Qt3DCore::QEntity *objEntity = new Qt3DCore::QEntity(rootEntity);
@@ -24,6 +34,44 @@ void addOBJModel(Qt3DCore::QEntity *rootEntity, const QString &objFilePath, Qt3D
     material->setDiffuse(color);
     objEntity->addComponent(material);
 }
+
+// テクスチャ付きのマテリアルを作成する関数
+Qt3DExtras::QTextureMaterial *createTexturedMaterial(const QString &textureFilePath) {
+    // テクスチャを作成
+    Qt3DRender::QTexture2D *texture = new Qt3DRender::QTexture2D();
+    Qt3DRender::QTextureImage *textureImage = new Qt3DRender::QTextureImage();
+    textureImage->setSource(QUrl::fromLocalFile(textureFilePath));
+    texture->addTextureImage(textureImage);
+
+    // テクスチャマテリアルを作成
+    Qt3DExtras::QTextureMaterial *textureMaterial = new Qt3DExtras::QTextureMaterial();
+    textureMaterial->setTexture(texture);
+
+    return textureMaterial;
+}
+
+// ex_wall_1 の追加でテクスチャを適用
+void addTexturedWall(Qt3DCore::QEntity *rootEntity, const QString &objFilePath, const QString &textureFilePath) {
+    Qt3DCore::QEntity *wallEntity = new Qt3DCore::QEntity(rootEntity);
+
+    // 壁のメッシュをロード
+    Qt3DRender::QMesh *mesh = new Qt3DRender::QMesh();
+    mesh->setSource(QUrl::fromLocalFile(objFilePath));
+
+    // トランスフォームを作成
+    Qt3DCore::QTransform *transform = new Qt3DCore::QTransform();
+    transform->setScale(1.0f); // 必要に応じてスケールを調整
+    transform->setTranslation(QVector3D(0.0, 0.0, 0.0));
+
+    // テクスチャマテリアルを作成
+    Qt3DExtras::QTextureMaterial *material = createTexturedMaterial(textureFilePath);
+
+    // エンティティにコンポーネントを追加
+    wallEntity->addComponent(mesh);
+    wallEntity->addComponent(transform);
+    wallEntity->addComponent(material);
+}
+
 
 void transRobot(Qt3DCore::QTransform *transform, QVector3D base_position, float angle) {
     QVector3D temp_position = QVector3D(base_position.x(), base_position.z(), base_position.y());
@@ -100,4 +148,18 @@ void create_robots(Qt3DCore::QEntity *rootEntity, const int numModels, QVector<Q
         }
         topOutTransforms.append(singleTopOutTransforms);
     }
+
+    Qt3DCore::QTransform *wallTransform = new Qt3DCore::QTransform();
+    transRobot(wallTransform, QVector3D(0,0,0), 0);
+    // addOBJModel(rootEntity, "../assets/models/field/ex_wall_1.obj", wallTransform, QColor(60,60,60));
+    addTexturedWall(rootEntity, "../assets/models/field/ex_wall_1.obj", "../assets/textures/logo_01.png");
+    // addOBJModel(rootEntity, "../assets/models/field/ex_wall_2.obj", wallTransform, QColor(60,60,60));
+    addTexturedWall(rootEntity, "../assets/models/field/seats_floor_1.obj", "../assets/textures/logo_01.png");
+    // addOBJModel(rootEntity, "../assets/models/field/seats_floor_2.obj", wallTransform, "gray");
+    // addOBJModel(rootEntity, "../assets/models/field/seats.obj", wallTransform, QColor(143,186, 250));
+    // Qt3DCore::QTransform *chairTransform = new Qt3DCore::QTransform();
+    // transRobot(chairTransform, QVector3D(0,0,0), 0);
+    // // wallTransform->setScale(0.001);
+    // // baseTransforms.append(baseTransform);
+    // addOBJModel(rootEntity, "../assets/models/field/chairs.obj", chairTransform, QColor(143, 186, 250));
 }
