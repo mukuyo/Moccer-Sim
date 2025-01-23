@@ -17,19 +17,6 @@ ApplicationWindow {
     height: 720
     visible: true
 
-    Node {
-        id: root
-        Lighting {
-            id: lighting
-        }
-        Wheel {
-            id: wheel
-        }
-        Robot {
-            id: robot
-        }
-    }
-
     Rectangle {
         id: topLeft
         anchors.top: parent.top
@@ -42,23 +29,38 @@ ApplicationWindow {
         View3D {
             id: topLeftView
             anchors.fill: parent
-            importScene: root
 
+            // Camera Setting
             Node {
                 id: originNode
-
                 PerspectiveCamera {
                     id: cameraNode
                     clipFar: 1000
                     clipNear: 10
                     fieldOfView: 60
                     position: Qt.vector3d(0, 0, 100)
-                    // eulerRotation.x: -30
+                    eulerRotation.x: -30
                 }
             }
             OrbitCameraController {
                 origin: originNode
                 camera: cameraNode
+            }
+
+            Node {
+                id: root
+                Lighting {
+                    id: lighting
+                }
+                Wheel {
+                    id: wheel
+                }
+                Bot {
+                    id: robot
+                }
+                Field {
+                    id: field
+                }
             }
         }
     }

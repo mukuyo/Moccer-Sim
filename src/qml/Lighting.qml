@@ -16,4 +16,8 @@ Node {
         id: light3
         position: Qt.vector3d(0, -50, 0)
     }
+DirectionalLight {
+    eulerRotation.x: -30
+    eulerRotation.y: -70
+}
 }

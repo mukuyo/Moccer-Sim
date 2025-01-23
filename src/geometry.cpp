@@ -17,7 +17,6 @@
 #include <Qt3DRender/QTextureImage>
 #include <iostream>
 Geometry::Geometry(Qt3DCore::QEntity *rootEntity) : Qt3DCore::QEntity(rootEntity) {
-    // addCube(0.0f, 0.0f, 0.0f);
     create_fileds(rootEntity);
 }
 
