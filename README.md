@@ -24,6 +24,7 @@ brew install qt eigen protobuf@21 yaml-cpp vulkan-volk
 - **yaml-cpp**: For YAML parsing.
 - **vulkan-volk**: Provides Vulkan API support.
 
+
 ### 2. Building the Project
 Set up and build the project using the following steps:
 
@@ -33,10 +34,7 @@ mkdir build && cd build
 cmake ..
 make
 ```
-#### Explanation of Commands
-- **`mkdir build && cd build`**: Creates and moves into a dedicated build directory to keep build artifacts separate from the source code.
-- **`cmake ..`**: Generates the necessary build files for the project.
-- **`make`**: Compiles the source code into an executable binary.
+
 
 ### 3. Launch the GUI
 Run the main application to start the GUI:
