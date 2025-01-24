@@ -1,48 +1,61 @@
 # Moccer-Sim
 
 ## Introduction
-Welcome to Moccer-Sim,  for the [RoboCup Soccer Small Size League (SSL)](https://ssl.robocup.org/).
+Welcome to Moccer-Sim, a simulation tool designed for the [RoboCup Soccer Small Size League (SSL)](https://ssl.robocup.org/).
 
 ## System Requirements
-Before you dive into the exciting world of RoboCup Soccer SSL with `Moccer-Sim`, ensure your system meets the following minimal requirements:
+Before diving into the exciting world of RoboCup Soccer SSL with `Moccer-Sim`, ensure your system meets the following requirements:
 
-- **Qt6**: Only Version 6.7
+- **Qt6**: Only Version 6.7 is supported.
 - **Protocol Buffer Compiler**: `protoc` is essential for compiling protocol buffers.
-  
+
 ## Getting Started
-To get started with `Moccer-Sim`, follow these simple steps:
+To get started with `Moccer-Sim`, follow these steps:
 
-1. Install Dependencies:
-Ensure you have all the necessary packages installed. Open your terminal and run:
-   ```bash
-      brew update
-      brew install qt eigen protobuf@21 yaml-cpp vulkan-volk
-   ```
+### 1. Install Dependencies
+Make sure all necessary packages are installed. Open your terminal and run:
+```bash
+brew update
+brew install qt eigen protobuf@21 yaml-cpp vulkan-volk
+```
+- **Qt**: Used for the GUI framework.
+- **Eigen**: A library for linear algebra operations.
+- **protobuf**: Required for defining and serializing structured data.
+- **yaml-cpp**: For YAML parsing.
+- **vulkan-volk**: Provides Vulkan API support.
 
-2. Make:
-  ```bash
-      cd ~/ws/ssl-RACOON-GUI
-      mkdir build && cd build
-      cmake ..
-      make
-  ```
+### 2. Building the Project
+Set up and build the project using the following steps:
 
-3.Launch the GUI: Execute the main application to start the GUI.
-  ```bash
-  make run
-  ```
+```bash
+cd ~/ws/ssl-RACOON-GUI
+mkdir build && cd build
+cmake ..
+make
+```
+#### Explanation of Commands
+- **`mkdir build && cd build`**: Creates and moves into a dedicated build directory to keep build artifacts separate from the source code.
+- **`cmake ..`**: Generates the necessary build files for the project.
+- **`make`**: Compiles the source code into an executable binary.
+
+### 3. Launch the GUI
+Run the main application to start the GUI:
+```bash
+make run
+```
+This command executes the compiled binary and launches the graphical user interface. You can now start interacting with `Moccer-Sim`.
+
+### 4. Additional Notes
+If you encounter errors during the build process, ensure all dependencies are installed and up-to-date. For troubleshooting, refer to the [official documentation](https://github.com/RoboCup-SSL/).
 
 ## Related Tools
+Enhance your RoboCup Soccer SSL experience with these related tools:
 
-Enhance your RoboCup Soccer SSL experience further with these related tools:
-
-- [ssl-game-controller](https://github.com/RoboCup-SSL/ssl-game-controller) - The official game controller for managing match flow and rules.
-- [ssl-autorefs](https://github.com/RoboCup-SSL/ssl-autorefs) - Automated referee systems for unbiased and accurate game officiating.
+- [ssl-game-controller](https://github.com/RoboCup-SSL/ssl-game-controller): The official game controller for managing match flow and rules.
+- [ssl-autorefs](https://github.com/RoboCup-SSL/ssl-autorefs): Automated referee systems for unbiased and accurate game officiating.
 
 ## Contributing
-
 We welcome contributions from the community! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to get involved.
 
 ## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
