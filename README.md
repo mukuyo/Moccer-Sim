@@ -18,12 +18,6 @@ Make sure all necessary packages are installed. Open your terminal and run:
 brew update
 brew install qt eigen protobuf@21 yaml-cpp vulkan-volk
 ```
-- **Qt**: Used for the GUI framework.
-- **Eigen**: A library for linear algebra operations.
-- **protobuf**: Required for defining and serializing structured data.
-- **yaml-cpp**: For YAML parsing.
-- **vulkan-volk**: Provides Vulkan API support.
-
 
 ### 2. Building the Project
 Set up and build the project using the following steps:
@@ -34,7 +28,6 @@ mkdir build && cd build
 cmake ..
 make
 ```
-
 
 ### 3. Launch the GUI
 Run the main application to start the GUI:
