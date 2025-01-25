@@ -55,7 +55,6 @@ Geometry::~Geometry() = default;
 
 void Geometry::create_fileds(Qt3DCore::QEntity *rootEntity)
 {
-    std::cout<<"Geometry::create_fileds()"<<std::endl;
     Qt3DExtras::QPlaneMesh *fieldMesh = new Qt3DExtras::QPlaneMesh();
     fieldMesh->setWidth(15.6f);  // 12000mm = 12.0m
     fieldMesh->setHeight(16.6f);  // 9000mm = 9.0m
