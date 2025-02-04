@@ -4,6 +4,7 @@
 #include <iostream>
 #include <QObject>
 #include <QVector3D>
+#include <QVariantList>
 
 using namespace std;
 
@@ -13,7 +14,7 @@ class Robot : public QObject {
     Q_PROPERTY(float wheel_speed1 READ getWheelSpeed1 CONSTANT)
     Q_PROPERTY(float wheel_speed2 READ getWheelSpeed2 CONSTANT)
     Q_PROPERTY(float wheel_speed3 READ getWheelSpeed3 CONSTANT)
-    Q_PROPERTY(QVector3D position READ getPosition CONSTANT)
+    Q_PROPERTY(QVariantList positions READ getPositions CONSTANT)
 
 public:
     explicit Robot(QObject *parent = nullptr);
@@ -24,14 +25,14 @@ public:
     float getWheelSpeed2() const;
     float getWheelSpeed3() const;
 
-    QVector3D getPosition() const;
+    QVariantList getPositions() const;
 
     float wheel_speed0;
     float wheel_speed1;
     float wheel_speed2;
     float wheel_speed3;
 
-    QVector3D position;
+    QVariantList positions;
 
 private:
     float theta;

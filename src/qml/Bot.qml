@@ -12,6 +12,7 @@ Node {
     property real angularSpeed: speed / radius // 角速度 (rad/s)
     property real theta: 0 // 現在の角度 (ラジアン)
     property vector3d _position: Qt.vector3d(0, 0, 0)
+    property var botList: []
 
     Robot {
         id: robot
@@ -20,33 +21,24 @@ Node {
     Connections {
         target: robot
         function onWheelSpeedChanged() {
-            _position = Qt.vector3d(
-                robot.position.x, // x座標
-                0, // y座標（高さは一定）
-                robot.position.y
-            );
+            // _position = Qt.vector3d(
+            //     robot.position.x, // x座標
+            //     0, // y座標（高さは一定）
+            //     robot.position.y
+            // );
+            botList = robot.positions;
         }
     }
 
-    Bot {
-        id: bot
-        position: Qt.vector3d(_position.x, _position.y, _position.z)
+    Repeater3D {
+        // model: bot
+        id: bots
+        Bot {
+            id: bot
+            position: botList[index]
+        }
     }
-
-    // // アニメーションで円運動
-    // SequentialAnimation {
-    //     loops: Animation.Infinite // 無限ループ
-    //     running: true // アニメーション開始
-    //     NumberAnimation {
-    //         target: robotNode
-    //         property: "theta" // 角度を管理
-    //         from: 0
-    //         to: 2 * Math.PI // 1周（360度 = 2πラジアン）
-    //         duration: 5000 // 1周の所要時間
-    //         easing.type: Easing.Linear // 一定速度で動く
-    //     }
-    // }
-
-    // thetaが変化するたびにロボットの位置を更新
-
+    Component.onCompleted: {
+        robot.updateWheelSpeeds(); // 初期データを取得
+    }
 }

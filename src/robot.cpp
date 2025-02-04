@@ -17,7 +17,7 @@ float Robot::getWheelSpeed1() const { return wheel_speed1; }
 float Robot::getWheelSpeed2() const { return wheel_speed2; }
 float Robot::getWheelSpeed3() const { return wheel_speed3; }
 
-QVector3D Robot::getPosition() const { return position; }
+QVariantList Robot::getPositions() const { return positions; }
 
 void Robot::updateWheelSpeeds() {
     wheel_speed0 = 360.0/180.0*M_PI;
@@ -28,7 +28,19 @@ void Robot::updateWheelSpeeds() {
     theta += 0.01;
     if (theta >= M_PI)
         theta = -M_PI;
-    position = QVector3D(r*cos(theta), r*sin(theta), 0);
-
+    // position = QVector3D(r*cos(theta), r*sin(theta), 0);
+    positions = {
+        QVariant::fromValue(QVector3D(0+r*cos(theta), 0+r*sin(theta), 0)),
+        QVariant::fromValue(QVector3D(5+r*cos(theta), 0+r*sin(theta), 0)),
+        QVariant::fromValue(QVector3D(-5+r*cos(theta), 0+r*sin(theta), 0)),
+        QVariant::fromValue(QVector3D(0+r*cos(theta), 5+r*sin(theta), 0)),
+        QVariant::fromValue(QVector3D(0+r*cos(theta), -5+r*sin(theta), 0)),
+        QVariant::fromValue(QVector3D(7+r*cos(theta), 7+r*sin(theta), 0)),
+        QVariant::fromValue(QVector3D(-7+r*cos(theta), 7+r*sin(theta), 0)),
+        QVariant::fromValue(QVector3D(7+r*cos(theta), -7+r*sin(theta), 0)),
+        QVariant::fromValue(QVector3D(-7+r*cos(theta), -7+r*sin(theta), 0)),
+        QVariant::fromValue(QVector3D(10+r*cos(theta), 0+r*sin(theta), 0)),
+        QVariant::fromValue(QVector3D(-10+r*cos(theta), 0+r*sin(theta), 0))
+    };
     emit wheelSpeedChanged();
 }
