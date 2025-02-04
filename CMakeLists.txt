@@ -17,7 +17,7 @@ qt6_wrap_cpp(MOC_SRCS
     ${HEADERS}
 )
 
-add_executable(Moccer main.cpp src/geometry.cpp src/lighting.cpp src/robot.cpp ${MOC_SRCS})
+add_executable(Moccer main.cpp src/robot.cpp ${MOC_SRCS})
 
 target_link_libraries(Moccer
     Qt6::Core 

@@ -52,11 +52,11 @@ ApplicationWindow {
                 Lighting {
                     id: lighting
                 }
-                Wheel {
-                    id: wheel
-                }
                 Bot {
                     id: robot
+                }
+                Wheel {
+                    id: wheel
                 }
                 Field {
                     id: field
