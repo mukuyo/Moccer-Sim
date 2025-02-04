@@ -38,7 +38,7 @@ ApplicationWindow {
                     clipFar: 1000
                     clipNear: 10
                     fieldOfView: 60
-                    position: Qt.vector3d(0, 0, 100)
+                    position: Qt.vector3d(0, 20, 100)
                     eulerRotation.x: -30
                 }
             }

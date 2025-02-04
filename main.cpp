@@ -8,14 +8,9 @@ class Moccer {
 public:
     Moccer(QQmlApplicationEngine &engine) {
         qmlRegisterType<Robot>("MOC", 1, 0, "Robot");
+        qmlRegisterType<Geometry>("Geometry", 1, 0, "Geometry");
 
         engine.load(QUrl(QStringLiteral("../src/qml/Main.qml")));
-
-        if (engine.rootObjects().isEmpty()) {
-            qWarning() << "Failed to load QML file.";
-            return;
-        }
-        qDebug() << "QML successfully loaded!";
     }
 };
 

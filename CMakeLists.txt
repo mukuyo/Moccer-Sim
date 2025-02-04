@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(GUI)
+project(Moccer)
 
 # Qt設定
 set(CMAKE_AUTOMOC ON)
@@ -17,11 +17,11 @@ qt6_wrap_cpp(MOC_SRCS
     ${HEADERS}
 )
 
-add_executable(GUI main.cpp src/geometry.cpp src/lighting.cpp src/robot.cpp ${MOC_SRCS})
+add_executable(Moccer main.cpp src/geometry.cpp src/lighting.cpp src/robot.cpp ${MOC_SRCS})
 
-target_link_libraries(GUI
+target_link_libraries(Moccer
     Qt6::Core 
-    Qt6::Gui 
+    Qt6::Gui
     Qt6::Widgets 
     Qt6::3DCore 
     Qt6::3DExtras 
