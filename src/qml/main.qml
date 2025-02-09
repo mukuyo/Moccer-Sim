@@ -1,4 +1,3 @@
-
 import QtQuick
 import QtQuick.Window
 import Qt3D.Extras
@@ -8,6 +7,7 @@ import QtQuick3D.Helpers
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import QtQuick3D
+import Qt3D.Render
 import MOC
 
 ApplicationWindow {
@@ -19,17 +19,17 @@ ApplicationWindow {
 
     Rectangle {
         id: topLeft
-        anchors.top: parent.top
-        anchors.left: parent.left
-        width: parent.width 
-        height: parent.height
+        anchors.fill: parent
         color: "#848895"
         border.color: "black"
 
         View3D {
             id: topLeftView
             anchors.fill: parent
-
+            FrameAnimation {
+                id: frameUpdater
+                running: true
+            }
             // Camera Setting
             Node {
                 id: originNode
@@ -53,7 +53,16 @@ ApplicationWindow {
                     id: lighting
                 }
                 Bot {
+                    id: bot
+                }
+                Robot {
                     id: robot
+                }
+                Timer {
+                    interval: 16  // 16msごとに更新 (約60FPS)
+                    running: true
+                    repeat: true
+                    onTriggered: robot.updateWheelSpeeds()
                 }
                 Wheel {
                     id: wheel

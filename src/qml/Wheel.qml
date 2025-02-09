@@ -19,10 +19,9 @@ Node {
     property vector3d center: Qt.vector3d(0, 0, 0) // 円運動の中心
     property real radius: 10 // ロボット全体の円運動の半径
     property real theta: 0 // 円運動の角度
+    property vector3d position: Qt.vector3d(0, 0, 0)
 
-    Robot {
-        id: robot
-    }
+
 
     Connections {
         target: robot
@@ -31,15 +30,22 @@ Node {
             wheel_speed1 = (2.0 * wheelNode.pi / robot.wheel_speed1) * 1000.0;
             wheel_speed2 = (2.0 * wheelNode.pi / robot.wheel_speed2) * 1000.0;
             wheel_speed3 = (2.0 * wheelNode.pi / robot.wheel_speed3) * 1000.0;
+            position = Qt.vector3d(
+                robot.position.x, // x座標
+                0, // y座標（高さは一定）
+                robot.position.y
+            );
         }
     }
-    
-    // ロボット全体の位置を計算
-    property vector3d robotPosition: Qt.vector3d(
-        center.x + radius * Math.cos(theta),
-        center.y,
-        center.z + radius * Math.sin(theta)
-    )
+
+    // Timer {
+    //     interval: 16  // 16msごとに更新 (約60FPS)
+    //     running: true
+    //     repeat: true
+    //     onTriggered: robot.updateWheelSpeeds()
+    // }
+
+    property vector3d robotPosition: position
 
     // 各ホイールの定義
     Wheel {
@@ -82,53 +88,41 @@ Node {
         eulerRotation: Qt.vector3d(0, 125, wheelNode.angle3)
     }
 
-    // ホイールの回転アニメーション
-    SequentialAnimation on angle0 {
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed0  // [ms]
-            easing.type: Easing.Linear
-        }
-    }
-    SequentialAnimation on angle1 {
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed1  // [ms]
-            easing.type: Easing.Linear
-        }
-    }
-    SequentialAnimation on angle2 {
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed2  // [ms]
-            easing.type: Easing.Linear
-        }
-    }
-    SequentialAnimation on angle3 {
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed3  // [ms]
-            easing.type: Easing.Linear
-        }
-    }
-
-    // ロボット全体の円運動アニメーション
-    SequentialAnimation on theta {
-        loops: Animation.Infinite
-        running: true
-        NumberAnimation {
-            from: 0
-            to: 2 * pi // 1周分の角度
-            duration: 5000 // 10秒で1周 (円周速度 ~ 1m/s)
-            easing.type: Easing.Linear
-        }
-    }
+    // // ホイールの回転アニメーション
+    // SequentialAnimation on angle0 {
+    //     loops: Animation.Infinite
+    //     NumberAnimation {
+    //         from: 0
+    //         to: 360
+    //         duration: wheel_speed0  // [ms]
+    //         easing.type: Easing.Linear
+    //     }
+    // }
+    // SequentialAnimation on angle1 {
+    //     loops: Animation.Infinite
+    //     NumberAnimation {
+    //         from: 0
+    //         to: 360
+    //         duration: wheel_speed1  // [ms]
+    //         easing.type: Easing.Linear
+    //     }
+    // }
+    // SequentialAnimation on angle2 {
+    //     loops: Animation.Infinite
+    //     NumberAnimation {
+    //         from: 0
+    //         to: 360
+    //         duration: wheel_speed2  // [ms]
+    //         easing.type: Easing.Linear
+    //     }
+    // }
+    // SequentialAnimation on angle3 {
+    //     loops: Animation.Infinite
+    //     NumberAnimation {
+    //         from: 0
+    //         to: 360
+    //         duration: wheel_speed3  // [ms]
+    //         easing.type: Easing.Linear
+    //     }
+    // }
 }

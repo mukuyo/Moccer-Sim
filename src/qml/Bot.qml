@@ -14,10 +14,6 @@ Node {
     property vector3d _position: Qt.vector3d(0, 0, 0)
     property var botList: []
 
-    Robot {
-        id: robot
-    }
-
     Connections {
         target: robot
         function onWheelSpeedChanged() {
@@ -30,14 +26,17 @@ Node {
         }
     }
 
-    Repeater3D {
-        // model: bot
-        id: bots
-        Bot {
-            id: bot
-            position: botList[index]
-        }
+
+
+Repeater3D {
+    id: bots
+    model: botList.length // 配列の長さを model に指定
+
+    Bot {
+        id: bot
+        position: Qt.vector3d(botList[index].x, 0, botList[index].y)
     }
+}
     Component.onCompleted: {
         robot.updateWheelSpeeds(); // 初期データを取得
     }
