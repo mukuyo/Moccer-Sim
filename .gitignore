@@ -2,6 +2,5 @@
 .DS_Store
 
 /build/
-/assets/
-
-
+/assets/*
+!/assets/.gitkeep
