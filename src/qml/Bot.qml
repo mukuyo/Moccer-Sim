@@ -27,8 +27,8 @@ Node {
 
         Bot {
             id: bot
-            position: Qt.vector3d(botList[index].x, botList[index].y, 0.5)
-            eulerRotation: Qt.vector3d(0, -90, -90)
+            position: Qt.vector3d(botList[index].x, 0.5, botList[index].y)
+            eulerRotation: Qt.vector3d(0, -90, 0)
         }
     }
 

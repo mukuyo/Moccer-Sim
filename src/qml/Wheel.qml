@@ -23,7 +23,7 @@ Node {
 
     Connections {
         target: robot
-        function onWheelSpeedChanged() {
+        function onUpdateChanged() {
             wheel_speed0 = (2.0 * wheelNode.pi / robot.wheel_speed0) * 1000.0;
             wheel_speed1 = (2.0 * wheelNode.pi / robot.wheel_speed1) * 1000.0;
             wheel_speed2 = (2.0 * wheelNode.pi / robot.wheel_speed2) * 1000.0;
@@ -38,7 +38,7 @@ Repeater3D {
 
     Repeater3D {
         id: wheels
-        model: 4
+        model: 1
         property int botIndex: modelData
 
         Wheel {
@@ -51,14 +51,11 @@ Repeater3D {
                 Qt.vector3d(0, 125, wheelNode.angle3)
             ]
             property var offsets: [
-                Qt.vector3d(wheelNode.wheel_radius * Math.cos(145 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(-145 * wheelNode.pi / 180.0)),
+                Qt.vector3d(wheelNode.wheel_radius * Math.sin(145 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.cos(-145 * wheelNode.pi / 180.0)),
                 Qt.vector3d(wheelNode.wheel_radius * Math.cos(135 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(135 * wheelNode.pi / 180.0)),
                 Qt.vector3d(wheelNode.wheel_radius * Math.cos(-45 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(45 * wheelNode.pi / 180.0)),
                 Qt.vector3d(wheelNode.wheel_radius * Math.cos(35 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(-35 * wheelNode.pi / 180.0))
             ]
-                Component.onCompleted: {
-                    console.log("wheelIndex: " + botIndex);
-                }
             position: Qt.vector3d(
                 wheelNode.botList[botIndex].x + offsets[wheelIndex].x,
                 wheelNode.botList[botIndex].z + offsets[wheelIndex].y,
