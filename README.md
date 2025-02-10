@@ -22,7 +22,7 @@ brew install qt eigen protobuf@21 yaml-cpp vulkan-volk
 ### Ubuntu
 ```bash
 sudo apt update
-sudo apt install qt6-base-dev qt6-declarative-dev qt6-tools-dev qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates qml6-module-qtquick-layouts qml6-module-qtquick-window qml6-module-qt-labs-platform qt6-3d-dev qt6-quick3d-dev qt6-shadertools-dev libeigen3-dev protobuf-compiler libyaml-cpp-dev cmake build-essential
+sudo apt install qt6-base-dev qt6-declarative-dev qt6-tools-dev qml6-module-* qt6-3d-dev qt6-quick3d-dev qt6-shadertools-dev libeigen3-dev protobuf-compiler libyaml-cpp-dev cmake build-essential
 ```
 
 ### 2. Building the Project
