@@ -32,10 +32,6 @@ Node {
         }
     }
 
-Repeater3D {
-    id: bots
-    model: botList.length
-
     Repeater3D {
         id: wheels
         model: 1
@@ -102,5 +98,20 @@ Repeater3D {
             duration: wheel_speed3
             easing.type: Easing.Linear
         }
+    }
+
+    Timer {
+        interval: 16  // Approximately 60 FPS
+        running: true
+        repeat: true
+        onTriggered: {
+            angle0 += 0;
+            angle1 += 0;
+            angle2 += 0;
+            angle3 += 0;
+        }
+    }
+    Component.onCompleted: {
+        robot.updateInfo(); // 初期データを取得
     }
 }
