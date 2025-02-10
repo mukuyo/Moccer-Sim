@@ -16,7 +16,7 @@ Node {
 
     Connections {
         target: robot
-        function onWheelSpeedChanged() {
+        function onUpdateChanged() {
             botList = robot.positions;
         }
     }
@@ -33,6 +33,6 @@ Node {
     }
 
     Component.onCompleted: {
-        robot.updateWheelSpeeds(); // 初期データを取得
+        robot.updateInfo(); // 初期データを取得
     }
 }

@@ -23,6 +23,17 @@ ApplicationWindow {
         color: "#848895"
         border.color: "black"
 
+        Robot {
+            id: robot
+        }
+
+        Timer {
+            interval: 16
+            running: true
+            repeat: true
+            onTriggered: robot.updateInfo()
+        }
+
         View3D {
             id: topLeftView
             anchors.fill: parent
@@ -30,16 +41,17 @@ ApplicationWindow {
                 id: frameUpdater
                 running: true
             }
-            // Camera Setting
             Node {
                 id: originNode
+                // position: Qt.vector3d(0, -500, 500)
+                eulerRotation: Qt.vector3d(40, 90, 0)
                 PerspectiveCamera {
                     id: cameraNode
-                    clipFar: 1000
-                    clipNear: 10
+                    clipFar: 10000
+                    clipNear: 1
                     fieldOfView: 60
-                    position: Qt.vector3d(0, 20, 100)
-                    eulerRotation.x: -30
+                    position: Qt.vector3d(0, -100, 400)
+                    // eulerRotation.x: 40
                 }
             }
             OrbitCameraController {
@@ -54,15 +66,6 @@ ApplicationWindow {
                 }
                 Bot {
                     id: bot
-                }
-                Robot {
-                    id: robot
-                }
-                Timer {
-                    interval: 16  // 16msごとに更新 (約60FPS)
-                    running: true
-                    repeat: true
-                    onTriggered: robot.updateWheelSpeeds()
                 }
                 Wheel {
                     id: wheel

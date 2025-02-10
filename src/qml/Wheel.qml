@@ -23,16 +23,12 @@ Node {
 
     Connections {
         target: robot
-        function onWheelSpeedChanged() {
-            wheel_speed0 = (2.0 * wheelNode.pi / robot.wheel_speed0) * 1000.0;
-            wheel_speed1 = (2.0 * wheelNode.pi / robot.wheel_speed1) * 1000.0;
-            wheel_speed2 = (2.0 * wheelNode.pi / robot.wheel_speed2) * 1000.0;
-            wheel_speed3 = (2.0 * wheelNode.pi / robot.wheel_speed3) * 1000.0;
+        function onUpdateChanged() {
+            wheel_speed0 = robot.wheel_speed0;
+            wheel_speed1 = robot.wheel_speed1;
+            wheel_speed2 = robot.wheel_speed2;
+            wheel_speed3 = robot.wheel_speed3;
             botList = robot.positions;
-
-            wheel_speed0 = 1000.0;
-            console.log(wheel_speed0);
-            angle0Animation.restart();
         }
     }
 
@@ -70,44 +66,18 @@ Node {
         }
     }
 
-    SequentialAnimation on angle0 {
-        id: angle0Animation
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed0
-            easing.type: Easing.Linear
+    Timer {
+        interval: 16  // Approximately 60 FPS
+        running: true
+        repeat: true
+        onTriggered: {
+            angle0 += 0;
+            angle1 += 0;
+            angle2 += 0;
+            angle3 += 0;
         }
     }
-    SequentialAnimation on angle1 {
-        id: angle1Animation
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed1
-            easing.type: Easing.Linear
-        }
-    }
-    SequentialAnimation on angle2 {
-        id: angle2Animation
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed2
-            easing.type: Easing.Linear
-        }
-    }
-    SequentialAnimation on angle3 {
-        id: angle3Animation
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed3
-            easing.type: Easing.Linear
-        }
+    Component.onCompleted: {
+        robot.updateInfo(); // 初期データを取得
     }
 }
