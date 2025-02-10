@@ -14,7 +14,7 @@ void Robot::updateWheelSpeeds() {
 
     // 半径と角度の更新
     float r = 40.0f;
-    theta += 0.08f;
+    theta += 0.05f;
 
     positions = {
         QVariant::fromValue(QVector3D(0+r*cos(theta), 0+r*sin(theta), 0)),

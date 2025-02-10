@@ -31,7 +31,7 @@ public:
     QVector3D getPosition() const;
 
 private:
-    QElapsedTimer m_elapsedTimer; // QElapsedTimerを使って経過時間を計測
+    
     float theta;
     float wheel_speed0;
     float wheel_speed1;
