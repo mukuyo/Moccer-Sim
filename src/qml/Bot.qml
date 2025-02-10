@@ -16,28 +16,23 @@ Node {
 
     Connections {
         target: robot
-        function onWheelSpeedChanged() {
-            // _position = Qt.vector3d(
-            //     robot.position.x, // x座標
-            //     0, // y座標（高さは一定）
-            //     robot.position.y
-            // );
+        function onUpdateChanged() {
             botList = robot.positions;
         }
     }
 
+    Repeater3D {
+        id: bots
+        model: botList.length // 配列の長さを model に指定
 
-
-Repeater3D {
-    id: bots
-    model: botList.length // 配列の長さを model に指定
-
-    Bot {
-        id: bot
-        position: Qt.vector3d(botList[index].x, 0, botList[index].y)
+        Bot {
+            id: bot
+            position: Qt.vector3d(botList[index].x, botList[index].y, 0.5)
+            eulerRotation: Qt.vector3d(0, -90, -90)
+        }
     }
-}
+
     Component.onCompleted: {
-        robot.updateWheelSpeeds(); // 初期データを取得
+        robot.updateInfo(); // 初期データを取得
     }
 }

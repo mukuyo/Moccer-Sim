@@ -16,7 +16,6 @@ class Robot : public QObject {
     Q_PROPERTY(float wheel_speed2 READ getWheelSpeed2 CONSTANT)
     Q_PROPERTY(float wheel_speed3 READ getWheelSpeed3 CONSTANT)
     Q_PROPERTY(QVariantList positions READ getPositions CONSTANT)
-    Q_PROPERTY(QVector3D position READ getPosition CONSTANT)
 
 public:
     explicit Robot(QObject *parent = nullptr);
@@ -28,10 +27,11 @@ public:
     float getWheelSpeed3() const;
 
     QVariantList getPositions() const;
-    QVector3D getPosition() const;
 
 private:
-    
+    void updatePositions();
+    void updateWheelSpeeds();    
+
     float theta;
     float wheel_speed0;
     float wheel_speed1;
@@ -41,10 +41,10 @@ private:
     QVariantList positions;
 
 public slots:
-    void updateWheelSpeeds();
+    void updateInfo();
 
 signals:
-    void wheelSpeedChanged();
+    void updateChanged();
 };
 
 #endif // ROBOT_H
