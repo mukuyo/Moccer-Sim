@@ -23,87 +23,61 @@ Node {
 
     Connections {
         target: robot
-        function onWheelSpeedChanged() {
-            wheel_speed0 = (2.0 * wheelNode.pi / robot.wheel_speed0) * 1000.0;
-            wheel_speed1 = (2.0 * wheelNode.pi / robot.wheel_speed1) * 1000.0;
-            wheel_speed2 = (2.0 * wheelNode.pi / robot.wheel_speed2) * 1000.0;
-            wheel_speed3 = (2.0 * wheelNode.pi / robot.wheel_speed3) * 1000.0;
+        function onUpdateChanged() {
+            wheel_speed0 = robot.wheel_speed0;
+            wheel_speed1 = robot.wheel_speed1;
+            wheel_speed2 = robot.wheel_speed2;
+            wheel_speed3 = robot.wheel_speed3;
             botList = robot.positions;
         }
     }
 
-Repeater3D {
-    id: bots
-    model: botList.length
-
     Repeater3D {
-        id: wheels
-        model: 4
-        property int botIndex: modelData
+        id: bots
+        model: botList.length
 
-        Wheel {
-            id: wheel
-            property int wheelIndex: index    // 各ホイールのインデックス
-            property var angles: [
-                Qt.vector3d(0, -125, wheelNode.angle0),
-                Qt.vector3d(0, -45, wheelNode.angle1),
-                Qt.vector3d(0,  45, wheelNode.angle2),
-                Qt.vector3d(0, 125, wheelNode.angle3)
-            ]
-            property var offsets: [
-                Qt.vector3d(wheelNode.wheel_radius * Math.cos(145 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(-145 * wheelNode.pi / 180.0)),
-                Qt.vector3d(wheelNode.wheel_radius * Math.cos(135 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(135 * wheelNode.pi / 180.0)),
-                Qt.vector3d(wheelNode.wheel_radius * Math.cos(-45 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(45 * wheelNode.pi / 180.0)),
-                Qt.vector3d(wheelNode.wheel_radius * Math.cos(35 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(-35 * wheelNode.pi / 180.0))
-            ]
-                Component.onCompleted: {
-                    console.log("wheelIndex: " + botIndex);
-                }
-            position: Qt.vector3d(
-                wheelNode.botList[botIndex].x + offsets[wheelIndex].x,
-                wheelNode.botList[botIndex].z + offsets[wheelIndex].y,
-                wheelNode.botList[botIndex].y + offsets[wheelIndex].z
-            )
-            eulerRotation: angles[wheelIndex]
-        }
-    }
-}
+        Repeater3D {
+            id: wheels
+            model: 4
+            property int botIndex: modelData
 
+            Wheel {
+                id: wheel
+                property int wheelIndex: index    // 各ホイールのインデックス
+                property var angles: [
+                    Qt.vector3d(235, -90, wheelNode.angle0),
+                    Qt.vector3d(305, -90, wheelNode.angle1),
+                    Qt.vector3d(45, -90, wheelNode.angle2),
+                    Qt.vector3d(125,  -90, wheelNode.angle3)
+                ]
+                property var offsets: [
+                    Qt.vector3d(wheelNode.wheel_radius * Math.sin(35 * wheelNode.pi / 180.0), wheelNode.wheel_radius * Math.cos(35 * wheelNode.pi / 180.0), 2.7),
+                    Qt.vector3d(wheelNode.wheel_radius * Math.sin(-45 * wheelNode.pi / 180.0), wheelNode.wheel_radius * Math.cos(-45 * wheelNode.pi / 180.0), 2.7),
+                    Qt.vector3d(wheelNode.wheel_radius * Math.sin(-135 * wheelNode.pi / 180.0), wheelNode.wheel_radius * Math.cos(135 * wheelNode.pi / 180.0), 2.7),
+                    Qt.vector3d(wheelNode.wheel_radius * Math.sin(145 * wheelNode.pi / 180.0), wheelNode.wheel_radius * Math.cos(145 * wheelNode.pi / 180.0), 2.7)
+                ]
+                position: Qt.vector3d(
+                    wheelNode.botList[botIndex].x + offsets[wheelIndex].x,
+                    wheelNode.botList[botIndex].y + offsets[wheelIndex].y,
+                    wheelNode.botList[botIndex].z + offsets[wheelIndex].z
+                )
+                eulerRotation: angles[wheelIndex]
+            }
+        }
+    }
 
-    SequentialAnimation on angle0 {
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed0
-            easing.type: Easing.Linear
+    Timer {
+        interval: 16  // Approximately 60 FPS
+        running: true
+        repeat: true
+        onTriggered: {
+            angle0 += 0;
+            angle1 += 0;
+            angle2 += 0;
+            angle3 += 0;
         }
     }
-    SequentialAnimation on angle1 {
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed1
-            easing.type: Easing.Linear
-        }
-    }
-    SequentialAnimation on angle2 {
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed2
-            easing.type: Easing.Linear
-        }
-    }
-    SequentialAnimation on angle3 {
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed3
-            easing.type: Easing.Linear
-        }
+    Component.onCompleted: {
+        robot.updateInfo(); // 初期データを取得
     }
 }
