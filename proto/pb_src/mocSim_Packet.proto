@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+import "mocSim_Commands.proto";
+import "mocSim_Replacement.proto";
+message mocSim_Packet {
+    optional mocSim_Commands commands = 1;
+    optional mocSim_Replacement replacement = 2;
+}

@@ -23,16 +23,20 @@ ApplicationWindow {
         color: "#848895"
         border.color: "black"
 
+        Observe {
+            id: observer
+        }
         Robot {
             id: robot
         }
 
-        Timer {
-            interval: 16
-            running: true
-            repeat: true
-            onTriggered: robot.updateInfo()
-        }
+
+        // Timer {
+        //     interval: 16
+        //     running: true
+        //     repeat: true
+        //     onTriggered: robot.updateInfo()
+        // }
 
         View3D {
             id: topLeftView
@@ -44,80 +48,68 @@ ApplicationWindow {
             }
             Node {
                 id: originNode
-                // eulerRotation: Qt.vector3d(-40, 0, 0)
                 PerspectiveCamera {
                     id: camera
                     clipFar: 10000
                     clipNear: 1
                     fieldOfView: 90
-                    position: Qt.vector3d(0, 200, 500)
-                    eulerRotation: Qt.vector3d(-40, 0, 0)
+                    position: Qt.vector3d(0, 300, 400)
+                    eulerRotation: Qt.vector3d(-45, 0, 0)
                 }
             }
-            // OrbitCameraController {
-            //     origin: originNode
-            //     camera: cameraNode
-            // }
+            MouseArea {
+                id: mouseArea
+                anchors.fill: parent
+                property real dt: 0.001
+                property real linearSpeed: 100
+                property real lookSpeed: 100
+                property real zoomLimit: 0.16
+                property point lastPos
+                acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        property real dt: 0.001
-        property real linearSpeed: 100
-        property real lookSpeed: 100
-        property real zoomLimit: 0.16
-        property point lastPos
-        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+                onPressed: (event) => {
+                    lastPos = Qt.point(event.x, event.y)
+                }
 
-        onPressed: (event) => {
-            lastPos = Qt.point(event.x, event.y)
-        }
+                onPositionChanged: (event) => {
+                    if (mouseArea.pressedButtons & Qt.LeftButton) { // Rotate
+                        let pan = -(event.x - lastPos.x) * dt * lookSpeed
+                        let tilt = (event.y - lastPos.y) * dt * lookSpeed
+                        // rotateCamera(pan, tilt)
+                        camera.eulerRotation.y += pan
+                        camera.eulerRotation.x += tilt
+                    } else if (mouseArea.pressedButtons & Qt.RightButton) { // Translate
+                        let rx = -(event.x - lastPos.x) * dt * linearSpeed*8
+                        let ry = (event.y - lastPos.y) * dt * linearSpeed*8
+                        camera.position.x += rx
+                        camera.position.y += ry
+                    } else if (mouseArea.pressedButtons & Qt.MiddleButton) { // Zoom
+                        let rz = (event.y - lastPos.y) * dt * linearSpeed
+                        let distance = camera.position.length()
+                        if (rz > 0 && distance < zoomLimit) return
+                        camera.position.z += rz
+                    }
+                    lastPos = Qt.point(event.x, event.y)
+                }
 
-        onPositionChanged: (event) => {
-            if (mouseArea.pressedButtons & Qt.LeftButton) { // Rotate
-                let pan = -(event.x - lastPos.x) * dt * lookSpeed
-                let tilt = (event.y - lastPos.y) * dt * lookSpeed
-                // rotateCamera(pan, tilt)
-                camera.eulerRotation.y += pan
-                camera.eulerRotation.x += tilt
-            } else if (mouseArea.pressedButtons & Qt.RightButton) { // Translate
-                let rx = -(event.x - lastPos.x) * dt * linearSpeed*8
-                let ry = (event.y - lastPos.y) * dt * linearSpeed*8
-                camera.position.x += rx
-                camera.position.y += ry
-            } else if (mouseArea.pressedButtons & Qt.MiddleButton) { // Zoom
-                let rz = (event.y - lastPos.y) * dt * linearSpeed
-                zoom(rz)
+                onWheel: (wheel) => {
+                    let rz = wheel.angleDelta.y * dt * linearSpeed
+                    let distance = camera.position.length()
+                    if (rz > 0 && distance < zoomLimit) return
+                    camera.position.z -= rz
+                }
             }
-            lastPos = Qt.point(event.x, event.y)
-        }
-
-        onWheel: (wheel) => {
-            let rz = wheel.angleDelta.y * dt * linearSpeed
-            let distance = camera.position.length()
-            if (rz > 0 && distance < zoomLimit) return
-            camera.position.z += rz
-        }
-    }
-
-    // function rotateCamera(pan, tilt) {
-
-    // }
-
-    // function zoom(rz) {
-
-    // }
             Node {
                 id: root
                 Lighting {
                     id: lighting
                 }
-                Bot {
-                    id: bot
-                }
-                Wheel {
-                    id: wheel
-                }
+                // Bot {
+                //     id: bot
+                // }
+                // Wheel {
+                //     id: wheel
+                // }
                 Field {
                     id: field
                 }

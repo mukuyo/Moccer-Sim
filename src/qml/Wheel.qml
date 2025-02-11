@@ -32,9 +32,13 @@ Node {
         }
     }
 
+Repeater3D {
+    id: bots
+    model: botList.length
+
     Repeater3D {
         id: wheels
-        model: 1
+        model: 4
         property int botIndex: modelData
 
         Wheel {
@@ -47,7 +51,7 @@ Node {
                 Qt.vector3d(0, 125, wheelNode.angle3)
             ]
             property var offsets: [
-                Qt.vector3d(wheelNode.wheel_radius * Math.sin(145 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.cos(-145 * wheelNode.pi / 180.0)),
+                Qt.vector3d(wheelNode.wheel_radius * Math.cos(145 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(-145 * wheelNode.pi / 180.0)),
                 Qt.vector3d(wheelNode.wheel_radius * Math.cos(135 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(135 * wheelNode.pi / 180.0)),
                 Qt.vector3d(wheelNode.wheel_radius * Math.cos(-45 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(45 * wheelNode.pi / 180.0)),
                 Qt.vector3d(wheelNode.wheel_radius * Math.cos(35 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(-35 * wheelNode.pi / 180.0))
@@ -98,20 +102,5 @@ Node {
             duration: wheel_speed3
             easing.type: Easing.Linear
         }
-    }
-
-    Timer {
-        interval: 16  // Approximately 60 FPS
-        running: true
-        repeat: true
-        onTriggered: {
-            angle0 += 0;
-            angle1 += 0;
-            angle2 += 0;
-            angle3 += 0;
-        }
-    }
-    Component.onCompleted: {
-        robot.updateInfo(); // 初期データを取得
     }
 }

@@ -1,12 +1,14 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QDebug>
-#include "src/include/robot.h"
+#include "src/models/robot.h"
+#include "src/observer.h"
 
 class Moccer {
 public:
     Moccer(QQmlApplicationEngine &engine) {
         qmlRegisterType<Robot>("MOC", 1, 0, "Robot");
+        qmlRegisterType<Observer>("MOC", 1, 0, "Observe");
 
         engine.load(QUrl(QStringLiteral("../src/qml/Main.qml")));
     }

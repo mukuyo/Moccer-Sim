@@ -9,7 +9,7 @@ Node {
         id: fieldEntity
         source: "#Rectangle"
         scale: Qt.vector3d(13.4, 10.4, 1)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [ 
             DefaultMaterial {
                 diffuseColor: "green"
@@ -21,9 +21,8 @@ Node {
     Model {
         id: topWall
         source: "#Cube"
-        scale: Qt.vector3d(13.4, 0.02, 0.1)
-        position: Qt.vector3d(0, 520, 5)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        scale: Qt.vector3d(13.4, 0.1, 0.02)
+        position: Qt.vector3d(0, 5, -520)
         materials: [
             DefaultMaterial {
                 diffuseColor: "black"
@@ -35,9 +34,8 @@ Node {
     Model {
         id: bottomWall
         source: "#Cube"
-        scale: Qt.vector3d(13.4, 0.02, 0.1)
-        position: Qt.vector3d(0, -520, 5)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        scale: Qt.vector3d(13.4, 0.1, 0.02)
+        position: Qt.vector3d(0, 5, 520)
         materials: [
             DefaultMaterial {
                 diffuseColor: "black"
@@ -49,9 +47,9 @@ Node {
     Model {
         id: leftWall
         source: "#Cube"
-        scale: Qt.vector3d(0.02, 10.42, 0.1)
-        position: Qt.vector3d(-670, 0, 5)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        scale: Qt.vector3d(10.42, 0.1, 0.02)
+        position: Qt.vector3d(-670, 5, 0)
+        eulerRotation: Qt.vector3d(0, 90, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "black"
@@ -63,9 +61,9 @@ Node {
     Model {
         id: rightWall
         source: "#Cube"
-        scale: Qt.vector3d(0.02, 10.42, 0.1)
-        position: Qt.vector3d(670, 0, 5)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        scale: Qt.vector3d(10.42, 0.1, 0.02)
+        position: Qt.vector3d(670, 5, 0)
+        eulerRotation: Qt.vector3d(0, -90, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "black"
@@ -77,9 +75,9 @@ Node {
     Model {
         id: rightGoal
         source: "#Cube"
-        scale: Qt.vector3d(0.02, 1.84, 0.1)
-        position: Qt.vector3d(618, 0, 5)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        scale: Qt.vector3d(1.84, 0.1, 0.02)
+        position: Qt.vector3d(618, 5, 0)
+        eulerRotation: Qt.vector3d(0, 90, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "black"
@@ -91,9 +89,8 @@ Node {
     Model {
         id: rightGoalTop
         source: "#Cube"
-        scale: Qt.vector3d(0.18, 0.02, 0.1)
-        position: Qt.vector3d(609, 91, 5)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        scale: Qt.vector3d(0.18, 0.1, 0.02)
+        position: Qt.vector3d(609, 5, -91)
         materials: [
             DefaultMaterial {
                 diffuseColor: "black"
@@ -105,9 +102,8 @@ Node {
     Model {
         id: rightGoalBottom
         source: "#Cube"
-        scale: Qt.vector3d(0.18, 0.02, 0.1)
-        position: Qt.vector3d(609, -91, 5)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        scale: Qt.vector3d(0.18, 0.1, 0.02)
+        position: Qt.vector3d(609, 5, 91)
         materials: [
             DefaultMaterial {
                 diffuseColor: "black"
@@ -119,9 +115,9 @@ Node {
     Model {
         id: leftGoal
         source: "#Cube"
-        scale: Qt.vector3d(0.02, 1.84, 0.1)
-        position: Qt.vector3d(-618, 0, 5)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        scale: Qt.vector3d(1.84, 0.1, 0.02)
+        position: Qt.vector3d(-618, 5, 0)
+        eulerRotation: Qt.vector3d(0, 90, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "black"
@@ -133,9 +129,8 @@ Node {
     Model {
         id: leftGoalTop
         source: "#Cube"
-        scale: Qt.vector3d(0.18, 0.02, 0.1)
-        position: Qt.vector3d(-609, 91, 5)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        scale: Qt.vector3d(0.18, 0.1, 0.02)
+        position: Qt.vector3d(-609, 5, -91)
         materials: [
             DefaultMaterial {
                 diffuseColor: "black"
@@ -147,9 +142,8 @@ Node {
     Model {
         id: leftGoalBottom
         source: "#Cube"
-        scale: Qt.vector3d(0.18, 0.02, 0.1)
-        position: Qt.vector3d(-609, -91, 5)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        scale: Qt.vector3d(0.18, 0.1, 0.02)
+        position: Qt.vector3d(-609, 5, 91)
         materials: [
             DefaultMaterial {
                 diffuseColor: "black"
@@ -162,8 +156,8 @@ Node {
         id: centerLine
         source: "#Rectangle"
         scale: Qt.vector3d(0.01, 9.0, 1)
-        position: Qt.vector3d(0, 0, 0.3)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        position: Qt.vector3d(0, 0.3, 0)
+        eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "white"
@@ -176,8 +170,8 @@ Node {
         id: horizontalLine
         source: "#Rectangle"
         scale: Qt.vector3d(12.0, 0.01, 1)
-        position: Qt.vector3d(0, 0, 0.3)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        position: Qt.vector3d(0, 0.3, 0)
+        eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "white"
@@ -190,9 +184,8 @@ Node {
         id: topEdge
         source: "#Rectangle"
         scale: Qt.vector3d(12.0, 0.01, 1)
-        // position: Qt.vector3d(0, 0.1, -449.5)
-        position: Qt.vector3d(0, 449.5, 0.1)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        position: Qt.vector3d(0, 0.1, -449.5)
+        eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "white"
@@ -203,8 +196,8 @@ Node {
         id: bottomEdge
         source: "#Rectangle"
         scale: Qt.vector3d(12.0, 0.01, 1)
-        position: Qt.vector3d(0, -449.5, 0.1)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        position: Qt.vector3d(0, 0.1, 449.5)
+        eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "white"
@@ -216,7 +209,7 @@ Node {
         source: "#Rectangle"
         scale: Qt.vector3d(0.01, 9.0, 1)
         position: Qt.vector3d(-599.5, 0.1, 0)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "white"
@@ -228,7 +221,7 @@ Node {
         source: "#Rectangle"
         scale: Qt.vector3d(0.01, 9.0, 1)
         position: Qt.vector3d(599.5, 0.1, 0)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "white"
@@ -241,8 +234,8 @@ Node {
         id: leftPenaltyTop
         source: "#Rectangle"
         scale: Qt.vector3d(1.8, 0.01, 1)
-        position: Qt.vector3d(-509.5, -180, 0.1)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        position: Qt.vector3d(-509.5, 0.1, -180)
+        eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "white"
@@ -253,8 +246,8 @@ Node {
         id: rightPenaltyTop
         source: "#Rectangle"
         scale: Qt.vector3d(1.8, 0.01, 1)
-        position: Qt.vector3d(509.5, -180, 0.1)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        position: Qt.vector3d(509.5, 0.1, -180)
+        eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "white"
@@ -265,8 +258,8 @@ Node {
         id: leftPenaltyBottom
         source: "#Rectangle"
         scale: Qt.vector3d(1.8, 0.01, 1)
-        position: Qt.vector3d(-509.5, 180, 0.1)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        position: Qt.vector3d(-509.5, 0.1, 180)
+        eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "white"
@@ -277,8 +270,8 @@ Node {
         id: rightPenaltyBottom
         source: "#Rectangle"
         scale: Qt.vector3d(1.8, 0.01, 1)
-        position: Qt.vector3d(509.5, 180, 0.1)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        position: Qt.vector3d(509.5, 0.1, 180)
+        eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "white"
@@ -290,7 +283,7 @@ Node {
         source: "#Rectangle"
         scale: Qt.vector3d(0.01, 3.6, 1)
         position: Qt.vector3d(-420, 0.1, 0)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "white"
@@ -302,7 +295,7 @@ Node {
         source: "#Rectangle"
         scale: Qt.vector3d(0.01, 3.6, 1)
         position: Qt.vector3d(420, 0.1, 0)
-        eulerRotation: Qt.vector3d(0, 0, 0)  // No rotation
+        eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "white"
@@ -316,7 +309,6 @@ Node {
         source: "#Cylinder"
         scale: Qt.vector3d(1.02, 0.001, 1.02)
         position: Qt.vector3d(0, 0.0001, 0)
-        eulerRotation: Qt.vector3d(90, 0, 0)  // No rotation
         materials: [
             DefaultMaterial {
                 diffuseColor: "white"
@@ -327,8 +319,7 @@ Node {
         id: centerGreenCircle
         source: "#Cylinder"
         scale: Qt.vector3d(1, 0.001, 1)
-        position: Qt.vector3d(0, 0, 0.2)
-        eulerRotation: Qt.vector3d(90, 0, 0)  // No rotation
+        position: Qt.vector3d(0, 0.2, 0)
         materials: [
             DefaultMaterial {
                 diffuseColor: "green"
