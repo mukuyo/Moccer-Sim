@@ -26,24 +26,29 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets 3DCore 3DExtras 3DRender Q
 
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(MODEL_DIR ${SRC_DIR}/models)
+set(NET_DIR ${SRC_DIR}/networks)
 
 file(GLOB SOURCES ${SRC_DIR}/*.cpp)
 file(GLOB MODEL_SOURCES ${MODEL_DIR}/*.cpp)
+file(GLOB NET_SOURCES ${NET_DIR}/*.cpp)
 
 file(GLOB HEADERS ${SRC_DIR}/*.h)
 file(GLOB MODEL_HEADERS ${MODEL_DIR}/*.h)
+file(GLOB NET_HEADERS ${NET_DIR}/*.h)
 
 # Source files
 set(SOURCES
     ${PROTO_SRCS}
     ${SOURCES}
     ${MODEL_SOURCES}
+    ${NET_SOURCES}
 )
 
 # Ensure moc is run on header files
 qt6_wrap_cpp(MOC_SRCS
     ${HEADERS}
     ${MODEL_HEADERS}
+    ${NET_HEADERS}
 )
 
 # Protobufの設定
@@ -64,7 +69,6 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_FILES} IMPORT_DIRS ${PROTOBU
 
 include_directories(${PROTOBUF_GENERATE_DIR})
 include_directories(${SRC_DIR})
-include_directories(${HEADERS})
 
 # mocを適用
 qt6_wrap_cpp(MOC_SRCS ${HEADERS})

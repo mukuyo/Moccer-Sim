@@ -6,30 +6,9 @@
 #include <QUdpSocket>
 #include <QHostAddress>
 #include <iostream>
+#include "networks/receiver.h"
 #include "mocSim_Packet.pb.h"
 
-// 受信スレッド用のクラス
-class ReceiverWorker : public QObject {
-    Q_OBJECT
-
-public:
-    explicit ReceiverWorker(QObject *parent = nullptr);
-    ~ReceiverWorker();
-
-public slots:
-    void startListening(quint16 port);
-    void receive();
-    void stopListening();
-
-signals:
-    void receivedPacket(const mocSim_Packet &packet);
-
-private:
-    QUdpSocket *udpSocket;
-    bool running;
-};
-
-// Observer クラス
 class Observer : public QObject {
     Q_OBJECT
 
@@ -39,9 +18,6 @@ public:
 
     void start(quint16 port);
     void stop();
-
-// private slots:
-//     void handlePacket(const mocSim_Packet &packet);
 
 private:
     QThread receiverThread;
