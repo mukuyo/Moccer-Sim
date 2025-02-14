@@ -19,6 +19,8 @@ public:
     void start(quint16 port);
     void stop();
 
+    void receive(const mocSim_Packet& packet);
+
 private:
     QThread receiverThread;
     ReceiverWorker *worker;

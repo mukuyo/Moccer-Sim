@@ -21,15 +21,11 @@ void ReceiverWorker::startListening(quint16 port) {
 void ReceiverWorker::receive() {
     while (udpSocket->hasPendingDatagrams()) {
         QByteArray datagram;
-        datagram.resize(udpSocket->pendingDatagramSize());
-
-        QHostAddress sender;
-        quint16 senderPort;
-        udpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
-
+        datagram.resize(static_cast<int>(udpSocket->pendingDatagramSize()));
+        udpSocket->readDatagram(datagram.data(), datagram.size());
+        
         mocSim_Packet packet;
         if (packet.ParseFromArray(datagram.data(), datagram.size())) {
-            cout << "Received packet from " << sender.toString().toStdString() << ":" << senderPort << endl;
             emit receivedPacket(packet);
         } else {
             std::cerr << "Failed to parse Protobuf packet" << std::endl;

@@ -92,3 +92,10 @@ target_link_libraries(Moccer
 
 # 実行時ディレクトリの設定
 set_target_properties(Moccer PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# Custom 'run' target
+add_custom_target(run
+    COMMAND ${CMAKE_BINARY_DIR}/bin/Moccer
+    DEPENDS Moccer
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
