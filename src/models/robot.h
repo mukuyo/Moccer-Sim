@@ -8,31 +8,61 @@
 #include <QElapsedTimer>
 #include <QRandomGenerator>
 
+#include "mocSim_Commands.pb.h"
+
 using namespace std;
 
 class Robot : public QObject {
     Q_OBJECT
-    Q_PROPERTY(float wheel1 READ getWheel1 CONSTANT)
-    // Q_PROPERTY(float wheel_speed1 READ getWheelSpeed1 CONSTANT)
-    // Q_PROPERTY(float wheel_speed2 READ getWheelSpeed2 CONSTANT)
-    // Q_PROPERTY(float wheel_speed3 READ getWheelSpeed3 CONSTANT)
-    // Q_PROPERTY(QVector3D position READ getPosition CONSTANT)
+
+    Q_PROPERTY(uint32_t id READ getId)
+    Q_PROPERTY(float kickspeedx READ getKickspeedx)
+    Q_PROPERTY(float kickspeedz READ getKickspeedz)
+    Q_PROPERTY(float veltangent READ getVeltangent)
+    Q_PROPERTY(float velnormal READ getVelnormal)
+    Q_PROPERTY(float velangular READ getVelangular)
+    Q_PROPERTY(float spinner READ getSpinner)
+    Q_PROPERTY(bool wheelsspeed READ getWheelsspeed)
+    Q_PROPERTY(float wheel1 READ getWheel1)
+    Q_PROPERTY(float wheel2 READ getWheel2)
+    Q_PROPERTY(float wheel3 READ getWheel3)
+    Q_PROPERTY(float wheel4 READ getWheel4)
+
+    // Q_PROPERTY(uint32_t id READ id WRITE id NOTIFY idChanged)
+    // Q_PROPERTY(float kickspeedx READ kickspeedx WRITE kickspeedx NOTIFY kickspeedxChanged)
+    // Q_PROPERTY(float kickspeedz READ kickspeedz WRITE kickspeedz NOTIFY kickspeedzChanged)
+    // Q_PROPERTY(float veltangent READ veltangent WRITE veltangent NOTIFY veltangentChanged)
+    // Q_PROPERTY(float velnormal READ velnormal WRITE velnormal NOTIFY velnormalChanged)
+    // Q_PROPERTY(float velangular READ velangular WRITE velangular NOTIFY velangularChanged)
+    // Q_PROPERTY(bool spinner READ spinner WRITE spinner NOTIFY spinnerChanged)
+    // Q_PROPERTY(bool wheelsspeed READ wheelsspeed WRITE wheelsspeed NOTIFY wheelsspeedChanged)
+    // Q_PROPERTY(float wheel1 READ wheel1 WRITE wheel1 NOTIFY wheel1Changed)
+    // Q_PROPERTY(float wheel2 READ wheel2 WRITE wheel2 NOTIFY wheel2Changed)
+    // Q_PROPERTY(float wheel3 READ wheel3 WRITE wheel3 NOTIFY wheel3Changed)
+    // Q_PROPERTY(float wheel4 READ wheel4 WRITE wheel4 NOTIFY wheel4Changed)
 
 public:
     explicit Robot(QObject *parent = nullptr);
     ~Robot();
 
-    float getWheel1() const;
-    // float getWheelSpeed0() const;
-    // float getWheelSpeed1() const;
-    // float getWheelSpeed2() const;
-    // float getWheelSpeed3() const;
+    void update(mocSim_Robot_Command robot_command);
 
-    // QVector3D getPosition() const;
+    uint32_t getId() const;
+    float getKickspeedx() const;
+    float getKickspeedz() const;
+    float getVeltangent() const;
+    float getVelnormal() const;
+    float getVelangular() const;
+    float getSpinner() const;
+    bool getWheelsspeed() const;
+    float getWheel1() const;
+    float getWheel2() const;
+    float getWheel3() const;
+    float getWheel4() const;
 
 private:
-    void updatePosition();
-    void updateWheelSpeeds();    
+    // void updatePosition();
+    // void updateWheelSpeeds();    
 
     uint32_t id;
     float kickspeedx;
@@ -70,11 +100,6 @@ private:
     // bool visible;
     // bool ball_catch;
 
-public slots:
-    void updateInfo();
-
-signals:
-    void updateChanged();
 };
 
 #endif // ROBOT_H

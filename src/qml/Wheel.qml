@@ -32,40 +32,39 @@ Node {
         }
     }
 
-Repeater3D {
-    id: bots
-    model: botList.length
-
     Repeater3D {
-        id: wheels
-        model: 4
-        property int botIndex: modelData
+        id: bots
+        model: botList.length
 
-        Wheel {
-            id: wheel
-            property int wheelIndex: index    // 各ホイールのインデックス
-            property var angles: [
-                Qt.vector3d(0, -125, wheelNode.angle0),
-                Qt.vector3d(0, -45, wheelNode.angle1),
-                Qt.vector3d(0,  45, wheelNode.angle2),
-                Qt.vector3d(0, 125, wheelNode.angle3)
-            ]
-            property var offsets: [
-                Qt.vector3d(wheelNode.wheel_radius * Math.cos(145 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(-145 * wheelNode.pi / 180.0)),
-                Qt.vector3d(wheelNode.wheel_radius * Math.cos(135 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(135 * wheelNode.pi / 180.0)),
-                Qt.vector3d(wheelNode.wheel_radius * Math.cos(-45 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(45 * wheelNode.pi / 180.0)),
-                Qt.vector3d(wheelNode.wheel_radius * Math.cos(35 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(-35 * wheelNode.pi / 180.0))
-            ]
-            position: Qt.vector3d(
-                wheelNode.botList[botIndex].x + offsets[wheelIndex].x,
-                wheelNode.botList[botIndex].z + offsets[wheelIndex].y,
-                wheelNode.botList[botIndex].y + offsets[wheelIndex].z
-            )
-            eulerRotation: angles[wheelIndex]
+        Repeater3D {
+            id: wheels
+            model: 4
+            property int botIndex: modelData
+
+            Wheel {
+                id: wheel
+                property int wheelIndex: index    // 各ホイールのインデックス
+                property var angles: [
+                    Qt.vector3d(0, -125, wheelNode.angle0),
+                    Qt.vector3d(0, -45, wheelNode.angle1),
+                    Qt.vector3d(0,  45, wheelNode.angle2),
+                    Qt.vector3d(0, 125, wheelNode.angle3)
+                ]
+                property var offsets: [
+                    Qt.vector3d(wheelNode.wheel_radius * Math.cos(145 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(-145 * wheelNode.pi / 180.0)),
+                    Qt.vector3d(wheelNode.wheel_radius * Math.cos(135 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(135 * wheelNode.pi / 180.0)),
+                    Qt.vector3d(wheelNode.wheel_radius * Math.cos(-45 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(45 * wheelNode.pi / 180.0)),
+                    Qt.vector3d(wheelNode.wheel_radius * Math.cos(35 * wheelNode.pi / 180.0), 2.2, wheelNode.wheel_radius * Math.sin(-35 * wheelNode.pi / 180.0))
+                ]
+                position: Qt.vector3d(
+                    wheelNode.botList[botIndex].x + offsets[wheelIndex].x,
+                    wheelNode.botList[botIndex].z + offsets[wheelIndex].y,
+                    wheelNode.botList[botIndex].y + offsets[wheelIndex].z
+                )
+                eulerRotation: angles[wheelIndex]
+            }
         }
     }
-}
-
 
     SequentialAnimation on angle0 {
         loops: Animation.Infinite

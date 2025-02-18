@@ -26,9 +26,6 @@ ApplicationWindow {
         Observe {
             id: observer
         }
-        Robot {
-            id: robot
-        }
 
 
         // Timer {
@@ -104,9 +101,9 @@ ApplicationWindow {
                 Lighting {
                     id: lighting
                 }
-                // Bot {
-                //     id: bot
-                // }
+                Bot {
+                    id: bot
+                }
                 // Wheel {
                 //     id: wheel
                 // }

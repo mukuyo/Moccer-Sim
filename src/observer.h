@@ -7,6 +7,7 @@
 #include <QHostAddress>
 #include <iostream>
 #include "networks/receiver.h"
+#include "models/robot.h"
 #include "mocSim_Packet.pb.h"
 
 class Observer : public QObject {
@@ -24,6 +25,8 @@ public:
 private:
     QThread receiverThread;
     ReceiverWorker *worker;
+
+    Robot *robot[16];
 };
 
 #endif // OBSERVER_H

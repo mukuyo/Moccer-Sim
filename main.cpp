@@ -7,7 +7,7 @@
 class Moccer {
 public:
     Moccer(QQmlApplicationEngine &engine) {
-        qmlRegisterType<Robot>("MOC", 1, 0, "Robot");
+        // qmlRegisterType<Robot>("MOC", 1, 0, "Robot");
         qmlRegisterType<Observer>("MOC", 1, 0, "Observe");
 
         engine.load(QUrl(QStringLiteral("../src/qml/Main.qml")));
