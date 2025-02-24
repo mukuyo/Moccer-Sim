@@ -12,7 +12,7 @@ import MOC
 
 ApplicationWindow {
     id: window
-    title: "Moccer"
+    title: "Moccer-Sim"
     width: 1280
     height: 720
     visible: true
@@ -72,7 +72,6 @@ ApplicationWindow {
                     if (mouseArea.pressedButtons & Qt.LeftButton) { // Rotate
                         let pan = -(event.x - lastPos.x) * dt * lookSpeed
                         let tilt = (event.y - lastPos.y) * dt * lookSpeed
-                        // rotateCamera(pan, tilt)
                         camera.eulerRotation.y += pan
                         camera.eulerRotation.x += tilt
                     } else if (mouseArea.pressedButtons & Qt.RightButton) { // Translate
@@ -91,9 +90,16 @@ ApplicationWindow {
 
                 onWheel: (wheel) => {
                     let rz = wheel.angleDelta.y * dt * linearSpeed
+                    let rx = -wheel.angleDelta.x * dt * linearSpeed
+
+                    let forward = camera.forward
+                    let right = camera.right
                     let distance = camera.position.length()
+
                     if (rz > 0 && distance < zoomLimit) return
-                    camera.position.z -= rz
+
+                    camera.position.x += rx * right.x + rz * forward.x
+                    camera.position.z += rx * right.z + rz * forward.z
                 }
             }
             Node {
@@ -104,9 +110,9 @@ ApplicationWindow {
                 Bot {
                     id: bot
                 }
-                // Wheel {
-                //     id: wheel
-                // }
+                Wheel {
+                    id: wheel
+                }
                 Field {
                     id: field
                 }

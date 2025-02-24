@@ -1,22 +1,31 @@
 import QtQuick
 import QtQuick3D
 
+import "../../assets/models/field/"
+
 Node {
     id: rootEntity
+
+    Stadium {
+        id: ex_wall
+        // scale: Qt.vector3d(100, 100, 100)
+        eulerRotation: Qt.vector3d(-90, 0, 0)
+    }
 
     // フィールド
     Model {
         id: fieldEntity
         source: "#Rectangle"
-        scale: Qt.vector3d(13.4, 10.4, 1)
+        scale: Qt.vector3d(15.4, 12.4, 1) //13.4, 10.4
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [ 
             DefaultMaterial {
-                diffuseColor: "green"
+                diffuseMap: Texture {
+                    source: "../../assets/textures/field_texture.jpg" // 画像ファイルのパス
+                }
             }
         ]
     }
-
     // 上壁
     Model {
         id: topWall
@@ -320,9 +329,11 @@ Node {
         source: "#Cylinder"
         scale: Qt.vector3d(1, 0.001, 1)
         position: Qt.vector3d(0, 0.2, 0)
-        materials: [
+        materials: [ 
             DefaultMaterial {
-                diffuseColor: "green"
+                diffuseMap: Texture {
+                    source: "../../assets/textures/field_texture.jpg" // 画像ファイルのパス
+                }
             }
         ]
     }

@@ -39,7 +39,9 @@ Node {
 
         onWheel: (wheel) => {
             let rz = wheel.angleDelta.y * dt * linearSpeed
+            let rx = -wheel.angleDelta.x * dt * linearSpeed
             zoom(rz)
+            
         }
     }
 
