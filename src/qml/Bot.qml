@@ -41,12 +41,15 @@ Node {
         Qt.vector3d(600, 0, 0),
     ]
 
-    // Connections {
-    //     target: robot
-    //     function onUpdateChanged() {
-    //         blue_bots = robot.positions;
-    //     }
-    // }
+    Connections {
+        target: observer
+        function onRobotsChanged() {
+            // blue_bots = robot.positions;
+            // Debug.log("blue_bots: " + observer.robots[0].id);
+            console.log("blue_bots: " + observer.robots[1].kickspeedx);
+
+        }
+    }
 
     Repeater3D {
         id: bbots

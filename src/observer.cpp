@@ -8,11 +8,10 @@ Observer::Observer(QObject *parent)
         worker->startListening(20011);  // grSim のデフォルトポート
     });
 
-    // connect(&receiverThread, &QThread::finished, worker, &QObject::deleteLater);
     connect(worker, &ReceiverWorker::receivedPacket, this, &Observer::receive, Qt::QueuedConnection);
 
     for (int i = 0; i < 16; ++i) {
-        robot[i] = new Robot();
+        robots[i] = new Robot();
     }    
 
     receiverThread.start();
@@ -20,15 +19,16 @@ Observer::Observer(QObject *parent)
 
 Observer::~Observer() {
     stop();
-    for (int i = 0; i < 11; ++i) {
-        delete robot[i];
+    for (int i = 0; i < 16; ++i) {  // メモリリーク修正
+        delete robots[i];
     }
 }
 
 void Observer::receive(const mocSim_Packet& packet) {
     for (int i = 0; i < packet.commands().robot_commands_size(); ++i) {
-        robot[i]->update(packet.commands().robot_commands(i));
+        robots[i]->update(packet.commands().robot_commands(i));
     }
+    emit robotsChanged();
 }
 
 void Observer::stop() {
@@ -37,4 +37,12 @@ void Observer::stop() {
         receiverThread.quit();
         receiverThread.wait();
     }
+}
+
+QList<QObject*> Observer::getRobots() const {
+    QList<QObject*> list;
+    for (int i = 0; i < 16; ++i) {
+        list.append(robots[i]);
+    }
+    return list;
 }
