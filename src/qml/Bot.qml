@@ -48,8 +48,8 @@ Node {
     Connections {
         target: observer
         function onRobotsChanged() {
-            vel_normal = observer.robots[0].velnormal*0.1;
-            vel_tangent = observer.robots[0].veltangent*0.1;
+            vel_normal = observer.robots[0].velnormal*3;
+            vel_tangent = observer.robots[0].veltangent;
             // console.log("vel_normal: " + vel_normal);
             // var updatedBots = blue_bots.slice(); // 現在の配列をコピー
             // for (var i = 0; i < updatedBots.length; i++) {
@@ -65,7 +65,7 @@ Node {
     }
 
     Timer {
-        interval: 32 // 16msごとに実行 (約60FPS)
+        interval: 16 // 16msごとに実行 (約60FPS)
         running: true
         repeat: true
         onTriggered: {
@@ -75,77 +75,72 @@ Node {
                 if (angle > 2 * Math.PI) {
                     angle = 0;
                 }
-                updatedBots[i] = Qt.vector3d(updatedBots[i].x + vel_normal, updatedBots[i].y + vel_tangent, updatedBots[i].z);
+                // updatedBots[i] = Qt.vector3d(updatedBots[i].x + vel_normal, updatedBots[i].y + vel_tangent, updatedBots[i].z);
+                updatedBots[i] = Qt.vector3d(updatedBots[i].x + vel_normal * Math.cos(angle), updatedBots[i].y + vel_normal * Math.sin(angle), updatedBots[i].z);
             }
             blue_bots = updatedBots; // 配列を再代入して QML に変更を通知
         }
     }
 
-    // Repeater3D {
-    //     id: bbots
-    //     model: blue_bots.length
+    Repeater3D {
+        id: blueBotsRepeater
+        model: blue_bots.length
 
-    //     Bot {
-    //         id: bot
-    //         position: Qt.vector3d(blue_bots[index].x, 0.5, blue_bots[index].y)
-    //         eulerRotation: Qt.vector3d(0, -90, 0)
-    //     }
-    // }
-Repeater3D {
-    id: blueBotsRepeater
-    model: blue_bots.length
+        delegate: Node {
+            property int botIndex: index 
+            Bot {
+                id: bot
+                position: Qt.vector3d(blue_bots[index].x, 0.5, blue_bots[index].y)
+                eulerRotation: Qt.vector3d(0, -90, 0)
+            }
 
-    delegate: Node {
-        // メインの青い円
-        Model {
-            source: "#Cylinder"
-            scale: Qt.vector3d(0.05, 0.001, 0.05)
-            position: Qt.vector3d(blue_bots[index].x, 12.8, blue_bots[index].y)
-            materials: [
-                DefaultMaterial {
-                    diffuseColor: "blue"
-                }
-            ]
-        }
-
-        // 4つの小さい円 (四隅)
-        Repeater3D {
-            model: 4
+            // Center Circle
             Model {
                 source: "#Cylinder"
-                scale: Qt.vector3d(0.04, 0.001, 0.04)
-
-                position: {
-                    var offsets = [
-                        Qt.vector3d(3.5, 12.8, -5.4772),  // 左上
-                        Qt.vector3d(-5.4772, 12.8, -3.5), // 左下
-                        Qt.vector3d(-5.4772, 12.8, 3.5),  // 右下
-                        Qt.vector3d(3.5, 12.8, 5.4772)   // 右上
-                    ]
-                    return Qt.vector3d(
-                        blue_bots[index].x + offsets[index].x,
-                        offsets[index].y,
-                        blue_bots[index].y + offsets[index].z
-                    )
-                }
-
+                scale: Qt.vector3d(0.05, 0.001, 0.05)
+                position: Qt.vector3d(blue_bots[botIndex].x, 12.8, blue_bots[botIndex].y)
                 materials: [
                     DefaultMaterial {
-                        diffuseColor: {
-                            var colors = [
-                                ["#EA3EF7", "#75FA4C", "#75FA4C", "#EA3EF7", "#EA3EF7", "#75FA4C", "#75FA4C", "#EA3EF7", "#75FA4C", "#EA3EF7", "#EA3EF7"],
-                                ["#75FA4C", "#75FA4C", "#75FA4C", "#75FA4C", "#EA3EF7", "#EA3EF7", "#EA3EF7", "#EA3EF7", "#75FA4C", "#EA3EF7", "#75FA4C"],
-                                ["#EA3EF7", "#EA3EF7", "#EA3EF7", "#EA3EF7", "#75FA4C", "#75FA4C", "#75FA4C", "#75FA4C", "#75FA4C", "#EA3EF7", "#75FA4C"],
-                                ["#EA3EF7", "#EA3EF7", "#75FA4C", "#75FA4C", "#EA3EF7", "#EA3EF7", "#75FA4C", "#75FA4C", "#75FA4C", "#EA3EF7", "#EA3EF7"]
-                            ]
-                            return colors[index][Math.min(blue_bots.length - 1, index)]
-                        }
+                        diffuseColor: "blue"
                     }
                 ]
             }
+
+            // Four small circles around the bot
+            Repeater3D {
+                model: 4
+
+                delegate: Model {
+                    source: "#Cylinder"
+                    scale: Qt.vector3d(0.04, 0.001, 0.04)
+
+                    position: {
+                        var offsets = [
+                            Qt.vector3d(3.5, 0, -5.4772),  // Left Up
+                            Qt.vector3d(-5.4772, 0, -3.5), // Left Down
+                            Qt.vector3d(-5.4772, 0, 3.5),  // Right Down
+                            Qt.vector3d(3.5, 0, 5.4772)   // Right Up
+                        ];
+                        return Qt.vector3d(
+                            blue_bots[botIndex].x + offsets[index].x,
+                            12.8,
+                            blue_bots[botIndex].y + offsets[index].z
+                        );
+                    }
+
+                    materials: [
+                        DefaultMaterial {
+                            diffuseColor: {
+                                var colors = ["#EA3EF7", "#75FA4C", "#EA3EF7", "#75FA4C"];
+                                return colors[index];
+                            }
+                        }
+                    ]
+                }
+            }
         }
     }
-}
+
 
 
     // Repeater3D {
