@@ -38,18 +38,19 @@ ApplicationWindow {
         View3D {
             id: topLeftView
             anchors.fill: parent
+            renderMode: View3D.Offscreen
 
-            FrameAnimation {
-                id: frameUpdater
-                running: true
-            }
+            // FrameAnimation {
+            //     id: frameUpdater
+            //     running: true
+            // }
             Node {
                 id: originNode
                 PerspectiveCamera {
                     id: camera
-                    clipFar: 10000
-                    clipNear: 1
-                    fieldOfView: 90
+                    clipFar: 2000
+                    clipNear: 10
+                    fieldOfView: 60
                     position: Qt.vector3d(0, 300, 400)
                     eulerRotation: Qt.vector3d(-45, 0, 0)
                 }
@@ -69,23 +70,28 @@ ApplicationWindow {
                 }
 
                 onPositionChanged: (event) => {
+                    let dx = event.x - lastPos.x;
+                    let dy = event.y - lastPos.y;
+
+                    if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return;
+
                     if (mouseArea.pressedButtons & Qt.LeftButton) { // Rotate
-                        let pan = -(event.x - lastPos.x) * dt * lookSpeed
-                        let tilt = (event.y - lastPos.y) * dt * lookSpeed
-                        camera.eulerRotation.y += pan
-                        camera.eulerRotation.x += tilt
+                        let pan = -dx * dt * lookSpeed;
+                        let tilt = dy * dt * lookSpeed;
+                        camera.eulerRotation.y += pan;
+                        camera.eulerRotation.x += tilt;
                     } else if (mouseArea.pressedButtons & Qt.RightButton) { // Translate
-                        let rx = -(event.x - lastPos.x) * dt * linearSpeed*8
-                        let ry = (event.y - lastPos.y) * dt * linearSpeed*8
-                        camera.position.x += rx
-                        camera.position.y += ry
+                        let rx = -dx * dt * linearSpeed * 8;
+                        let ry = dy * dt * linearSpeed * 8;
+                        camera.position.x += rx;
+                        camera.position.y += ry;
                     } else if (mouseArea.pressedButtons & Qt.MiddleButton) { // Zoom
-                        let rz = (event.y - lastPos.y) * dt * linearSpeed
-                        let distance = camera.position.length()
-                        if (rz > 0 && distance < zoomLimit) return
-                        camera.position.z += rz
+                        let rz = dy * dt * linearSpeed;
+                        let distance = camera.position.length();
+                        if (rz > 0 && distance < zoomLimit) return;
+                        camera.position.z += rz;
                     }
-                    lastPos = Qt.point(event.x, event.y)
+                    lastPos = Qt.point(event.x, event.y);
                 }
 
                 onWheel: (wheel) => {
@@ -110,9 +116,9 @@ ApplicationWindow {
                 Bot {
                     id: bot
                 }
-                Wheel {
-                    id: wheel
-                }
+                // Wheel {
+                //     id: wheel
+                // }
                 Field {
                     id: field
                 }

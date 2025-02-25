@@ -129,40 +129,40 @@ Node {
             }
         }
     }
-    SequentialAnimation on angle0 {
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed0
-            easing.type: Easing.Linear
-        }
-    }
-    SequentialAnimation on angle1 {
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed1
-            easing.type: Easing.Linear
-        }
-    }
-    SequentialAnimation on angle2 {
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed2
-            easing.type: Easing.Linear
-        }
-    }
-    SequentialAnimation on angle3 {
-        loops: Animation.Infinite
-        NumberAnimation {
-            from: 0
-            to: 360
-            duration: wheel_speed3
-            easing.type: Easing.Linear
-        }
-    }
+    // SequentialAnimation on angle0 {
+    //     loops: Animation.Infinite
+    //     NumberAnimation {
+    //         from: 0
+    //         to: 360
+    //         duration: wheel_speed0
+    //         easing.type: Easing.Linear
+    //     }
+    // }
+    // SequentialAnimation on angle1 {
+    //     loops: Animation.Infinite
+    //     NumberAnimation {
+    //         from: 0
+    //         to: 360
+    //         duration: wheel_speed1
+    //         easing.type: Easing.Linear
+    //     }
+    // }
+    // SequentialAnimation on angle2 {
+    //     loops: Animation.Infinite
+    //     NumberAnimation {
+    //         from: 0
+    //         to: 360
+    //         duration: wheel_speed2
+    //         easing.type: Easing.Linear
+    //     }
+    // }
+    // SequentialAnimation on angle3 {
+    //     loops: Animation.Infinite
+    //     NumberAnimation {
+    //         from: 0
+    //         to: 360
+    //         duration: wheel_speed3
+    //         easing.type: Easing.Linear
+    //     }
+    // }
 }
