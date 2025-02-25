@@ -31,10 +31,12 @@ set(NET_DIR ${SRC_DIR}/networks)
 file(GLOB SOURCES ${SRC_DIR}/*.cpp)
 file(GLOB MODEL_SOURCES ${MODEL_DIR}/*.cpp)
 file(GLOB NET_SOURCES ${NET_DIR}/*.cpp)
+file(GLOB UTIL_SOURCES ${SRC_DIR}/utils/*.cpp)
 
 file(GLOB HEADERS ${SRC_DIR}/*.h)
 file(GLOB MODEL_HEADERS ${MODEL_DIR}/*.h)
 file(GLOB NET_HEADERS ${NET_DIR}/*.h)
+file(GLOB UTIL_HEADERS ${SRC_DIR}/utils/*.h)
 
 # Source files
 set(SOURCES
@@ -42,6 +44,7 @@ set(SOURCES
     ${SOURCES}
     ${MODEL_SOURCES}
     ${NET_SOURCES}
+    ${UTIL_SOURCES}
 )
 
 # Ensure moc is run on header files
@@ -49,6 +52,7 @@ qt6_wrap_cpp(MOC_SRCS
     ${HEADERS}
     ${MODEL_HEADERS}
     ${NET_HEADERS}
+    ${UTIL_HEADERS}
 )
 
 # Protobufの設定

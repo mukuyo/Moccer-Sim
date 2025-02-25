@@ -26,24 +26,19 @@ ApplicationWindow {
         Observe {
             id: observer
         }
-
-
-        // Timer {
-        //     interval: 16
-        //     running: true
-        //     repeat: true
-        //     onTriggered: robot.updateInfo()
-        // }
+        Collision {
+            id: collision
+        }
 
         View3D {
             id: topLeftView
             anchors.fill: parent
             renderMode: View3D.Offscreen
 
-            // FrameAnimation {
-            //     id: frameUpdater
-            //     running: true
-            // }
+            FrameAnimation {
+                id: frameUpdater
+                running: true
+            }
             Node {
                 id: originNode
                 PerspectiveCamera {
@@ -116,11 +111,11 @@ ApplicationWindow {
                 Bot {
                     id: bot
                 }
-                // Wheel {
-                //     id: wheel
-                // }
                 Field {
                     id: field
+                }
+                Ball {
+                    id: ball
                 }
             }
         }

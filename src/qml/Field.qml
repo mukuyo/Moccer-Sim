@@ -337,4 +337,12 @@ Node {
             }
         ]
     }
+    Timer {
+        interval: 16
+        running: true
+        repeat: true
+        onTriggered: {
+            collision.check(centerGreenCircle, centerWhiteCircle)
+        }
+    }
 }

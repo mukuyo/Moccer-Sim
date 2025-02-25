@@ -28,19 +28,6 @@ class Robot : public QObject {
     Q_PROPERTY(float wheel3 READ getWheel3)
     Q_PROPERTY(float wheel4 READ getWheel4)
 
-    // Q_PROPERTY(uint32_t id READ id WRITE id NOTIFY idChanged)
-    // Q_PROPERTY(float kickspeedx READ kickspeedx WRITE kickspeedx NOTIFY kickspeedxChanged)
-    // Q_PROPERTY(float kickspeedz READ kickspeedz WRITE kickspeedz NOTIFY kickspeedzChanged)
-    // Q_PROPERTY(float veltangent READ veltangent WRITE veltangent NOTIFY veltangentChanged)
-    // Q_PROPERTY(float velnormal READ velnormal WRITE velnormal NOTIFY velnormalChanged)
-    // Q_PROPERTY(float velangular READ velangular WRITE velangular NOTIFY velangularChanged)
-    // Q_PROPERTY(bool spinner READ spinner WRITE spinner NOTIFY spinnerChanged)
-    // Q_PROPERTY(bool wheelsspeed READ wheelsspeed WRITE wheelsspeed NOTIFY wheelsspeedChanged)
-    // Q_PROPERTY(float wheel1 READ wheel1 WRITE wheel1 NOTIFY wheel1Changed)
-    // Q_PROPERTY(float wheel2 READ wheel2 WRITE wheel2 NOTIFY wheel2Changed)
-    // Q_PROPERTY(float wheel3 READ wheel3 WRITE wheel3 NOTIFY wheel3Changed)
-    // Q_PROPERTY(float wheel4 READ wheel4 WRITE wheel4 NOTIFY wheel4Changed)
-
 public:
     explicit Robot(QObject *parent = nullptr);
     ~Robot();
