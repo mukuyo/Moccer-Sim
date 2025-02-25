@@ -4,7 +4,6 @@ import MOC
 
 import "../../assets/models/bot/"
 import "../../assets/models/wheel/"
-import "../../assets/models/ball/"
 
 Node {
     id: robotNode
@@ -61,9 +60,6 @@ Node {
 
     property real radian_offset: -Math.atan(35.0/54.772)
 
-property var blueBotEntities: []
-property var yellowBotEntities: []
-
     Connections {
         target: observer
         function onBlueRobotsChanged() {
@@ -83,11 +79,6 @@ property var yellowBotEntities: []
         }
     }
 
-    Ball {
-        id: ball
-        position: Qt.vector3d(0, 2.3, 0)
-    }
-
     Repeater3D {
         id: blueBotsRepeater
         model: blue_bots.length
@@ -98,9 +89,6 @@ property var yellowBotEntities: []
                 id: bot
                 position: Qt.vector3d(blue_bots[index].x, 0.5, blue_bots[index].y)
                 eulerRotation: Qt.vector3d(0, blue_bot_radians[index] * 180.0 / Math.PI, 0)
-            }
-            Component.onCompleted: {
-                blueBotEntities.push(bot);
             }
             Model {
                 source: "#Cylinder"
@@ -185,9 +173,6 @@ property var yellowBotEntities: []
                 id: bot
                 position: Qt.vector3d(yellow_bots[index].x, 0.5, yellow_bots[index].y)
                 eulerRotation: Qt.vector3d(0, yellow_bot_radians[index] * 180.0 / Math.PI, 0)
-            }
-            Component.onCompleted: {
-                yellowBotEntities.push(bot);
             }
             Model {
                 source: "#Cylinder"
@@ -284,6 +269,7 @@ property var yellowBotEntities: []
                     updatedbBots[i].y + bbot_vel_normals[i] * Math.sin(updatedbBotRadians[i]) + bbot_vel_tangents[i] * Math.cos(updatedbBotRadians[i]),
                     updatedbBots[i].z
                 );
+                
             }
             
             for (var i = 0; i < updatedyBots.length; i++) {
@@ -303,16 +289,6 @@ property var yellowBotEntities: []
             yellow_bots = updatedyBots;
             blue_bot_radians = updatedbBotRadians;
             yellow_bot_radians = updatedyBotRadians;
-            
-            // for (var i = 0; i < blue_bots.length; i++) {
-            //     for (var j = 0; j < yellow_bots.length; j++) {
-            //         var blueBotEntity = blueBotEntities[i]; // Assuming you've created Qt3D entities for these
-            //         var yellowBotEntity = yellowBotEntities[j]; // Same for yellow bots
-
-            //         var flag = collision.check(blueBotEntity, yellowBotEntity);
-            //         console.log("Collision detected:", flag);
-            //     }
-            // }
         }
     }
 }

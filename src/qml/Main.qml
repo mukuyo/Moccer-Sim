@@ -106,16 +106,28 @@ ApplicationWindow {
             Node {
                 id: root
                 Lighting {
-                    id: lighting
+                    id: _lighting
                 }
                 Bot {
-                    id: bot
+                    id: _bot
                 }
                 Field {
-                    id: field
+                    id: _field
                 }
                 Ball {
-                    id: ball
+                    id: _ball
+                }
+                Timer {
+                    id: timer
+                    interval: 16
+                    repeat: true
+                    running: true
+                    onTriggered: {
+                        var flag = collision.ball_check(_ball.position, _bot.blue_bots, _bot.yellow_bots)
+                        console.log(flag)
+                        // observer.update()
+                        // collision.update()
+                    }
                 }
             }
         }
