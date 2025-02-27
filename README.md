@@ -17,7 +17,7 @@ Make sure all necessary packages are installed. Open your terminal and run:
 ### Mac OS
 ```bash
 brew update
-brew install qt eigen protobuf@21 yaml-cpp vulkan-volk
+brew install qt eigen protobuf@21 yaml-cpp vulkan-volk assimp bullet
 ```
 ### Ubuntu
 ```bash
