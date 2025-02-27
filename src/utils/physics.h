@@ -14,8 +14,8 @@ public:
     explicit Physics(QObject *parent = nullptr);
     ~Physics();
 
-    Q_INVOKABLE void stepSimulation();         // 物理演算を進める
     Q_INVOKABLE QVector3D getBallPosition(); // ボールの位置を取得
+    Q_INVOKABLE void updateBallPosition(QVector3D ball_position);
 
 private:
     btBvhTriangleMeshShape* loadObjToBulletShape(const std::string &filename);

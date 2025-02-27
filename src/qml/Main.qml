@@ -7,6 +7,7 @@ import QtQuick3D.Helpers
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import QtQuick3D
+import QtQuick3D.Physics
 import Qt3D.Render
 import MOC
 
@@ -16,6 +17,7 @@ ApplicationWindow {
     width: 1280
     height: 720
     visible: true
+    DynamicsWorld{}
     Item {
         id: ro
         width: parent.width
@@ -62,7 +64,7 @@ ApplicationWindow {
                     PerspectiveCamera {
                         id: camera
                         clipFar: 2000
-                        clipNear: 10
+                        clipNear: 1
                         fieldOfView: 60
                         position: Qt.vector3d(0, 300, 400)
                         eulerRotation: Qt.vector3d(-45, 0, 0)
@@ -81,23 +83,30 @@ ApplicationWindow {
                     onPressed: (event) => {
                         lastPos = Qt.point(event.x, event.y)
                     }
-
+                    
                     onPositionChanged: (event) => {
                         let dx = event.x - lastPos.x;
                         let dy = event.y - lastPos.y;
 
                         if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return;
 
-                        if (mouseArea.pressedButtons & Qt.LeftButton) { // Rotate
+                        if ((mouseArea.pressedButtons & Qt.LeftButton) && (event.modifiers & Qt.ControlModifier)) { // Rotate
+                            let rx = dx * dt * linearSpeed * 8;
+                            let ry = -dy * dt * linearSpeed * 8;
+                            let rz = dy * dt * linearSpeed * 8;
+
+                            let forward = camera.forward
+                            let right = camera.right
+                            let distance = camera.position.length()
+
+                            camera.position.x += rx * right.x + rz * forward.x
+                            camera.position.y += ry;
+                            camera.position.z += rx * right.z + rz * forward.z
+                        } else if (mouseArea.pressedButtons & Qt.LeftButton) { // Rotate
                             let pan = -dx * dt * lookSpeed;
                             let tilt = dy * dt * lookSpeed;
                             camera.eulerRotation.y += pan;
                             camera.eulerRotation.x += tilt;
-                        } else if (mouseArea.pressedButtons & Qt.RightButton) { // Translate
-                            let rx = -dx * dt * linearSpeed * 8;
-                            let ry = dy * dt * linearSpeed * 8;
-                            camera.position.x += rx;
-                            camera.position.y += ry;
                         } else if (mouseArea.pressedButtons & Qt.MiddleButton) { // Zoom
                             let rz = dy * dt * linearSpeed;
                             let distance = camera.position.length();
@@ -126,31 +135,16 @@ ApplicationWindow {
                     Lighting {
                         id: _lighting
                     }
-                    Bot {
-                        id: _bot
-                    }
+                    // Bot {
+                    //     id: _bot
+                    // }
                     Field {
                         id: _field
                     }
                     Ball {
                         id: _ball
                         property vector3d velocity: Qt.vector3d(0, 0, 0)
-                        property real acceleration: 0.3
-                    }
-                    Timer {
-                        id: timer
-                        interval: 16
-                        repeat: true
-                        running: true
-                        onTriggered: {
-                            physics.stepSimulation()
-                            var pos = physics.getBallPosition()
-                            console.log(pos)
-                            // var flag = collision.ball_check(_ball.position, _bot.blue_bots, _bot.yellow_bots)
-                            // console.log(flag)
-                            // observer.update()
-                            // collision.update()
-                        }
+                        property real acceleration: 0.03
                     }
                 }
             }

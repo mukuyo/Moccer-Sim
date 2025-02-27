@@ -38,7 +38,7 @@ btBvhTriangleMeshShape* Physics::loadObjToBulletShape(const std::string &filenam
     return new btBvhTriangleMeshShape(triangleMesh, true);
 }
 
-// **Physics クラスのコンストラクタ**
+/// **Physics クラスのコンストラクタ**
 Physics::Physics(QObject *parent) : QObject(parent) {
     btDefaultCollisionConfiguration* collisionConfig = new btDefaultCollisionConfiguration();
     btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfig);
@@ -48,13 +48,30 @@ Physics::Physics(QObject *parent) : QObject(parent) {
     // **Bullet の物理世界を作成**
     dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
     dynamicsWorld->setGravity(btVector3(0, -9.8, 0));
+    btBoxShape* fieldShape = new btBoxShape(btVector3(15.4, 0.1, 12.4));
 
-    // **地面を直接作成**
-    btCollisionShape* groundShape = new btBoxShape(btVector3(15.4, 1, 12.4));
-    btDefaultMotionState* groundMotion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
-    btRigidBody::btRigidBodyConstructionInfo groundCI(0, groundMotion, groundShape);
-    btRigidBody* groundBody = new btRigidBody(groundCI);
-    dynamicsWorld->addRigidBody(groundBody);
+    btTransform startTransform;
+    startTransform.setIdentity();
+    startTransform.setOrigin(btVector3(0,0,0));
+
+    btDefaultMotionState* fieldMotionState = new btDefaultMotionState(startTransform);
+
+    btScalar mass(0);  // Static object (mass = 0)
+    btVector3 inertia(0, 0, 0);  // No inertia for a static object
+    fieldShape->calculateLocalInertia(mass, inertia);
+
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, fieldMotionState, fieldShape, inertia);
+    btRigidBody* fieldBody = new btRigidBody(rbInfo);
+
+    dynamicsWorld->addRigidBody(fieldBody);
+    // // **地面を直接作成**
+    // btCollisionShape* groundShape = new btBoxShape(btVector3(154*2, 0.1, 124*2));
+    // btDefaultMotionState* groundMotion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
+    // btRigidBody::btRigidBodyConstructionInfo groundCI(0, groundMotion, groundShape);
+    // btRigidBody* groundBody = new btRigidBody(groundCI);
+    // groundBody->setRestitution(0.3);
+    // // groundBody->setFriction(0.5); // Set friction for ground
+    // dynamicsWorld->addRigidBody(groundBody);
 
     // **ボールを .obj からロード**
     btCollisionShape* ballShape = loadObjToBulletShape("../assets/models/ball/ball.obj");
@@ -63,24 +80,39 @@ Physics::Physics(QObject *parent) : QObject(parent) {
         return;
     }
 
-    btDefaultMotionState* ballMotion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 5, 0)));
+    btDefaultMotionState* ballMotion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 25, 0)));
 
-    btScalar mass = 1.0;
-    btVector3 inertia(0, 0, 0);
+    mass = 1.0;
+    // inertia = inertia(0, 0, 0);
     ballShape->calculateLocalInertia(mass, inertia);
 
     btRigidBody::btRigidBodyConstructionInfo ballCI(mass, ballMotion, ballShape, inertia);
     ballBody = new btRigidBody(ballCI);
-    ballBody->setRestitution(0.7); // 反発係数
+    ballBody->setRestitution(0.3); // 反発係数
+    ballBody->setFriction(0.5);   // Set friction for ball
     dynamicsWorld->addRigidBody(ballBody);
 }
 
-// **物理演算を更新**
-void Physics::stepSimulation() {
+void Physics::updateBallPosition(QVector3D velocity) {
+    // Get the current transform and velocity.
+    btTransform trans;
+    ballBody->getMotionState()->getWorldTransform(trans);
+    btVector3 currentVelocity = ballBody->getLinearVelocity();
+    
+    // Add the new velocity to the current one.
+    btVector3 newVelocity = currentVelocity + btVector3(velocity.x(), velocity.y(), velocity.z());
+    ballBody->setLinearVelocity(newVelocity);
+    
+    // Optionally, apply a force (e.g., a manual force, like thrust):
+    // btVector3 force(0, 10, 0); // Example: apply upward force
+    // ballBody->applyForce(force, btVector3(0, 0, 0)); // Apply force at center of mass
+    
+    // Step the simulation.
     dynamicsWorld->stepSimulation(1 / 60.f);
 }
 
-// **ボールの位置を取得**
+
+
 QVector3D Physics::getBallPosition() {
     btTransform trans;
     ballBody->getMotionState()->getWorldTransform(trans);
@@ -92,6 +124,8 @@ QVector3D Physics::getBallPosition() {
     result.setZ(pos.z());
     return result;
 }
+
+
 
 // **Physics クラスのデストラクタ**
 Physics::~Physics() {
