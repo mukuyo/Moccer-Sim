@@ -17,13 +17,27 @@ ApplicationWindow {
     width: 1280
     height: 720
     visible: true
-    DynamicsWorld{}
+    // DynamicsWorld{}
+
     Item {
         id: ro
         width: parent.width
         height: parent.height
         focus: true
 
+        PhysicsWorld {
+            id: roa
+            // running: true
+            // typicalLength: 1
+            // typicalSpeed: 10
+            // enableCCD: true
+            // maximumTimestep: 20
+            scene: viewport.scene
+            // gravity: Qt.vector3d(0,-9.81, 0)
+        }
+
+        
+    
         Keys.onPressed: (event) => {
             event.accepted = true;  // ⚡ 他の要素にイベントを渡さない
             if (event.key === Qt.Key_W) {
@@ -51,7 +65,7 @@ ApplicationWindow {
             }
 
             View3D {
-                id: topLeftView
+                id: viewport
                 anchors.fill: parent
                 renderMode: View3D.Offscreen
 

@@ -28,10 +28,12 @@ Node {
     // }
     StaticRigidBody {
         eulerRotation: Qt.vector3d(-90, 0, 0)
+        physicsMaterial: physicsMaterial
         collisionShapes: PlaneShape {}
+        scale: Qt.vector3d(15.4, 12.4, 1)
         Model {
             source: "#Rectangle"
-            scale: Qt.vector3d(13.4, 10.4, 1)
+            
             
             materials: [ 
                 DefaultMaterial {
