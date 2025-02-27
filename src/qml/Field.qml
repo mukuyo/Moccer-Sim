@@ -8,7 +8,6 @@ Node {
 
     Stadium {
         id: ex_wall
-        // scale: Qt.vector3d(100, 100, 100)
         eulerRotation: Qt.vector3d(-90, 0, 0)
     }
 
@@ -16,7 +15,7 @@ Node {
     Model {
         id: fieldEntity
         source: "#Rectangle"
-        scale: Qt.vector3d(15.4, 12.4, 1) //13.4, 10.4
+        scale: Qt.vector3d(15.4, 12.4, 1) // 13.4, 10.4
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [ 
             DefaultMaterial {

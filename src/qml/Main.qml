@@ -44,8 +44,8 @@ ApplicationWindow {
             Observe {
                 id: observer
             }
-            Collision {
-                id: collision
+            Physics {
+                id: physics
             }
 
             View3D {
@@ -143,7 +143,10 @@ ApplicationWindow {
                         repeat: true
                         running: true
                         onTriggered: {
-                            var flag = collision.ball_check(_ball.position, _bot.blue_bots, _bot.yellow_bots)
+                            physics.stepSimulation()
+                            var pos = physics.getBallPosition()
+                            console.log(pos)
+                            // var flag = collision.ball_check(_ball.position, _bot.blue_bots, _bot.yellow_bots)
                             // console.log(flag)
                             // observer.update()
                             // collision.update()

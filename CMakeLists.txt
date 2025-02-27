@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Moccer)
+project(Moccer-Sim)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -60,6 +60,18 @@ set(protobuf_MODULE_COMPATIBLE TRUE)
 find_package(Protobuf 3.21.12 REQUIRED)
 include_directories(${Protobuf_INCLUDE_DIRS})
 
+set(BULLET_INCLUDE_DIR "/usr/local/Cellar/bullet/3.25/include")
+set(BULLET_LIBRARY_DIR "/usr/local/Cellar/bullet/3.25/lib")
+find_package(Bullet REQUIRED)
+include_directories(${BULLET_INCLUDE_DIR})
+include_directories(${BULLET_INCLUDE_DIR}/bullet)
+
+set(ASSIMP_INCLUDE_DIR "/usr/local/Cellar/assimp/5.4.3/include")
+set(ASSIMP_LIBRARY_DIR "/usr/local/Cellar/assimp/5.4.3/lib/libassimp.dylib")
+find_package(Assimp REQUIRED)
+include_directories(ASSIMP_INCLUDE_DIR)
+# target_link_libraries(my_project Bullet::BulletDynamics Bullet::BulletCollision Bullet::LinearMath)
+
 # Protobuf用ディレクトリ
 set(PROTOBUF_DIR ${CMAKE_SOURCE_DIR}/proto)
 set(PROTOBUF_SOURCE_DIR ${PROTOBUF_DIR}/pb_src)
@@ -78,10 +90,10 @@ include_directories(${SRC_DIR})
 qt6_wrap_cpp(MOC_SRCS ${HEADERS})
 
 # 実行ファイルの設定
-add_executable(Moccer main.cpp ${SOURCES} ${MOC_SRCS} ${PROTO_SRCS})
+add_executable(Moccer-Sim main.cpp ${SOURCES} ${MOC_SRCS} ${PROTO_SRCS})
 
 # ライブラリのリンク
-target_link_libraries(Moccer
+target_link_libraries(Moccer-Sim
     Qt6::Core 
     Qt6::Gui
     Qt6::Widgets 
@@ -91,15 +103,18 @@ target_link_libraries(Moccer
     Qt6::Quick 
     Qt6::Quick3D
     Qt6::Qml
-    ${Protobuf_LIBRARIES} pthread
+    ${Protobuf_LIBRARIES} 
+    pthread
+    ${BULLET_LIBRARIES}
+    ${ASSIMP_LIBRARY_DIR}
 )
 
 # 実行時ディレクトリの設定
-set_target_properties(Moccer PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set_target_properties(Moccer-Sim PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Custom 'run' target
 add_custom_target(run
-    COMMAND ${CMAKE_BINARY_DIR}/bin/Moccer
-    DEPENDS Moccer
+    COMMAND ${CMAKE_BINARY_DIR}/bin/Moccer-Sim
+    DEPENDS Moccer-Sim
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )

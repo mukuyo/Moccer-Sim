@@ -16,4 +16,3 @@ bool Collision::ball_check(QVector3D ball_position, QList<QVector3D> bbots_posit
     }
     return false;
 }
-

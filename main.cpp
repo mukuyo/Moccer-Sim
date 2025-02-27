@@ -3,13 +3,13 @@
 #include <QDebug>
 
 #include "src/observer.h"
-#include "src/utils/collision.h"
+#include "src/utils/physics.h"
 
 class Moccer {
 public:
     Moccer(QQmlApplicationEngine &engine) {
         qmlRegisterType<Observer>("MOC", 1, 0, "Observe");
-        qmlRegisterType<Collision>("MOC", 1, 0, "Collision");
+        qmlRegisterType<Physics>("MOC", 1, 0, "Physics");
 
         engine.load(QUrl(QStringLiteral("../src/qml/Main.qml")));
     }
