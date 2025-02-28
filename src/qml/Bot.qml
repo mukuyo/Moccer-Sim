@@ -1,9 +1,11 @@
 import QtQuick
 import QtQuick3D
+import QtQuick3D.Physics
 import MOC
 
 import "../../assets/models/bot/"
 import "../../assets/models/wheel/"
+import "../../assets/models/ball/"
 
 Node {
     id: robotNode
@@ -79,216 +81,234 @@ Node {
         }
     }
 
-    Repeater3D {
-        id: blueBotsRepeater
-        model: blue_bots.length
+    //     Bot {
 
-        delegate: Node {
-            property int botIndex: index
-            Bot {
-                id: bot
-                position: Qt.vector3d(blue_bots[index].x, 0.5, blue_bots[index].y)
-                eulerRotation: Qt.vector3d(0, blue_bot_radians[index] * 180.0 / Math.PI, 0)
-            }
-            Model {
-                source: "#Cylinder"
-                scale: Qt.vector3d(0.05, 0.001, 0.05)
-                position: Qt.vector3d(blue_bots[botIndex].x, 12.8, blue_bots[botIndex].y)
-                materials: [
-                    DefaultMaterial {
-                        diffuseColor: "blue"
-                    }
-                ]
-            }
+    //     }
+    // }
+    DynamicRigidBody {
+        id: bott
+        gravityEnabled: false
+        position: Qt.vector3d(0,0,0)
+        collisionShapes: ConvexMeshShape {
+            id: bo
+            source: "../../assets/models/bot/meshes/bot_mesh.cooked.cvx"
+        }
+        Bot {
 
-            Repeater3D {
-                model: 4
+        }
+    // Repeater3D {
+    //     id: blueBotsRepeater
+    //     model: 1
 
-                delegate: Model {
-                    source: "#Cylinder"
-                    scale: Qt.vector3d(0.04, 0.001, 0.04)
+    //     delegate: Node {
+    //         property int botIndex: index
+    //         Bot {
+    //             id: bot
+    //             position: Qt.vector3d(blue_bots[index].x, 0.5, blue_bots[index].y)
+    //             eulerRotation: Qt.vector3d(0, blue_bot_radians[index] * 180.0 / Math.PI, 0)
+    //         }
+    //         Model {
+    //             source: "#Cylinder"
+    //             scale: Qt.vector3d(0.05, 0.001, 0.05)
+    //             position: Qt.vector3d(blue_bots[botIndex].x, 12.8, blue_bots[botIndex].y)
+    //             materials: [
+    //                 DefaultMaterial {
+    //                     diffuseColor: "blue"
+    //                 }
+    //             ]
+    //         }
 
-                    position: {
-                        var offsets = [
-                            Qt.vector3d(6.5*Math.cos(Math.PI-radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(Math.PI-radian_offset-blue_bot_radians[index])),  // Left Up
-                            Qt.vector3d(6.5*Math.cos(Math.PI/2.0-radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(Math.PI/2.0-radian_offset-blue_bot_radians[index])), // Left Down
-                            Qt.vector3d(6.5*Math.cos(Math.PI/2.0+radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(Math.PI/2.0+radian_offset-blue_bot_radians[index])), // Right Down
-                            Qt.vector3d(6.5*Math.cos(radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(radian_offset-blue_bot_radians[index]))   // Right Up
-                        ];
-                        return Qt.vector3d(
-                            blue_bots[botIndex].x + offsets[index].x,
-                            12.8,
-                            blue_bots[botIndex].y + offsets[index].z
-                        );
-                    }
+    //         Repeater3D {
+    //             model: 4
 
-                    materials: [
-                        DefaultMaterial {
-                            diffuseColor: {
-                                var colors = ["#EA3EF7", "#75FA4C", "#EA3EF7", "#75FA4C"];
-                                return colors[index];
-                            }
-                        }
-                    ]
-                }
-            }
-            Repeater3D {
-                id: wheels
-                model: 4
-                property int botIndex: modelData
+    //             delegate: Model {
+    //                 source: "#Cylinder"
+    //                 scale: Qt.vector3d(0.04, 0.001, 0.04)
 
-                Wheel {
-                    id: wheel
-                    property int wheelIndex: index
-                    property var angles: [
-                        Qt.vector3d(0, -125+blue_bot_radians[index]*180.0/Math.PI, angle0),
-                        Qt.vector3d(0, -45+blue_bot_radians[index]*180.0/Math.PI, angle1),
-                        Qt.vector3d(0,  45+blue_bot_radians[index]*180.0/Math.PI, angle2),
-                        Qt.vector3d(0, 125+blue_bot_radians[index]*180.0/Math.PI, angle3),
-                    ]
-                    property var offsets: [
-                        Qt.vector3d(wheel_radius * Math.cos((215 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((215 * Math.PI / 180.0)-blue_bot_radians[index])),
-                        Qt.vector3d(wheel_radius * Math.cos((135 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((135 * Math.PI / 180.0)-blue_bot_radians[index])),
-                        Qt.vector3d(wheel_radius * Math.cos((45 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((45 * Math.PI / 180.0)-blue_bot_radians[index])),
-                        Qt.vector3d(wheel_radius * Math.cos((-35 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((-35 * Math.PI / 180.0)-blue_bot_radians[index])),
+    //                 position: {
+    //                     var offsets = [
+    //                         Qt.vector3d(6.5*Math.cos(Math.PI-radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(Math.PI-radian_offset-blue_bot_radians[index])),  // Left Up
+    //                         Qt.vector3d(6.5*Math.cos(Math.PI/2.0-radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(Math.PI/2.0-radian_offset-blue_bot_radians[index])), // Left Down
+    //                         Qt.vector3d(6.5*Math.cos(Math.PI/2.0+radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(Math.PI/2.0+radian_offset-blue_bot_radians[index])), // Right Down
+    //                         Qt.vector3d(6.5*Math.cos(radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(radian_offset-blue_bot_radians[index]))   // Right Up
+    //                     ];
+    //                     return Qt.vector3d(
+    //                         blue_bots[botIndex].x + offsets[index].x,
+    //                         12.8,
+    //                         blue_bots[botIndex].y + offsets[index].z
+    //                     );
+    //                 }
+
+    //                 materials: [
+    //                     DefaultMaterial {
+    //                         diffuseColor: {
+    //                             var colors = ["#EA3EF7", "#75FA4C", "#EA3EF7", "#75FA4C"];
+    //                             return colors[index];
+    //                         }
+    //                     }
+    //                 ]
+    //             }
+    //         }
+    //         Repeater3D {
+    //             id: wheels
+    //             model: 4
+    //             property int botIndex: modelData
+
+    //             Wheel {
+    //                 id: wheel
+    //                 property int wheelIndex: index
+    //                 property var angles: [
+    //                     Qt.vector3d(0, -125+blue_bot_radians[index]*180.0/Math.PI, angle0),
+    //                     Qt.vector3d(0, -45+blue_bot_radians[index]*180.0/Math.PI, angle1),
+    //                     Qt.vector3d(0,  45+blue_bot_radians[index]*180.0/Math.PI, angle2),
+    //                     Qt.vector3d(0, 125+blue_bot_radians[index]*180.0/Math.PI, angle3),
+    //                 ]
+    //                 property var offsets: [
+    //                     Qt.vector3d(wheel_radius * Math.cos((215 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((215 * Math.PI / 180.0)-blue_bot_radians[index])),
+    //                     Qt.vector3d(wheel_radius * Math.cos((135 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((135 * Math.PI / 180.0)-blue_bot_radians[index])),
+    //                     Qt.vector3d(wheel_radius * Math.cos((45 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((45 * Math.PI / 180.0)-blue_bot_radians[index])),
+    //                     Qt.vector3d(wheel_radius * Math.cos((-35 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((-35 * Math.PI / 180.0)-blue_bot_radians[index])),
                         
-                    ]
-                    position: Qt.vector3d(
-                        blue_bots[botIndex].x + offsets[wheelIndex].x,
-                        blue_bots[botIndex].z + offsets[wheelIndex].y,
-                        blue_bots[botIndex].y + offsets[wheelIndex].z
-                    )
-                    eulerRotation: angles[wheelIndex]
-                }
-            }
-        }
-    }
-    Repeater3D {
-        id: yellowBotsRepeater
-        model: yellow_bots.length
+    //                 ]
+    //                 position: Qt.vector3d(
+    //                     blue_bots[botIndex].x + offsets[wheelIndex].x,
+    //                     blue_bots[botIndex].z + offsets[wheelIndex].y,
+    //                     blue_bots[botIndex].y + offsets[wheelIndex].z
+    //                 )
+    //                 eulerRotation: angles[wheelIndex]
+    //             }
+    //         }
+    //     }
+    // }
+}
 
-        delegate: Node {
-            property int botIndex: index
-            Bot {
-                id: bot
-                position: Qt.vector3d(yellow_bots[index].x, 0.5, yellow_bots[index].y)
-                eulerRotation: Qt.vector3d(0, yellow_bot_radians[index] * 180.0 / Math.PI, 0)
-            }
-            Model {
-                source: "#Cylinder"
-                scale: Qt.vector3d(0.05, 0.001, 0.05)
-                position: Qt.vector3d(yellow_bots[botIndex].x, 12.8, yellow_bots[botIndex].y)
-                materials: [
-                    DefaultMaterial {
-                        diffuseColor: "yellow"
-                    }
-                ]
-            }
+    // Repeater3D {
+    //     id: yellowBotsRepeater
+    //     model: yellow_bots.length
 
-            Repeater3D {
-                model: 4
+    //     delegate: Node {
+    //         property int botIndex: index
+    //         Bot {
+    //             id: bot
+    //             position: Qt.vector3d(yellow_bots[index].x, 0.5, yellow_bots[index].y)
+    //             eulerRotation: Qt.vector3d(0, yellow_bot_radians[index] * 180.0 / Math.PI, 0)
+    //         }
+    //         Model {
+    //             source: "#Cylinder"
+    //             scale: Qt.vector3d(0.05, 0.001, 0.05)
+    //             position: Qt.vector3d(yellow_bots[botIndex].x, 12.8, yellow_bots[botIndex].y)
+    //             materials: [
+    //                 DefaultMaterial {
+    //                     diffuseColor: "yellow"
+    //                 }
+    //             ]
+    //         }
 
-                delegate: Model {
-                    source: "#Cylinder"
-                    scale: Qt.vector3d(0.04, 0.001, 0.04)
+    //         Repeater3D {
+    //             model: 4
 
-                    position: {
-                        var offsets = [
-                            Qt.vector3d(6.5*Math.cos(Math.PI-radian_offset-yellow_bot_radians[index]), 0, 6.5*Math.sin(Math.PI-radian_offset-yellow_bot_radians[index])),
-                            Qt.vector3d(6.5*Math.cos(Math.PI/2.0-radian_offset-yellow_bot_radians[index]), 0, 6.5*Math.sin(Math.PI/2.0-radian_offset-yellow_bot_radians[index])),
-                            Qt.vector3d(6.5*Math.cos(Math.PI/2.0+radian_offset-yellow_bot_radians[index]), 0, 6.5*Math.sin(Math.PI/2.0+radian_offset-yellow_bot_radians[index])),
-                            Qt.vector3d(6.5*Math.cos(radian_offset-yellow_bot_radians[index]), 0, 6.5*Math.sin(radian_offset-yellow_bot_radians[index]))
-                        ];
-                        return Qt.vector3d(
-                            yellow_bots[botIndex].x + offsets[index].x,
-                            12.8,
-                            yellow_bots[botIndex].y + offsets[index].z
-                        );
-                    }
+    //             delegate: Model {
+    //                 source: "#Cylinder"
+    //                 scale: Qt.vector3d(0.04, 0.001, 0.04)
 
-                    materials: [
-                        DefaultMaterial {
-                            diffuseColor: {
-                                var colors = ["#EA3EF7", "#75FA4C", "#EA3EF7", "#75FA4C"];
-                                return colors[index];
-                            }
-                        }
-                    ]
-                }
-            }
+    //                 position: {
+    //                     var offsets = [
+    //                         Qt.vector3d(6.5*Math.cos(Math.PI-radian_offset-yellow_bot_radians[index]), 0, 6.5*Math.sin(Math.PI-radian_offset-yellow_bot_radians[index])),
+    //                         Qt.vector3d(6.5*Math.cos(Math.PI/2.0-radian_offset-yellow_bot_radians[index]), 0, 6.5*Math.sin(Math.PI/2.0-radian_offset-yellow_bot_radians[index])),
+    //                         Qt.vector3d(6.5*Math.cos(Math.PI/2.0+radian_offset-yellow_bot_radians[index]), 0, 6.5*Math.sin(Math.PI/2.0+radian_offset-yellow_bot_radians[index])),
+    //                         Qt.vector3d(6.5*Math.cos(radian_offset-yellow_bot_radians[index]), 0, 6.5*Math.sin(radian_offset-yellow_bot_radians[index]))
+    //                     ];
+    //                     return Qt.vector3d(
+    //                         yellow_bots[botIndex].x + offsets[index].x,
+    //                         12.8,
+    //                         yellow_bots[botIndex].y + offsets[index].z
+    //                     );
+    //                 }
+
+    //                 materials: [
+    //                     DefaultMaterial {
+    //                         diffuseColor: {
+    //                             var colors = ["#EA3EF7", "#75FA4C", "#EA3EF7", "#75FA4C"];
+    //                             return colors[index];
+    //                         }
+    //                     }
+    //                 ]
+    //             }
+    //         }
             
-            Repeater3D {
-                id: wheelsYellow
-                model: 4
-                property int botIndex: modelData
+    //         Repeater3D {
+    //             id: wheelsYellow
+    //             model: 4
+    //             property int botIndex: modelData
 
-                Wheel {
-                    id: wheel
-                    property int wheelIndex: index
-                    property var angles: [
-                        Qt.vector3d(0, -125+yellow_bot_radians[index]*180.0/Math.PI, angle0),
-                        Qt.vector3d(0, -45+yellow_bot_radians[index]*180.0/Math.PI, angle1),
-                        Qt.vector3d(0,  45+yellow_bot_radians[index]*180.0/Math.PI, angle2),
-                        Qt.vector3d(0, 125+yellow_bot_radians[index]*180.0/Math.PI, angle3),
-                    ]
-                    property var offsets: [
-                        Qt.vector3d(wheel_radius * Math.cos((215 * Math.PI / 180.0)-yellow_bot_radians[index]), 2.7, wheel_radius * Math.sin((215 * Math.PI / 180.0)-yellow_bot_radians[index])),
-                        Qt.vector3d(wheel_radius * Math.cos((135 * Math.PI / 180.0)-yellow_bot_radians[index]), 2.7, wheel_radius * Math.sin((135 * Math.PI / 180.0)-yellow_bot_radians[index])),
-                        Qt.vector3d(wheel_radius * Math.cos((45 * Math.PI / 180.0)-yellow_bot_radians[index]), 2.7, wheel_radius * Math.sin((45 * Math.PI / 180.0)-yellow_bot_radians[index])),
-                        Qt.vector3d(wheel_radius * Math.cos((-35 * Math.PI / 180.0)-yellow_bot_radians[index]), 2.7, wheel_radius * Math.sin((-35 * Math.PI / 180.0)-yellow_bot_radians[index])),
-                    ]
-                    position: Qt.vector3d(
-                        yellow_bots[botIndex].x + offsets[wheelIndex].x,
-                        yellow_bots[botIndex].z + offsets[wheelIndex].y,
-                        yellow_bots[botIndex].y + offsets[wheelIndex].z
-                    )
-                    eulerRotation: angles[wheelIndex]
-                }
-            }
-        }
-    }
+    //             Wheel {
+    //                 id: wheel
+    //                 property int wheelIndex: index
+    //                 property var angles: [
+    //                     Qt.vector3d(0, -125+yellow_bot_radians[index]*180.0/Math.PI, angle0),
+    //                     Qt.vector3d(0, -45+yellow_bot_radians[index]*180.0/Math.PI, angle1),
+    //                     Qt.vector3d(0,  45+yellow_bot_radians[index]*180.0/Math.PI, angle2),
+    //                     Qt.vector3d(0, 125+yellow_bot_radians[index]*180.0/Math.PI, angle3),
+    //                 ]
+    //                 property var offsets: [
+    //                     Qt.vector3d(wheel_radius * Math.cos((215 * Math.PI / 180.0)-yellow_bot_radians[index]), 2.7, wheel_radius * Math.sin((215 * Math.PI / 180.0)-yellow_bot_radians[index])),
+    //                     Qt.vector3d(wheel_radius * Math.cos((135 * Math.PI / 180.0)-yellow_bot_radians[index]), 2.7, wheel_radius * Math.sin((135 * Math.PI / 180.0)-yellow_bot_radians[index])),
+    //                     Qt.vector3d(wheel_radius * Math.cos((45 * Math.PI / 180.0)-yellow_bot_radians[index]), 2.7, wheel_radius * Math.sin((45 * Math.PI / 180.0)-yellow_bot_radians[index])),
+    //                     Qt.vector3d(wheel_radius * Math.cos((-35 * Math.PI / 180.0)-yellow_bot_radians[index]), 2.7, wheel_radius * Math.sin((-35 * Math.PI / 180.0)-yellow_bot_radians[index])),
+    //                 ]
+    //                 position: Qt.vector3d(
+    //                     yellow_bots[botIndex].x + offsets[wheelIndex].x,
+    //                     yellow_bots[botIndex].z + offsets[wheelIndex].y,
+    //                     yellow_bots[botIndex].y + offsets[wheelIndex].z
+    //                 )
+    //                 eulerRotation: angles[wheelIndex]
+    //             }
+    //         }
+    //     }
+    // }
 
     Timer {
         interval: 16
         running: true
         repeat: true
         onTriggered: {
-            var updatedbBots = blue_bots.slice();
-            var updatedyBots = yellow_bots.slice();
-            var updatedbBotRadians = blue_bot_radians.slice();
-            var updatedyBotRadians = yellow_bot_radians.slice();
+            bott.setLinearVelocity(Qt.vector3d(10,0,0))
+            // var updatedbBots = blue_bots.slice();
+            // var updatedyBots = yellow_bots.slice();
+            // var updatedbBotRadians = blue_bot_radians.slice();
+            // var updatedyBotRadians = yellow_bot_radians.slice();
 
-            for (var i = 0; i < updatedbBots.length; i++) {
-                bbot_vel_radians[i] += bbot_vel_angulars[i] * 0.016;
-                if (bbot_vel_radians[i] > 2 * Math.PI) {
-                    bbot_vel_radians[i] = 0;
-                }
-                updatedbBotRadians[i] = -90 + bbot_vel_radians[i];
-                updatedbBots[i] = Qt.vector3d(
-                    updatedbBots[i].x + bbot_vel_normals[i] * Math.cos(updatedbBotRadians[i]) + bbot_vel_tangents[i] * Math.sin(updatedbBotRadians[i]),
-                    updatedbBots[i].y + bbot_vel_normals[i] * Math.sin(updatedbBotRadians[i]) + bbot_vel_tangents[i] * Math.cos(updatedbBotRadians[i]),
-                    updatedbBots[i].z
-                );
+            // for (var i = 0; i < updatedbBots.length; i++) {
+            //     bbot_vel_radians[i] += bbot_vel_angulars[i] * 0.016;
+            //     if (bbot_vel_radians[i] > 2 * Math.PI) {
+            //         bbot_vel_radians[i] = 0;
+            //     }
+            //     updatedbBotRadians[i] = -Math.PI/2 + bbot_vel_radians[i];
+            //     updatedbBots[i] = Qt.vector3d(
+            //         updatedbBots[i].x + bbot_vel_normals[i] * Math.cos(updatedbBotRadians[i]) + bbot_vel_tangents[i] * Math.sin(updatedbBotRadians[i]),
+            //         updatedbBots[i].y + bbot_vel_normals[i] * Math.sin(updatedbBotRadians[i]) + bbot_vel_tangents[i] * Math.cos(updatedbBotRadians[i]),
+            //         updatedbBots[i].z
+            //     );
                 
-            }
+            // }
             
-            for (var i = 0; i < updatedyBots.length; i++) {
-                ybot_vel_radians[i] += ybot_vel_angulars[i] * 0.016;
-                if (ybot_vel_radians[i] > 2.0 * Math.PI) {
-                    ybot_vel_radians[i] = 0.0;
-                }
-                updatedyBotRadians[i] = 90 + ybot_vel_radians[i];
-                updatedyBots[i] = Qt.vector3d(
-                    updatedyBots[i].x + ybot_vel_normals[i] * Math.cos(updatedyBotRadians[i]) + ybot_vel_tangents[i] * Math.sin(updatedyBotRadians[i]),
-                    updatedyBots[i].y + ybot_vel_normals[i] * Math.sin(updatedyBotRadians[i]) + ybot_vel_tangents[i] * Math.cos(updatedyBotRadians[i]),
-                    updatedyBots[i].z
-                );
-            }
+            // for (var i = 0; i < updatedyBots.length; i++) {
+            //     ybot_vel_radians[i] += ybot_vel_angulars[i] * 0.016;
+            //     if (ybot_vel_radians[i] > 2.0 * Math.PI) {
+            //         ybot_vel_radians[i] = 0.0;
+            //     }
+            //     updatedyBotRadians[i] = Math.PI/2 + ybot_vel_radians[i];
+            //     updatedyBots[i] = Qt.vector3d(
+            //         updatedyBots[i].x + ybot_vel_normals[i] * Math.cos(updatedyBotRadians[i]) + ybot_vel_tangents[i] * Math.sin(updatedyBotRadians[i]),
+            //         updatedyBots[i].y + ybot_vel_normals[i] * Math.sin(updatedyBotRadians[i]) + ybot_vel_tangents[i] * Math.cos(updatedyBotRadians[i]),
+            //         updatedyBots[i].z
+            //     );
+            // }
 
-            blue_bots = updatedbBots;
-            yellow_bots = updatedyBots;
-            blue_bot_radians = updatedbBotRadians;
-            yellow_bot_radians = updatedyBotRadians;
+            // blue_bots = updatedbBots;
+            // yellow_bots = updatedyBots;
+            // blue_bot_radians = updatedbBotRadians;
+            // yellow_bot_radians = updatedyBotRadians;
         }
     }
 }

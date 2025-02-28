@@ -27,7 +27,7 @@ ApplicationWindow {
 
         PhysicsWorld {
             id: roa
-            // running: true
+            running: true
             // typicalLength: 1
             // typicalSpeed: 10
             // enableCCD: true
@@ -149,9 +149,9 @@ ApplicationWindow {
                     Lighting {
                         id: _lighting
                     }
-                    // Bot {
-                    //     id: _bot
-                    // }
+                    Bot {
+                        id: _bot
+                    }
                     Field {
                         id: _field
                     }
