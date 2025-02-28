@@ -11,24 +11,15 @@ Node {
         id: ex_wall
         eulerRotation: Qt.vector3d(-90, 0, 0)
     }
-
-    // フィールド
-    // Model {
-    //     id: fieldEntity
-    //     source: "#Rectangle"
-    //     scale: Qt.vector3d(15.4, 12.4, 1) // 13.4, 10.4
-    //     eulerRotation: Qt.vector3d(-90, 0, 0)
-    //     materials: [ 
-    //         DefaultMaterial {
-    //             diffuseMap: Texture {
-    //                 source: "../../assets/textures/field_texture.jpg" // 画像ファイルのパス
-    //             }
-    //         }
-    //     ]
-    // }
+        PhysicsMaterial {
+        id: physicsMaterial2
+        staticFriction: 1.0
+        dynamicFriction: 1.0
+        restitution: 0.0
+    }
     StaticRigidBody {
         eulerRotation: Qt.vector3d(-90, 0, 0)
-        physicsMaterial: physicsMaterial
+        // physicsMaterial: physicsMaterial2
         collisionShapes: PlaneShape {}
         scale: Qt.vector3d(15.4, 12.4, 1)
         Model {
