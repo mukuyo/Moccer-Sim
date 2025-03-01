@@ -149,11 +149,11 @@ ApplicationWindow {
                     Lighting {
                         id: _lighting
                     }
-                    // Bot {
-                    //     id: _bot
-                    // }
                     Field {
                         id: _field
+                    }
+                    Bot {
+                        id: _bot
                     }
                     Ball {
                         id: _ball
