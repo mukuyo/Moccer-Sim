@@ -284,11 +284,14 @@ Node {
             }
         }
     }
+
     Timer {
         interval: 16
         running: true
         repeat: true
         onTriggered: {
+            blueBotPositions = []
+            blueBotRotations = []
             for (let i = 0; i < frame_blue_bots.count; i++) {
                 let frame = frame_blue_bots.children[i];
                 let bot = blueBotsRepeater.children[i];
@@ -296,7 +299,11 @@ Node {
                 frame.setAngularVelocity(Qt.vector3d(0, bbot_vel_angulars[i], 0));
                 bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
                 bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
+                blueBotPositions.push(Qt.vector3d(frame.position.x, frame.position.y, frame.position.z));
+                blueBotRotations.push(Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z));
             }
+            yellowBotPositions = []
+            yellowBotRotations = []
             for (let i = 0; i < frame_yellow_bots.count; i++) {
                 let frame = frame_yellow_bots.children[i];
                 let bot = yellowBotsRepeater.children[i];
@@ -304,40 +311,11 @@ Node {
                 frame.setAngularVelocity(Qt.vector3d(0, ybot_vel_angulars[i], 0));
                 bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
                 bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
+                yellowBotPositions.push(Qt.vector3d(frame.position.x, frame.position.y, frame.position.z));
+                yellowBotRotations.push(Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z));
             }
+            observer.updateBlueRobots(blueBotPositions, blueBotRotations);
+            observer.updateYellowRobots(yellowBotPositions, yellowBotRotations);
         }
     }
-// Timer {
-//     interval: 16
-//     running: true
-//     repeat: true
-//     onTriggered: {
-//         // for (let i = 0; i < frame_blue_bots.count; i++) {
-//             let frame = frame_blue_bots.children[0];
-//             let bot = blueBotsRepeater.children[0];
-
-//             if (bot) {
-//                 // if (i == 0){
-//                 // // 現在の位置を取得
-//                 currentPos = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
-//                 let now = Date.now();
-//                 let deltaTime = (now - lastUpdateTime) / 1000;  // ミリ秒 → 秒
-//                 lastUpdateTime = now;
-//                 let deltaX = currentPos.x - previousPos.x;
-//                 // let deltaTime = interval / 1000;  // 16ms = 0.016秒
-//                 let velocity = deltaX / deltaTime;
-//                 if (velocity != 0) {
-//                     //
-//                 console.log(`Frame ${0}: 計算された速度 = ${velocity.toFixed(2)} m/s`);
-//                 console.log(deltaTime);
-//                 }
-
-//                 // 位置を更新
-//                 previousPos = Qt.vector3d(currentPos.x, currentPos.y, currentPos.z);
-//                 }
-//             // }
-//         // }
-//     }
-// }
-
 }

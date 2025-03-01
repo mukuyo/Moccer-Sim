@@ -1,31 +1,36 @@
 #ifndef SENDER_H
 #define SENDER_H
 
-#include <QObject>
-#include <QThread>
-#include <QUdpSocket>
-#include <QHostAddress>
 #include <iostream>
-#include "mocSim_Packet.pb.h"
+#include <thread>
+#include <chrono>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+#include <boost/optional.hpp>
+#include <boost/asio.hpp>
+#include <boost/array.hpp>
 
-class SenderWorker : public QObject {
-    Q_OBJECT
+#include "ssl_vision_detection.pb.h"
 
+using namespace std;
+
+class Sender {
 public:
-    explicit SenderWorker(QObject *parent = nullptr);
-    ~SenderWorker();
+    Sender();
+    ~Sender();
+    void send(bool is_yellow);
 
-// public slots:
-//     void startListening(quint16 port);
-//     void receive();
-//     void stopListening();
+private:
+    void runTimer();
+    bool running_;
+    std::thread timerThread_;
+    
+    // Networking related members
+    boost::asio::io_context ioContext_;
+    boost::asio::ip::udp::socket socket_;
+    boost::asio::ip::udp::endpoint endpoint_;
 
-// signals:
-//     void receivedPacket(const mocSim_Packet &packet);
-
-// private:
-//     QUdpSocket *udpSocket;
-//     bool running;
+    float angle;
 };
 
-#endif // sender.h
+#endif // SENDER_H

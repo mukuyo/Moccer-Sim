@@ -5,7 +5,7 @@ Observer::Observer(QObject *parent)
     worker->moveToThread(&receiverThread);
 
     connect(&receiverThread, &QThread::started, worker, [this]() {
-        worker->startListening(20011);
+        worker->startListening(10694);
     });
 
     connect(worker, &ReceiverWorker::receivedPacket, this, &Observer::receive, Qt::QueuedConnection);
@@ -61,4 +61,22 @@ QList<QObject*> Observer::getYellowRobots() const {
         list.append(yellow_robots[i]);
     }
     return list;
+}
+
+void Observer::updateBlueRobots(QList<QVector3D> positions, QList<QVector3D> rotations) {
+    for (int i = 0; i < 16; ++i) {
+        // blue_robots[i]->setPosition(positions[i]);
+        // blue_robots[i]->setRotation(rotations[i]);
+    }
+}
+
+void Observer::updateYellowRobots(QList<QVector3D> positions, QList<QVector3D> rotations) {
+    for (int i = 0; i < 16; ++i) {
+        // yellow_robots[i]->setPosition(positions[i]);
+        // yellow_robots[i]->setRotation(rotations[i]);
+    }
+}
+
+void Observer::updateBall(QVector3D position) {
+    // ball->setPosition(position);
 }

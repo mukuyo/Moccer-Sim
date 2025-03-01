@@ -20,6 +20,11 @@ public:
     explicit Observer(QObject *parent = nullptr);
     ~Observer();
 
+    Q_INVOKABLE void updateBlueRobots(QList<QVector3D> positions, QList<QVector3D> rotations);
+    Q_INVOKABLE void updateYellowRobots(QList<QVector3D> positions, QList<QVector3D> rotations);
+
+    Q_INVOKABLE void updateBall(QVector3D position);
+
     void start(quint16 port);
     void stop();
 
