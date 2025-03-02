@@ -36,13 +36,13 @@ ApplicationWindow {
         Keys.onPressed: (event) => {
             event.accepted = true;  // ⚡ 他の要素にイベントを渡さない
             if (event.key === Qt.Key_W) {
-                _bot.velocity.z -= _bot.acceleration;
+                _bot.velocity.z = -_bot.acceleration;
             } else if (event.key === Qt.Key_S) {
-                _bot.velocity.z += _bot.acceleration;
+                _bot.velocity.z = _bot.acceleration;
             } else if (event.key === Qt.Key_A) {
-                _bot.velocity.x -= _bot.acceleration;
+                _bot.velocity.x = -_bot.acceleration;
             } else if (event.key === Qt.Key_D) {
-                _bot.velocity.x += _bot.acceleration;
+                _bot.velocity.x = _bot.acceleration;
             }
         }
 
@@ -150,7 +150,7 @@ ApplicationWindow {
                     Bot {
                         id: _bot
                         property vector3d velocity: Qt.vector3d(0, 0, 0)
-                        property real acceleration: 0.06
+                        property real acceleration: 1.0
                     }
                 }
             }

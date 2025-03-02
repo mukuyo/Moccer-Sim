@@ -7,6 +7,7 @@
 #include <QVariantList>
 #include <QElapsedTimer>
 #include <QRandomGenerator>
+#include <QDebug>
 
 #include "mocSim_Commands.pb.h"
 

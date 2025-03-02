@@ -12,14 +12,14 @@ Node {
         eulerRotation: Qt.vector3d(-90, 0, 0)
     }
     PhysicsMaterial {
-        id: physicsMaterial
-        staticFriction: 0
-        dynamicFriction: 0
-        restitution: 0
+        id: fieldMaterial
+        staticFriction: 0.3
+        dynamicFriction: 0.3
+        restitution: 0.0
     }
     StaticRigidBody {
         eulerRotation: Qt.vector3d(-90, 0, 0)
-        physicsMaterial: physicsMaterial
+        physicsMaterial: fieldMaterial
         collisionShapes: PlaneShape {}
         scale: Qt.vector3d(15.4, 12.4, 1)
         Model {
