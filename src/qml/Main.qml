@@ -28,12 +28,7 @@ ApplicationWindow {
         PhysicsWorld {
             id: roa
             // running: true
-            // typicalLength: 1
-            // typicalSpeed: 10
-            // enableCCD: true
-            // maximumTimestep: 20
             scene: viewport.scene
-            // gravity: Qt.vector3d(0,-9.81, 0)
         }
 
         
@@ -41,13 +36,13 @@ ApplicationWindow {
         Keys.onPressed: (event) => {
             event.accepted = true;  // ⚡ 他の要素にイベントを渡さない
             if (event.key === Qt.Key_W) {
-                _ball.velocity.z -= _ball.acceleration;
+                _bot.velocity.z -= _bot.acceleration;
             } else if (event.key === Qt.Key_S) {
-                _ball.velocity.z += _ball.acceleration;
+                _bot.velocity.z += _bot.acceleration;
             } else if (event.key === Qt.Key_A) {
-                _ball.velocity.x -= _ball.acceleration;
+                _bot.velocity.x -= _bot.acceleration;
             } else if (event.key === Qt.Key_D) {
-                _ball.velocity.x += _ball.acceleration;
+                _bot.velocity.x += _bot.acceleration;
             }
         }
 
@@ -154,11 +149,8 @@ ApplicationWindow {
                     }
                     Bot {
                         id: _bot
-                    }
-                    Ball {
-                        id: _ball
                         property vector3d velocity: Qt.vector3d(0, 0, 0)
-                        property real acceleration: 0.03
+                        property real acceleration: 0.06
                     }
                 }
             }

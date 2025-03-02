@@ -9,8 +9,10 @@
 #include <boost/optional.hpp>
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
-
-#include "ssl_vision_detection.pb.h"
+#include <QVector3D>
+#include <QList>
+#include <QDebug>
+#include "ssl_vision_wrapper.pb.h"
 
 using namespace std;
 
@@ -18,19 +20,12 @@ class Sender {
 public:
     Sender();
     ~Sender();
-    void send(bool is_yellow);
+    void send(QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions);
 
 private:
-    void runTimer();
-    bool running_;
-    std::thread timerThread_;
-    
-    // Networking related members
     boost::asio::io_context ioContext_;
     boost::asio::ip::udp::socket socket_;
     boost::asio::ip::udp::endpoint endpoint_;
-
-    float angle;
 };
 
 #endif // SENDER_H

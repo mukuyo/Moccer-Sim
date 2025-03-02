@@ -1,11 +1,11 @@
 #include "observer.h"
 
 Observer::Observer(QObject *parent)
-    : QObject(parent), worker(new ReceiverWorker(nullptr)){
+    : QObject(parent), worker(new ReceiverWorker(nullptr)), sender(new Sender()) {
     worker->moveToThread(&receiverThread);
 
     connect(&receiverThread, &QThread::started, worker, [this]() {
-        worker->startListening(10694);
+        worker->startListening(20694);
     });
 
     connect(worker, &ReceiverWorker::receivedPacket, this, &Observer::receive, Qt::QueuedConnection);
@@ -63,20 +63,6 @@ QList<QObject*> Observer::getYellowRobots() const {
     return list;
 }
 
-void Observer::updateBlueRobots(QList<QVector3D> positions, QList<QVector3D> rotations) {
-    for (int i = 0; i < 16; ++i) {
-        // blue_robots[i]->setPosition(positions[i]);
-        // blue_robots[i]->setRotation(rotations[i]);
-    }
-}
-
-void Observer::updateYellowRobots(QList<QVector3D> positions, QList<QVector3D> rotations) {
-    for (int i = 0; i < 16; ++i) {
-        // yellow_robots[i]->setPosition(positions[i]);
-        // yellow_robots[i]->setRotation(rotations[i]);
-    }
-}
-
-void Observer::updateBall(QVector3D position) {
-    // ball->setPosition(position);
+void Observer:: updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QVector3D ball_position) {
+    sender->send(ball_position, blue_positions, yellow_positions);
 }

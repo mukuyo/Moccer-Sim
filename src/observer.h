@@ -7,6 +7,7 @@
 #include <QHostAddress>
 #include <iostream>
 #include "networks/receiver.h"
+#include "networks/sender.h"
 #include "models/robot.h"
 #include "mocSim_Packet.pb.h"
 
@@ -20,10 +21,7 @@ public:
     explicit Observer(QObject *parent = nullptr);
     ~Observer();
 
-    Q_INVOKABLE void updateBlueRobots(QList<QVector3D> positions, QList<QVector3D> rotations);
-    Q_INVOKABLE void updateYellowRobots(QList<QVector3D> positions, QList<QVector3D> rotations);
-
-    Q_INVOKABLE void updateBall(QVector3D position);
+    Q_INVOKABLE void updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QVector3D ball_position);
 
     void start(quint16 port);
     void stop();
@@ -40,6 +38,8 @@ signals:
 private:
     QThread receiverThread;
     ReceiverWorker *worker;
+
+    Sender *sender;
 
     Robot *blue_robots[16];
     Robot *yellow_robots[16];
