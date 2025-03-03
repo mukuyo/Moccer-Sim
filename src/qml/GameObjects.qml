@@ -11,8 +11,8 @@ import "../../assets/models/ball/"
 
 Node {
     id: robotNode
-    property real blue_bots_count: 11
-    property real yellow_bots_count: 11
+    property real blue_bots_count: 2
+    property real yellow_bots_count: 2
 
     property real wheel_radius: 8.15
     property real angle0: 0
@@ -81,9 +81,9 @@ Node {
         function onBlueRobotsChanged() {
             for (var i = 0; i < blue_bots_count; i++) {
                 let bot = blueBotsRepeater.children[i];
-                if (Math.abs(observer.blue_robots[i].velnormal) < 6.0)
+                if (Math.abs(observer.blue_robots[i].velnormal) < 8.0)
                     bbot_vel_normals[i] = observer.blue_robots[i].velnormal*60.0;
-                if (Math.abs(observer.blue_robots[i].veltangent) < 6.0)
+                if (Math.abs(observer.blue_robots[i].veltangent) < 8.0)
                     bbot_vel_tangents[i] = -observer.blue_robots[i].veltangent*60.0;
                 bbot_vel_angulars[i] = observer.blue_robots[i].velangular;
                 bbot_kickspeeds[i] = Qt.vector3d(observer.blue_robots[i].kickspeedx, 0, observer.blue_robots[i].kickspeedz);
@@ -94,9 +94,9 @@ Node {
         function onYellowRobotsChanged() {
             for (var i = 0; i < observer.yellow_robots.length; i++) {
                 let bot = yellowBotsRepeater.children[i];
-                if (Math.abs(observer.yellow_robots[i].velnormal) < 8.0)
+                if (Math.abs(observer.yellow_robots[i].velnormal) < 6.0)
                     ybot_vel_normals[i] = observer.yellow_robots[i].velnormal*60.0;
-                if (Math.abs(observer.yellow_robots[i].veltangent) < 8.0)
+                if (Math.abs(observer.yellow_robots[i].veltangent) < 6.0)
                     ybot_vel_tangents[i] = -observer.yellow_robots[i].veltangent*60.0;
                 ybot_vel_angulars[i] = observer.yellow_robots[i].velangular;
                 ybot_kickspeeds[i] = Qt.vector3d(observer.yellow_robots[i].kickspeedx, 0, observer.yellow_robots[i].kickspeedz);
@@ -138,7 +138,7 @@ Node {
             gravityEnabled: false
             physicsMaterial: physicsMaterial
             eulerRotation: Qt.vector3d(0, 90, 0)
-            position: Qt.vector3d(yellow_bots_pos[index].x, 0.5, yellow_bots_pos[index].z)
+            position: Qt.vector3d(yellow_bots_pos[index].x, 0, yellow_bots_pos[index].z)
             collisionShapes: [
                 ConvexMeshShape {
                     source: "../../assets/models/plane/meshes/plane_mesh.cooked.cvx"
@@ -156,11 +156,12 @@ Node {
         delegate: Node {
             property int botIndex: index
             Bot {
+                position: Qt.vector3d(0, 0.5, 0)
             }
             Model {
                 source: "#Cylinder"
                 scale: Qt.vector3d(0.05, 0.001, 0.05)
-                position: Qt.vector3d(0, 12.3, 0)
+                position: Qt.vector3d(0, 12.8, 0)
                 materials: [
                     DefaultMaterial {
                         diffuseColor: "blue"
@@ -182,7 +183,7 @@ Node {
                         ];
                         return Qt.vector3d(
                             offsets[index].x,
-                            12.3,
+                            12.8,
                             offsets[index].z
                         );
                     }
@@ -233,11 +234,12 @@ Node {
         delegate: Node {
             property int botIndex: index
             Bot {
+                position: Qt.vector3d(0, 0.5, 0)
             }
             Model {
                 source: "#Cylinder"
                 scale: Qt.vector3d(0.05, 0.001, 0.05)
-                position: Qt.vector3d(0, 12.3, 0)
+                position: Qt.vector3d(0, 12.8, 0)
                 materials: [
                     DefaultMaterial {
                         diffuseColor: "yellow"
@@ -259,7 +261,7 @@ Node {
                         ];
                         return Qt.vector3d(
                             offsets[index].x,
-                            12.3,
+                            12.8,
                             offsets[index].z
                         );
                     }
@@ -329,6 +331,7 @@ Node {
             let blueBotPositions = []
             let blueBotRotations = []
             let distance_ball = 0;
+            let kick_flag = false;
             for (let i = 0; i < blue_bots_count; i++) {
                 let frame = frame_blue_bots.children[i];
                 let bot = blueBotsRepeater.children[i];
@@ -339,13 +342,13 @@ Node {
                 bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
                 bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
                 blueBotPositions.push(Qt.vector3d(frame.position.x, -frame.position.z, frame.eulerRotation.y+90));
-
-                if (bbot_distance_ball[i] < 20.5/2 && Math.abs(Math.abs(bbot_radian_ball[i]) - radian - Math.PI/2) < Math.PI/3.0) {
+                if (bbot_distance_ball[i] < 10.25 && Math.abs(Math.abs(bbot_radian_ball[i])-(Math.abs(radian+Math.PI/2))) < Math.PI/3.0) {
                     if (bbot_kickspeeds[i].x != 0 || bbot_kickspeeds[i].z != 0) {
-                        velocity.x = bbot_kickspeeds[i].x*3;
-                        velocity.y = bbot_kickspeeds[i].z*3;
+                        kick_flag = true;
+                        velocity.x = bbot_kickspeeds[i].x*100;
+                        velocity.y = bbot_kickspeeds[i].z*100;
                         velocity.z = 0;
-                        // ball.applyCentralImpulse(Qt.vector3d(velocity.x, velocity.y, velocity.z));
+                        ball.applyCentralForce(Qt.vector3d(velocity.x*Math.cos(radian + Math.PI/2), velocity.y, velocity.x*Math.sin(radian - Math.PI/2)));
                     }
                 } else {
  
@@ -373,8 +376,11 @@ Node {
             velocity.x *= ballFriction;
             velocity.y *= ballFriction;
             velocity.z *= ballFriction;
-
-            ball.applyCentralImpulse(Qt.vector3d(velocity.x, velocity.y, velocity.z));
+            if (velocity.x != 0 || velocity.y != 0 || velocity.z != 0){
+                if (!kick_flag){
+                    ball.applyCentralImpulse(Qt.vector3d(velocity.x, velocity.y, velocity.z));
+                }
+            }
             velocity.x = 0;
             velocity.y = 0;
             velocity.z = 0;
