@@ -27,14 +27,14 @@ sudo apt update
 sudo apt install qt6-base-dev qt6-declarative-dev qt6-tools-dev qml6-module-* qt6-3d-dev qt6-quick3d-dev qt6-quick3d-dev-tools qt6-shadertools-dev libeigen3-dev protobuf-compiler libyaml-cpp-dev cmake build-essential libassimp-dev assimp-utils libbullet-dev
 ```
 
-### 2.Preparing 3D Models
+### 2. Preparing 3D Models
 To properly visualize the simulation, download the required 3D models and place them in the following directory:
 ```
 ~/ws/Moccer-Sim/assets/
 ```
 Currently, we are not distributing 3D models.
 
-### 3.Generating Mesh Files
+### 3. Generating Mesh Files
 ```bash
 chmod +x generating_mesh.sh
 ./generating_mesh.sh
@@ -57,7 +57,7 @@ make run
 ```
 This command executes the compiled binary and launches the graphical user interface. You can now start interacting with `Moccer-Sim`.
 
-### 4. Additional Notes
+### 6. Additional Notes
 If you encounter errors during the build process, ensure all dependencies are installed and up-to-date. For troubleshooting, refer to the [official documentation](https://github.com/RoboCup-SSL/).
 
 ## Related Tools
