@@ -11,8 +11,8 @@ import "../../assets/models/ball/"
 
 Node {
     id: robotNode
-    property real blue_bots_count: 6
-    property real yellow_bots_count: 6
+    property real blue_bots_count: 11
+    property real yellow_bots_count: 11
 
     property real wheel_radius: 8.15
     property real angle0: 0
@@ -39,7 +39,7 @@ Node {
     ]
 
     property var yellow_bots_pos: [
-        Qt.vector3d(50, 0, 100),
+        Qt.vector3d(50, 0, 0),
         Qt.vector3d(75, 0, 300),
         Qt.vector3d(75, 0, -300),
         Qt.vector3d(200, 0, 150),
