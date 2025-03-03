@@ -14,10 +14,9 @@ import MOC
 ApplicationWindow {
     id: window
     title: "Moccer-Sim"
-    width: 1280
-    height: 720
+    width: Screen.width
+    height: Screen.height
     visible: true
-    // DynamicsWorld{}
 
     Item {
         id: ro
@@ -26,23 +25,19 @@ ApplicationWindow {
         focus: true
 
         PhysicsWorld {
-            id: roa
-            // running: true
             scene: viewport.scene
         }
 
-        
-    
         Keys.onPressed: (event) => {
-            event.accepted = true;  // ⚡ 他の要素にイベントを渡さない
+            event.accepted = true;
             if (event.key === Qt.Key_W) {
-                _bot.velocity.z = -_bot.acceleration;
+                game_objects.velocity.z = -game_objects.acceleration;
             } else if (event.key === Qt.Key_S) {
-                _bot.velocity.z = _bot.acceleration;
+                game_objects.velocity.z = game_objects.acceleration;
             } else if (event.key === Qt.Key_A) {
-                _bot.velocity.x = -_bot.acceleration;
+                game_objects.velocity.x = -game_objects.acceleration;
             } else if (event.key === Qt.Key_D) {
-                _bot.velocity.x = _bot.acceleration;
+                game_objects.velocity.x = game_objects.acceleration;
             }
         }
 
@@ -54,9 +49,6 @@ ApplicationWindow {
 
             Observe {
                 id: observer
-            }
-            Physics {
-                id: physics
             }
 
             View3D {
@@ -75,8 +67,8 @@ ApplicationWindow {
                         clipFar: 2000
                         clipNear: 1
                         fieldOfView: 60
-                        position: Qt.vector3d(0, 300, 400)
-                        eulerRotation: Qt.vector3d(-45, 0, 0)
+                        position: Qt.vector3d(0, 500, 600)
+                        eulerRotation: Qt.vector3d(-47, 0, 0)
                     }
                 }
                 MouseArea {
@@ -111,12 +103,12 @@ ApplicationWindow {
                             camera.position.x += rx * right.x + rz * forward.x
                             camera.position.y += ry;
                             camera.position.z += rx * right.z + rz * forward.z
-                        } else if (mouseArea.pressedButtons & Qt.LeftButton) { // Rotate
+                        } else if (mouseArea.pressedButtons & Qt.LeftButton) {
                             let pan = -dx * dt * lookSpeed;
                             let tilt = dy * dt * lookSpeed;
                             camera.eulerRotation.y += pan;
                             camera.eulerRotation.x += tilt;
-                        } else if (mouseArea.pressedButtons & Qt.MiddleButton) { // Zoom
+                        } else if (mouseArea.pressedButtons & Qt.MiddleButton) {
                             let rz = dy * dt * linearSpeed;
                             let distance = camera.position.length();
                             if (rz > 0 && distance < zoomLimit) return;
@@ -141,14 +133,10 @@ ApplicationWindow {
                 }
                 Node {
                     id: root
-                    Lighting {
-                        id: _lighting
-                    }
-                    Field {
-                        id: _field
-                    }
-                    Bot {
-                        id: _bot
+                    Lighting {}
+                    Field {}
+                    GameObjects {
+                        id: game_objects
                         property vector3d velocity: Qt.vector3d(0, 0, 0)
                         property real acceleration: 1.0
                     }

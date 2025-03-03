@@ -11,8 +11,8 @@ import "../../assets/models/ball/"
 
 Node {
     id: robotNode
-    property real blue_bots_count: 1
-    property real yellow_bots_count: 11
+    property real blue_bots_count: 6
+    property real yellow_bots_count: 6
 
     property real wheel_radius: 8.15
     property real angle0: 0
@@ -135,7 +135,7 @@ Node {
         id: frame_yellow_bots
         model: yellow_bots_count
         DynamicRigidBody {
-            gravityEnabled: true
+            gravityEnabled: false
             physicsMaterial: physicsMaterial
             eulerRotation: Qt.vector3d(0, 90, 0)
             position: Qt.vector3d(yellow_bots_pos[index].x, 0.5, yellow_bots_pos[index].z)
@@ -378,15 +378,6 @@ Node {
             velocity.x = 0;
             velocity.y = 0;
             velocity.z = 0;
-            // console.log(velocity.x, velocity.y, velocity.z);
-
-            // if (velocity.x != 0 || velocity.z != 0)
-                // ball.setLinearVelocity(Qt.vector3d(velocity.x, velocity.y, velocity.z));
-            // velocity.x = 0;
-            // velocity.y = 0;
-            // velocity.z = 0;
-            
-            // ball.setLinearVelocity(Qt.vector3d(velocity_x, velocity_y, velocity.z*10));
         }
     }
     Component.onCompleted: {

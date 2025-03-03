@@ -3,15 +3,15 @@
 #include <thread>
 #include <chrono>
 
-Sender::Sender() :
+Sender::Sender(quint16 port, QObject *parent) :
     ioContext_(),
     socket_(ioContext_),
-    endpoint_(boost::asio::ip::make_address("127.0.0.1"), 10694) {  // Use make_address here
-    socket_.open(boost::asio::ip::udp::v4()); // Open the UDP socket
+    endpoint_(boost::asio::ip::make_address("224.5.23.2"), port) {
+    socket_.open(boost::asio::ip::udp::v4());
 }
 
 Sender::~Sender() {
-    socket_.close(); // Close the socket when done
+    socket_.close();
 }
 
 void Sender::send(QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {
@@ -52,8 +52,6 @@ void Sender::send(QVector3D ball_position, QList<QVector3D> blue_positions, QLis
         robot->set_pixel_x(0);
         robot->set_pixel_y(0);
     }
-
-    
 
     SSL_GeometryData geometry;
     SSL_GeometryFieldSize* field = geometry.mutable_field();
@@ -105,9 +103,6 @@ void Sender::send(QVector3D ball_position, QList<QVector3D> blue_positions, QLis
         return;
     }
 
-    // cout << "Sending packet with size: " << serializedData.size() << endl;
-
-    // Send the serialized data using the UDP socket
     socket_.send_to(boost::asio::buffer(serializedData), endpoint_);
 }
 

@@ -1,7 +1,7 @@
 #include "observer.h"
 
 Observer::Observer(QObject *parent)
-    : QObject(parent), worker(new ReceiverWorker(nullptr)), sender(new Sender()) {
+    : QObject(parent), worker(new ReceiverWorker(nullptr)), sender(new Sender(10694)) {
     worker->moveToThread(&receiverThread);
 
     connect(&receiverThread, &QThread::started, worker, [this]() {

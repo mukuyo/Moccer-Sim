@@ -1,6 +1,7 @@
 #ifndef SENDER_H
 #define SENDER_H
 
+#include <QObject>
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -16,9 +17,10 @@
 
 using namespace std;
 
-class Sender {
+class Sender : public QObject{
+    Q_OBJECT
 public:
-    Sender();
+    Sender(quint16 port, QObject *parent = nullptr);
     ~Sender();
     void send(QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions);
 

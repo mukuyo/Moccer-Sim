@@ -49,9 +49,6 @@ public:
     float getWheel4() const;
 
 private:
-    // void updatePosition();
-    // void updateWheelSpeeds();    
-
     uint32_t id;
     float kickspeedx;
     float kickspeedz;
@@ -66,27 +63,6 @@ private:
     float wheel2;
     float wheel3;
     float wheel4;
-
-    // float theta;
-    // float wheel_speed0;
-    // float wheel_speed1;
-    // float wheel_speed2;
-    // float wheel_speed3;
-    // QVariantList positions;
-
-    // int id;
-    // QVector3D position;
-    // float distance_ball_robot;
-    // float radian_ball_robot;
-    // float diff_x;
-    // float diff_y;
-    // float diff_theta;
-    // float speed;
-    // float slope;
-    // float intercept;
-    // float angular_velocity;
-    // bool visible;
-    // bool ball_catch;
 
 };
 

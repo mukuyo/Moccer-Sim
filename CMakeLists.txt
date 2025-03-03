@@ -19,17 +19,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         set(Protobuf_INCLUDE_DIR "/usr/local/Cellar/protobuf@21/21.12_1/include")
         set(Protobuf_LIBRARIES "/usr/local/Cellar/protobuf@21/21.12_1/lib/libprotobuf.dylib")
         include_directories("/usr/local/Cellar/protobuf@21/21.12_1/include")
-
-        set(BULLET_INCLUDE_DIR "/usr/local/Cellar/bullet/3.25/include")
-        set(BULLET_LIBRARY_DIR "/usr/local/Cellar/bullet/3.25/lib")
-
-
-        set(ASSIMP_INCLUDE_DIR "/usr/local/Cellar/assimp/5.4.3/include")
-        set(ASSIMP_LIBRARY_DIR "/usr/local/Cellar/assimp/5.4.3/lib/libassimp.dylib")
     endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(ASSIMP_INCLUDE_DIR "/usr/local/include")
-    set(ASSIMP_LIBRARY_DIR "/usr/lib/x86_64-linux-gnu/libassimp.so")
 else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
@@ -72,16 +63,6 @@ set(protobuf_MODULE_COMPATIBLE TRUE)
 find_package(Protobuf 3.21.12 REQUIRED)
 include_directories(${Protobuf_INCLUDE_DIRS})
 
-
-find_package(Bullet REQUIRED)
-include_directories(${BULLET_INCLUDE_DIR})
-include_directories(${BULLET_INCLUDE_DIR}/bullet)
-
-find_package(assimp REQUIRED)
-include_directories(${ASSIMP_INCLUDE_DIR})
-include_directories(${ASSIMP_INCLUDE_DIRS})
-
-
 # Protobuf用ディレクトリ
 set(PROTOBUF_DIR ${CMAKE_SOURCE_DIR}/proto)
 set(PROTOBUF_SOURCE_DIR ${PROTOBUF_DIR}/pb_src)
@@ -116,8 +97,6 @@ target_link_libraries(Moccer-Sim
     Qt6::Quick3DPhysics
     ${Protobuf_LIBRARIES} 
     pthread
-    ${BULLET_LIBRARIES}
-    ${ASSIMP_LIBRARY_DIR}
 )
 
 # 実行時ディレクトリの設定

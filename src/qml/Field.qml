@@ -27,14 +27,13 @@ Node {
             materials: [ 
                 DefaultMaterial {
                     diffuseMap: Texture {
-                        source: "../../assets/textures/field_texture.jpg" // 画像ファイルのパス
+                        source: "../../assets/textures/field_texture.jpg"
                     }
                 }
             ]
         }
     }
 
-    // 上壁
     StaticRigidBody {
         id: topWall
         position: Qt.vector3d(0, 5, -520)
@@ -50,7 +49,7 @@ Node {
             ]
         }
     }
-    // 下壁
+
     StaticRigidBody {
         id: bottomWall
         position: Qt.vector3d(0, 5, 520)
@@ -67,6 +66,7 @@ Node {
             ]
         }
     }
+
     StaticRigidBody {
         id: leftWall
         position: Qt.vector3d(-670, 5, 0)
@@ -83,6 +83,7 @@ Node {
             ]
         }
     }
+
     StaticRigidBody {
         id: rightWall
         position: Qt.vector3d(670, 5, 0)
@@ -116,6 +117,7 @@ Node {
             ]
         }
     }
+
     StaticRigidBody {
         id: rightGoalTop
         position: Qt.vector3d(609, 5, -91)
@@ -131,6 +133,7 @@ Node {
             ]
         }
     }
+
     StaticRigidBody {
         id: rightGoalBottom
         position: Qt.vector3d(609, 5, 91)
@@ -146,6 +149,7 @@ Node {
             ]
         }
     }
+
     StaticRigidBody {
         id: leftGoal
         position: Qt.vector3d(-618, 5, 0)
@@ -162,6 +166,7 @@ Node {
             ]
         }
     }
+
     StaticRigidBody {
         id: leftGoalTop
         position: Qt.vector3d(-609, 5, -91)
@@ -177,6 +182,7 @@ Node {
             ]
         }
     }
+
     StaticRigidBody {
         id: leftGoalBottom
         position: Qt.vector3d(-609, 5, 91)
@@ -193,7 +199,6 @@ Node {
         }
     }
 
-    // 中央線
     Model {
         id: centerLine
         source: "#Rectangle"
@@ -207,7 +212,6 @@ Node {
         ]
     }
 
-    // 横ライン
     Model {
         id: horizontalLine
         source: "#Rectangle"
@@ -221,7 +225,6 @@ Node {
         ]
     }
 
-    // フィールドの枠線
     Model {
         id: topEdge
         source: "#Rectangle"
@@ -234,6 +237,7 @@ Node {
             }
         ]
     }
+
     Model {
         id: bottomEdge
         source: "#Rectangle"
@@ -246,6 +250,7 @@ Node {
             }
         ]
     }
+
     Model {
         id: leftEdge
         source: "#Rectangle"
@@ -258,6 +263,7 @@ Node {
             }
         ]
     }
+
     Model {
         id: rightEdge
         source: "#Rectangle"
@@ -271,7 +277,6 @@ Node {
         ]
     }
 
-    // ペナルティエリアライン
     Model {
         id: leftPenaltyTop
         source: "#Rectangle"
@@ -284,6 +289,7 @@ Node {
             }
         ]
     }
+
     Model {
         id: rightPenaltyTop
         source: "#Rectangle"
@@ -296,6 +302,7 @@ Node {
             }
         ]
     }
+
     Model {
         id: leftPenaltyBottom
         source: "#Rectangle"
@@ -308,6 +315,7 @@ Node {
             }
         ]
     }
+
     Model {
         id: rightPenaltyBottom
         source: "#Rectangle"
@@ -320,6 +328,7 @@ Node {
             }
         ]
     }
+
     Model {
         id: leftPenaltyVertical
         source: "#Rectangle"
@@ -332,6 +341,7 @@ Node {
             }
         ]
     }
+
     Model {
         id: rightPenaltyVertical
         source: "#Rectangle"
@@ -345,7 +355,6 @@ Node {
         ]
     }
 
-    // Center Circle
     Model {
         id: centerWhiteCircle
         source: "#Cylinder"
@@ -357,6 +366,7 @@ Node {
             }
         ]
     }
+
     Model {
         id: centerGreenCircle
         source: "#Cylinder"
@@ -365,7 +375,7 @@ Node {
         materials: [ 
             DefaultMaterial {
                 diffuseMap: Texture {
-                    source: "../../assets/textures/field_texture.jpg" // 画像ファイルのパス
+                    source: "../../assets/textures/field_texture.jpg"
                 }
             }
         ]

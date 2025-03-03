@@ -9,7 +9,7 @@ ReceiverWorker::~ReceiverWorker() {
 
 void ReceiverWorker::startListening(quint16 port) {
     udpSocket = new QUdpSocket(this);
-    if (udpSocket->bind(QHostAddress::Any, port)) {
+    if (udpSocket->bind(QHostAddress::AnyIPv4, port)) {
         connect(udpSocket, &QUdpSocket::readyRead, this, &ReceiverWorker::receive);
         running = true;
         std::cout << "Listening on port " << port << " (in thread)" << std::endl;
