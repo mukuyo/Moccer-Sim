@@ -2,14 +2,13 @@ import QtQuick
 import QtQuick3D
 import QtQuick3D.Physics
 
-import "../../assets/models/field/"
+import "../../assets/models/stadium/"
 
 Node {
     id: rootEntity
 
     Stadium {
-        id: ex_wall
-        eulerRotation: Qt.vector3d(-90, 0, 0)
+        id: stadium
     }
     PhysicsMaterial {
         id: fieldMaterial
