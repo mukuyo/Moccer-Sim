@@ -6,7 +6,7 @@ Welcome to Moccer-Sim, a simulation tool designed for the [RoboCup Soccer Small 
 ## System Requirements
 Before diving into the exciting world of RoboCup Soccer SSL with `Moccer-Sim`, ensure your system meets the following requirements:
 
-- **Qt6**: Only Version 6.7 is supported.
+- **Qt6**: Version 6.8 is supported.
 - **Protocol Buffer Compiler**: `protoc` is essential for compiling protocol buffers.
 
 ## Getting Started
@@ -25,17 +25,30 @@ sudo apt update
 sudo apt install qt6-base-dev qt6-declarative-dev qt6-tools-dev qml6-module-* qt6-3d-dev qt6-quick3d-dev qt6-quick3d-dev-tools qt6-shadertools-dev libeigen3-dev protobuf-compiler libyaml-cpp-dev cmake build-essential libassimp-dev assimp-utils libbullet-dev
 ```
 
-### 2. Building the Project
+### 2.Preparing 3D Models
+To properly visualize the simulation, download the required 3D models and place them in the following directory:
+```
+~/ws/Moccer-Sim/assets/
+```
+Currently, we are not distributing 3D models.
+
+### 3.Generating Mesh Files
+```bash
+chmod +x generating_mesh.sh
+./generating_mesh.sh
+```
+
+### 4. Building the Project
 Set up and build the project using the following steps:
 
 ```bash
-cd ~/ws/ssl-RACOON-GUI
+cd ~/ws/Moccer-Sim/
 mkdir build && cd build
 cmake ..
 make
 ```
 
-### 3. Launch the GUI
+### 5. Launch the GUI
 Run the main application to start the GUI:
 ```bash
 make run
