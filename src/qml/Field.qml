@@ -12,9 +12,9 @@ Node {
     }
     PhysicsMaterial {
         id: fieldMaterial
-        staticFriction: 0.3
-        dynamicFriction: 0.3
-        restitution: 0.0
+        staticFriction: 0.1
+        dynamicFriction: 0.1
+        restitution: 0.1
     }
     StaticRigidBody {
         eulerRotation: Qt.vector3d(-90, 0, 0)
@@ -33,88 +33,107 @@ Node {
         }
     }
 
-    StaticRigidBody {
+    Model {
         id: topWall
-        position: Qt.vector3d(0, 5, -520)
-        scale: Qt.vector3d(13.4, 0.3, 0.02)
+        source: "#Cube"
+        scale: Qt.vector3d(12.62, 0.3, 0.02)
+        position: Qt.vector3d(0, 5, -481)
+        eulerRotation: Qt.vector3d(0, 0, 0)
+        materials: [
+            DefaultMaterial {
+                diffuseColor: "black"
+            }
+        ]
+    }
+    StaticRigidBody {
+        id: topWallSecret
+        position: Qt.vector3d(0, 5, -531)
+        scale: Qt.vector3d(12.62, 0.3, 1)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
-        Model {
-            source: "#Cube"
-            materials: [
-                DefaultMaterial {
-                    diffuseColor: "black"
-                }
-            ]
-        }
     }
 
-    StaticRigidBody {
+    Model {
         id: bottomWall
-        position: Qt.vector3d(0, 5, 520)
+        source: "#Cube"
+        scale: Qt.vector3d(12.62, 0.3, 0.02)
+        position: Qt.vector3d(0, 5, 481)
         eulerRotation: Qt.vector3d(0, 180, 0)
-        scale: Qt.vector3d(13.4, 0.3, 0.02)
+        materials: [
+            DefaultMaterial {
+                diffuseColor: "black"
+            }
+        ]
+    }
+    StaticRigidBody {
+        id: bottomWallSecret
+        position: Qt.vector3d(0, 5, 531)
+        scale: Qt.vector3d(12.62, 0.3, 1)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
-        Model {
-            source: "#Cube"
-            materials: [
-                DefaultMaterial {
-                    diffuseColor: "black"
-                }
-            ]
-        }
     }
-
-    StaticRigidBody {
+    
+    Model {
         id: leftWall
-        position: Qt.vector3d(-670, 5, 0)
-        scale: Qt.vector3d(10.42, 0.3, 0.02)
+        source: "#Cube"
+        scale: Qt.vector3d(9.62, 0.3, 0.02)
+        position: Qt.vector3d(-631, 5, 0)
+        eulerRotation: Qt.vector3d(0, 90, 0)
+        materials: [
+            DefaultMaterial {
+                diffuseColor: "black"
+            }
+        ]
+    }
+    StaticRigidBody {
+        id: leftWallSecret
+        position: Qt.vector3d(-681, 5, 0)
+        scale: Qt.vector3d(9.62, 0.3, 1)
         eulerRotation: Qt.vector3d(0, 90, 0)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
-        Model {
-            source: "#Cube"
-            materials: [
-                DefaultMaterial {
-                    diffuseColor: "black"
-                }
-            ]
-        }
     }
 
-    StaticRigidBody {
+    Model {
         id: rightWall
-        position: Qt.vector3d(670, 5, 0)
-        scale: Qt.vector3d(10.42, 0.3, 0.02)
+        source: "#Cube"
+        scale: Qt.vector3d(9.62, 0.3, 0.02)
+        position: Qt.vector3d(631, 5, 0)
+        eulerRotation: Qt.vector3d(0, -90, 0)
+        materials: [
+            DefaultMaterial {
+                diffuseColor: "black"
+            }
+        ]
+    }
+    StaticRigidBody {
+        id: rightWallSecret
+        position: Qt.vector3d(681, 5, 0)
+        scale: Qt.vector3d(9.62, 0.3, 1)
         eulerRotation: Qt.vector3d(0, -90, 0)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
-        Model {
-            source: "#Cube"
-            materials: [
-                DefaultMaterial {
-                    diffuseColor: "black"
-                }
-            ]
-        }
     }
 
-    StaticRigidBody {
+    Model {
         id: rightGoal
-        position: Qt.vector3d(618, 5, 0)
+        source: "#Cube"
         scale: Qt.vector3d(1.84, 0.3, 0.02)
-        eulerRotation: Qt.vector3d(0, 90, 0)
+        position: Qt.vector3d(618, 5, 0)
+        eulerRotation: Qt.vector3d(0, -90, 0)
+        materials: [
+            DefaultMaterial {
+                diffuseColor: "black"
+            }
+        ]
+    }
+    StaticRigidBody {
+        id: rightGoalSecret
+        position: Qt.vector3d(649, 5, 0)
+        scale: Qt.vector3d(1.84, 0.3, 0.62)
+        eulerRotation: Qt.vector3d(0, -90, 0)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
-        Model {
-            source: "#Cube"
-            materials: [
-                DefaultMaterial {
-                    diffuseColor: "black"
-                }
-            ]
-        }
     }
 
     StaticRigidBody {
@@ -149,21 +168,25 @@ Node {
         }
     }
 
-    StaticRigidBody {
+    Model {
         id: leftGoal
-        position: Qt.vector3d(-618, 5, 0)
+        source: "#Cube"
         scale: Qt.vector3d(1.84, 0.3, 0.02)
+        position: Qt.vector3d(-618, 5, 0)
+        eulerRotation: Qt.vector3d(0, 90, 0)
+        materials: [
+            DefaultMaterial {
+                diffuseColor: "black"
+            }
+        ]
+    }
+    StaticRigidBody {
+        id: leftGoalSecret
+        position: Qt.vector3d(-649, 5, 0)
+        scale: Qt.vector3d(1.84, 0.3, 0.62)
         eulerRotation: Qt.vector3d(0, 90, 0)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
-        Model {
-            source: "#Cube"
-            materials: [
-                DefaultMaterial {
-                    diffuseColor: "black"
-                }
-            ]
-        }
     }
 
     StaticRigidBody {
