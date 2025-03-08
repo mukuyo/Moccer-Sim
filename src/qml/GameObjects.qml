@@ -76,15 +76,20 @@ Node {
 
     property var key_velocity: Qt.vector3d(0, 0, 0)
 
+    function lerp(start, end, alpha) {
+        return start * (1 - alpha) + end * alpha;
+    }
+
     Connections {
         target: observer
         function onBlueRobotsChanged() {
             for (var i = 0; i < blue_bots_count; i++) {
                 let bot = blueBotsRepeater.children[i];
-                if (Math.abs(observer.blue_robots[i].velnormal) < 14.0)
-                    bbot_vel_normals[i] = observer.blue_robots[i].velnormal*60.0;
-                if (Math.abs(observer.blue_robots[i].veltangent) < 14.0)
-                    bbot_vel_tangents[i] = -observer.blue_robots[i].veltangent*60.0;
+                if (Math.abs(observer.blue_robots[i].velnormal) < 10.0)
+                    bbot_vel_normals[i] = lerp(bbot_vel_normals[i], observer.blue_robots[i].velnormal * 60.0, 0.01);
+                if (Math.abs(observer.blue_robots[i].veltangent) < 10.0)
+                    bbot_vel_tangents[i] = lerp(bbot_vel_tangents[i], -observer.blue_robots[i].veltangent * 60.0, 0.01);
+
                 bbot_vel_angulars[i] = observer.blue_robots[i].velangular;
                 bbot_kickspeeds[i] = Qt.vector3d(observer.blue_robots[i].kickspeedx, 0, observer.blue_robots[i].kickspeedz);
                 bbot_distance_ball[i] = Math.sqrt(Math.pow(bot.position.x - ball.position.x, 2) + Math.pow(bot.position.y - ball.position.y, 2) + Math.pow(bot.position.z - ball.position.z, 2));
@@ -350,8 +355,6 @@ Node {
                         velocity.z = 0;
                         ball.applyCentralForce(Qt.vector3d(velocity.x*Math.cos(radian + Math.PI/2), velocity.y, velocity.x*Math.sin(radian - Math.PI/2)));
                     }
-                } else {
- 
                 }
             }
             let yellowBotPositions = []
