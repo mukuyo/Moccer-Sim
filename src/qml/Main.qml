@@ -18,6 +18,8 @@ ApplicationWindow {
     height: Screen.height
     visible: true
 
+    property var selectBot: false
+
     Item {
         width: parent.width
         height: parent.height
@@ -99,16 +101,24 @@ ApplicationWindow {
                             game_objects.resetBallPosition(viewport.pick(event.x, event.y));
                         }
                     }
-                    
+                    onReleased: (event) => {
+                        selectBot = false;
+                    }
                     onPositionChanged: (event) => {
                         let dx = event.x - lastPos.x;
                         let dy = event.y - lastPos.y;
-                        let result = viewport.pick(event.x, event.y);
-                        if (result.objectHit.objectName.startsWith("b") || result.objectHit.objectName.startsWith("y")) {
-                            let results = viewport.pickAll(event.x, event.y);
-                            game_objects.resetBotPosition(results);
-                            return
+
+                        let results = viewport.pickAll(event.x, event.y);
+                        for (let i = 0; i < results.length; i++) {
+                            if (results[i].objectHit.objectName.startsWith("b") || results[i].objectHit.objectName.startsWith("y")) {
+                                selectBot = true;
+                            }
                         }
+                        if (selectBot) {
+                            game_objects.resetBotPosition(results);
+                            return;
+                        }
+
                         if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return;
 
                         if ((mouseArea.pressedButtons & Qt.LeftButton) && (event.modifiers & Qt.ControlModifier)) { // Rotate
@@ -135,10 +145,6 @@ ApplicationWindow {
                             camera.position.z += rz;
                         }
                         lastPos = Qt.point(event.x, event.y);
-                        
-                        // if (event.button === Qt.LeftButton) {
-                            
-                        // }
                     }
 
                     onWheel: (wheel) => {

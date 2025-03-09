@@ -75,7 +75,8 @@ Node {
     property var currentPos : Qt.vector3d(0, 0, 0)
     property real lastUpdateTime: Date.now()
 
-    property var key_velocity: Qt.vector3d(0, 0, 0)
+    property var obj_name: ""
+    property real bot_cursor_id: 0
 
     function lerp(start, end, alpha) {
         return start * (1 - alpha) + end * alpha;
@@ -351,10 +352,17 @@ Node {
         }
         for (let i = 0; i < results.length; i++) {
             if (results[i].objectHit.objectName.startsWith("b")) {
-                frame_blue_bots.children[parseInt(results[i].objectHit.objectName.slice(1))].reset(scenePosition, Qt.vector3d(0, -90, 0));
+                obj_name = "b";
+                bot_cursor_id = parseInt(results[i].objectHit.objectName.slice(1));;
             } else if (results[i].objectHit.objectName.startsWith("y")) {
-                frame_yellow_bots.children[parseInt(results[i].objectHit.objectName.slice(1))].reset(scenePosition, Qt.vector3d(0, 90, 0));
+                obj_name = "y";
+                bot_cursor_id = parseInt(results[i].objectHit.objectName.slice(1));;
             }
+        }
+        if (obj_name == "b") {
+            frame_blue_bots.children[bot_cursor_id].reset(scenePosition, Qt.vector3d(0, -90, 0));
+        } else if (obj_name == "y") {
+            frame_yellow_bots.children[bot_cursor_id].reset(scenePosition, Qt.vector3d(0, 90, 0));
         }
     }
 
