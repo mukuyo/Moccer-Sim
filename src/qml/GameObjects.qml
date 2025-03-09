@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick3D
+import Qt3D.Render
 import QtQuick3D.Physics
 import MOC
 
@@ -165,6 +166,12 @@ Node {
             }
             Model {
                 source: "#Cylinder"
+                pickable: true
+                objectName: "b"+String(index)
+                scale: Qt.vector3d(0.25, 0.13, 0.25)
+            }
+            Model {
+                source: "#Cylinder"
                 scale: Qt.vector3d(0.05, 0.001, 0.05)
                 position: Qt.vector3d(0, 12.8, 0)
                 materials: [
@@ -240,6 +247,12 @@ Node {
             property int botIndex: index
             Bot {
                 position: Qt.vector3d(0, 0.5, 0)
+            }
+            Model {
+                source: "#Cylinder"
+                pickable: true
+                objectName: "y"+String(index)
+                scale: Qt.vector3d(0.25, 0.13, 0.25)
             }
             Model {
                 source: "#Cylinder"
@@ -325,6 +338,23 @@ Node {
             source: "../../assets/models/ball/meshes/icosphere_mesh.cooked.cvx"
         }
         Ball {
+            id: ballModel
+        }
+    }
+    function resetBallPosition(result) {
+        ball.reset(result.scenePosition, Qt.vector3d(0, 0, 0));
+    }
+    function resetBotPosition(results) {
+        let scenePosition = Qt.vector3d(0, 0, 0);
+        for (let i = 0; i < results.length; i++) {
+            if (results[i].objectHit.objectName == "field") scenePosition = results[i].scenePosition;
+        }
+        for (let i = 0; i < results.length; i++) {
+            if (results[i].objectHit.objectName.startsWith("b")) {
+                frame_blue_bots.children[parseInt(results[i].objectHit.objectName.slice(1))].reset(scenePosition, Qt.vector3d(0, -90, 0));
+            } else if (results[i].objectHit.objectName.startsWith("y")) {
+                frame_yellow_bots.children[parseInt(results[i].objectHit.objectName.slice(1))].reset(scenePosition, Qt.vector3d(0, 90, 0));
+            }
         }
     }
 
@@ -337,6 +367,7 @@ Node {
             let blueBotRotations = []
             let distance_ball = 0;
             let kick_flag = false;
+            
             for (let i = 0; i < blue_bots_count; i++) {
                 let frame = frame_blue_bots.children[i];
                 let bot = blueBotsRepeater.children[i];
@@ -387,6 +418,8 @@ Node {
             velocity.x = 0;
             velocity.y = 0;
             velocity.z = 0;
+            // ball.position = Qt.vector3d(100, 0, 0)
+            // game_objects.ball.reset(Qt.vector3d(mouse.x, 0, mouse.z), Qt.vector3d(0, 0, 0));
         }
     }
     Component.onCompleted: {

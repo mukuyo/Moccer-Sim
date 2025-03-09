@@ -19,7 +19,6 @@ ApplicationWindow {
     visible: true
 
     Item {
-        id: ro
         width: parent.width
         height: parent.height
         focus: true
@@ -42,7 +41,6 @@ ApplicationWindow {
         }
 
         Rectangle {
-            id: topLeft
             anchors.fill: parent
             color: "#848895"
             border.color: "black"
@@ -71,6 +69,19 @@ ApplicationWindow {
                         eulerRotation: Qt.vector3d(-47, 0, 0)
                     }
                 }
+                Model {
+                    id: top
+                    source: "#Cube"
+                    pickable: true
+                    scale: Qt.vector3d(12.62, 0.3, 0.02)
+                    position: Qt.vector3d(0, 5, -481)
+                    eulerRotation: Qt.vector3d(0, 0, 0)
+                    materials: [
+                        DefaultMaterial {
+                            diffuseColor: "black"
+                        }
+                    ]
+                }
                 MouseArea {
                     id: mouseArea
                     anchors.fill: parent
@@ -83,12 +94,21 @@ ApplicationWindow {
 
                     onPressed: (event) => {
                         lastPos = Qt.point(event.x, event.y)
+
+                        if (event.button === Qt.RightButton) {
+                            game_objects.resetBallPosition(viewport.pick(event.x, event.y));
+                        }
                     }
                     
                     onPositionChanged: (event) => {
                         let dx = event.x - lastPos.x;
                         let dy = event.y - lastPos.y;
-
+                        let result = viewport.pick(event.x, event.y);
+                        if (result.objectHit.objectName.startsWith("b") || result.objectHit.objectName.startsWith("y")) {
+                            let results = viewport.pickAll(event.x, event.y);
+                            game_objects.resetBotPosition(results);
+                            return
+                        }
                         if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return;
 
                         if ((mouseArea.pressedButtons & Qt.LeftButton) && (event.modifiers & Qt.ControlModifier)) { // Rotate
@@ -115,6 +135,10 @@ ApplicationWindow {
                             camera.position.z += rz;
                         }
                         lastPos = Qt.point(event.x, event.y);
+                        
+                        // if (event.button === Qt.LeftButton) {
+                            
+                        // }
                     }
 
                     onWheel: (wheel) => {
@@ -132,13 +156,14 @@ ApplicationWindow {
                     }
                 }
                 Node {
-                    id: root
+                    id: node
                     Lighting {}
                     Field {}
                     GameObjects {
                         id: game_objects
                         property vector3d velocity: Qt.vector3d(0, 0, 0)
                         property real acceleration: 1.0
+                        property var field_cursor : Qt.vector3d(0, 0, 0)
                     }
                 }
             }

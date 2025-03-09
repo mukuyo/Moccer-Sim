@@ -17,12 +17,15 @@ Node {
         restitution: 0.1
     }
     StaticRigidBody {
+        id: field
         eulerRotation: Qt.vector3d(-90, 0, 0)
         physicsMaterial: fieldMaterial
         collisionShapes: PlaneShape {}
         scale: Qt.vector3d(15.4, 12.4, 1)
         Model {
             source: "#Rectangle"
+            objectName: "field"
+            pickable: true
             materials: [ 
                 DefaultMaterial {
                     diffuseMap: Texture {
@@ -35,6 +38,7 @@ Node {
 
     Model {
         id: topWall
+        pickable: true
         source: "#Cube"
         scale: Qt.vector3d(12.62, 0.3, 0.02)
         position: Qt.vector3d(0, 5, -481)
