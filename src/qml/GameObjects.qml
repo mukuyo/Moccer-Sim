@@ -26,8 +26,8 @@ Node {
     property real wheel_speed3: 1.0
 
     property var blue_bots_pos: [
-        Qt.vector3d(-75, 0, 300),
-        Qt.vector3d(-50, 0, 0),
+        Qt.vector3d(-75, 0, 0),
+        Qt.vector3d(-50, 0, -300),
         Qt.vector3d(-75, 0, -300),
         Qt.vector3d(-200, 0, 150),
         Qt.vector3d(-200, 0, -150),
@@ -380,7 +380,7 @@ Node {
                 let frame = frame_blue_bots.children[i];
                 let bot = blueBotsRepeater.children[i];
                 let radian = bot.eulerRotation.y * Math.PI / 180.0;
-                
+                // frame.reset(Qt.vector3d(bot.position.x+(-bbot_vel_normals[i]*Math.cos(radian) + bbot_vel_tangents[i]*Math.sin(radian)), 0, bot.position.z+(bbot_vel_normals[i]*Math.sin(radian) + bbot_vel_tangents[i]*Math.cos(radian))), Qt.vector3d(0, -90, 0));
                 frame.setLinearVelocity(Qt.vector3d(-bbot_vel_normals[i]*Math.cos(radian) + bbot_vel_tangents[i]*Math.sin(radian), -0.98,  bbot_vel_normals[i]*Math.sin(radian) + bbot_vel_tangents[i]*Math.cos(radian)));
                 frame.setAngularVelocity(Qt.vector3d(0, bbot_vel_angulars[i], 0));
                 bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
@@ -411,23 +411,13 @@ Node {
             }
             let ballPosition = Qt.vector3d(ball.position.x, -ball.position.z, ball.position.y);
             observer.updateObjects(blueBotPositions, yellowBotPositions, ballPosition);
-            
         
-            let ballFriction = 0.99;
-
-            velocity.x *= ballFriction;
-            velocity.y *= ballFriction;
-            velocity.z *= ballFriction;
             if (velocity.x != 0 || velocity.y != 0 || velocity.z != 0){
                 if (!kick_flag){
                     ball.applyCentralImpulse(Qt.vector3d(velocity.x, velocity.y, velocity.z));
                 }
             }
-            velocity.x = 0;
-            velocity.y = 0;
-            velocity.z = 0;
-            // ball.position = Qt.vector3d(100, 0, 0)
-            // game_objects.ball.reset(Qt.vector3d(mouse.x, 0, mouse.z), Qt.vector3d(0, 0, 0));
+            velocity = Qt.vector3d(0, 0, 0);
         }
     }
     Component.onCompleted: {
