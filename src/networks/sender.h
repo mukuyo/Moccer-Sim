@@ -28,6 +28,8 @@ private:
     boost::asio::io_context ioContext_;
     boost::asio::ip::udp::socket socket_;
     boost::asio::ip::udp::endpoint endpoint_;
+
+    int count;
 };
 
 #endif // SENDER_H

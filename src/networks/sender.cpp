@@ -8,6 +8,7 @@ Sender::Sender(quint16 port, QObject *parent) :
     socket_(ioContext_),
     endpoint_(boost::asio::ip::make_address("224.5.23.2"), port) {
     socket_.open(boost::asio::ip::udp::v4());
+    count = 0;
 }
 
 Sender::~Sender() {
@@ -18,9 +19,10 @@ void Sender::send(QVector3D ball_position, QList<QVector3D> blue_positions, QLis
     SSL_WrapperPacket packet;
 
     SSL_DetectionFrame detection;
-    detection.set_frame_number(0);
-    detection.set_t_capture(0);
-    detection.set_t_sent(0);
+    detection.set_frame_number(++count);
+    detection.set_t_capture(std::chrono::duration_cast<std::chrono::seconds>(
+        std::chrono::system_clock::now().time_since_epoch()).count());
+    detection.set_t_sent(detection.t_capture() + 0.016);
     detection.set_camera_id(0);
 
     SSL_DetectionBall* ball = detection.add_balls();
@@ -37,9 +39,10 @@ void Sender::send(QVector3D ball_position, QList<QVector3D> blue_positions, QLis
         robot->set_confidence(1.0);
         robot->set_x(blue_positions[i].x()*10.0);
         robot->set_y(blue_positions[i].y()*10.0);
-        robot->set_orientation(blue_positions[i].z()*3.14/180.0);
+        robot->set_orientation(blue_positions[i].z()*M_PI/180.0);
         robot->set_pixel_x(0);
         robot->set_pixel_y(0);
+        robot->set_height(0);
     }
 
     for (int i = 0; i < yellow_positions.size(); ++i) {
@@ -48,9 +51,10 @@ void Sender::send(QVector3D ball_position, QList<QVector3D> blue_positions, QLis
         robot->set_confidence(1.0);
         robot->set_x(yellow_positions[i].x()*10.0);
         robot->set_y(yellow_positions[i].y()*10.0);
-        robot->set_orientation(yellow_positions[i].z()*3.14/180);
+        robot->set_orientation(yellow_positions[i].z()*M_PI/180);
         robot->set_pixel_x(0);
         robot->set_pixel_y(0);
+        robot->set_height(0);
     }
 
     SSL_GeometryData geometry;
@@ -60,41 +64,135 @@ void Sender::send(QVector3D ball_position, QList<QVector3D> blue_positions, QLis
     field->set_goal_width(1800);
     field->set_goal_depth(180);
     field->set_boundary_width(300);
-    SSL_FieldLineSegment* line = field->add_field_lines();
-    line->set_name("TopTouchLine");
-    Vector2f* p1 = line->mutable_p1();
-    p1->set_x(-6000);
-    p1->set_y(4500);
-    Vector2f* p2 = line->mutable_p2();
-    p2->set_x(6000);
-    p2->set_y(4500);
-    line->set_thickness(50);
-
-    SSL_FieldCircularArc* arc = field->add_field_arcs();
-    arc->set_name("CenterCircle");
-    Vector2f* center = arc->mutable_center();
+    SSL_FieldLineSegment* topTouchLine = field->add_field_lines();
+    topTouchLine->set_name("TopTouchLine");
+    Vector2f point;
+    point.set_x(-6000);
+    point.set_y(4500);
+    topTouchLine->mutable_p1()->CopyFrom(point);
+    point.set_x(6000);
+    point.set_y(4500);
+    topTouchLine->mutable_p2()->CopyFrom(point);
+    topTouchLine->set_thickness(10);
+    SSL_FieldLineSegment* bottomTouchLine = field->add_field_lines();
+    bottomTouchLine->set_name("BottomTouchLine");
+    point.set_x(-6000);
+    point.set_y(-4500);
+    bottomTouchLine->mutable_p1()->CopyFrom(point);
+    point.set_x(6000);
+    point.set_y(-4500);
+    bottomTouchLine->mutable_p2()->CopyFrom(point);
+    bottomTouchLine->set_thickness(10);
+    SSL_FieldLineSegment* leftGoalLine = field->add_field_lines();
+    leftGoalLine->set_name("LeftGoalLine");
+    point.set_x(-6000);
+    point.set_y(-4500);
+    leftGoalLine->mutable_p1()->CopyFrom(point);
+    point.set_x(-6000);
+    point.set_y(4500);
+    leftGoalLine->mutable_p2()->CopyFrom(point);
+    leftGoalLine->set_thickness(10);
+    SSL_FieldLineSegment* rightGoalLine = field->add_field_lines();
+    rightGoalLine->set_name("RightGoalLine");
+    point.set_x(6000);
+    point.set_y(-4500);
+    rightGoalLine->mutable_p1()->CopyFrom(point);
+    point.set_x(6000);
+    point.set_y(4500);
+    rightGoalLine->mutable_p2()->CopyFrom(point);
+    rightGoalLine->set_thickness(10);
+    SSL_FieldLineSegment* halfWayLine = field->add_field_lines();
+    halfWayLine->set_name("HalfWayLine");
+    point.set_x(0);
+    point.set_y(-4500);
+    halfWayLine->mutable_p1()->CopyFrom(point);
+    point.set_x(0);
+    point.set_y(4500);
+    halfWayLine->mutable_p2()->CopyFrom(point);
+    halfWayLine->set_thickness(10);
+    SSL_FieldCircularArc* centerCircle = field->add_field_arcs();
+    centerCircle->set_name("CenterCircle");
+    Vector2f* center = centerCircle->mutable_center();
     center->set_x(0);
     center->set_y(0);
-    arc->set_radius(500);
-    arc->set_a1(0);
-    arc->set_a2(6.28319);
-    arc->set_thickness(50);
+    centerCircle->set_radius(500);
+    centerCircle->set_a1(0);
+    centerCircle->set_a2(6.28319);
+    centerCircle->set_thickness(10);
+    
+    SSL_FieldLineSegment* leftPenaltyStretch = field->add_field_lines();
+    leftPenaltyStretch->set_name("LeftPenaltyStretch");
+    point.set_x(-4800);
+    point.set_y(-1200);
+    leftPenaltyStretch->mutable_p1()->CopyFrom(point);
+    point.set_x(-4800);
+    point.set_y(1200);
+    leftPenaltyStretch->mutable_p2()->CopyFrom(point);
+    leftPenaltyStretch->set_thickness(10);
+    SSL_FieldLineSegment* rightPenaltyStretch = field->add_field_lines();
+    rightPenaltyStretch->set_name("RightPenaltyStretch");
+    point.set_x(4800);
+    point.set_y(-1200);
+    rightPenaltyStretch->mutable_p1()->CopyFrom(point);
+    point.set_x(4800);
+    point.set_y(1200);
+    rightPenaltyStretch->mutable_p2()->CopyFrom(point);
+    rightPenaltyStretch->set_thickness(10);
+
+    SSL_FieldLineSegment* leftFieldLeftPenaltyStretch = field->add_field_lines();
+    leftFieldLeftPenaltyStretch->set_name("LeftFieldLeftPenaltyStretch");
+    point.set_x(-6000);
+    point.set_y(-1200);
+    leftFieldLeftPenaltyStretch->mutable_p1()->CopyFrom(point);
+    point.set_x(-4800);
+    point.set_y(-1200);
+    leftFieldLeftPenaltyStretch->mutable_p2()->CopyFrom(point);
+    leftFieldLeftPenaltyStretch->set_thickness(10);
+    SSL_FieldLineSegment* leftFieldRightPenaltyStretch = field->add_field_lines();
+    leftFieldRightPenaltyStretch->set_name("LeftFieldRightPenaltyStretch");
+    point.set_x(-6000);
+    point.set_y(1200);
+    leftFieldRightPenaltyStretch->mutable_p1()->CopyFrom(point);
+    point.set_x(-4800);
+    point.set_y(1200);
+    leftFieldRightPenaltyStretch->mutable_p2()->CopyFrom(point);
+    leftFieldRightPenaltyStretch->set_thickness(10);
+
+    SSL_FieldLineSegment* rightFieldRightPenaltyStretch = field->add_field_lines();
+    rightFieldRightPenaltyStretch->set_name("RightFieldRightPenaltyStretch");
+    point.set_x(6000);
+    point.set_y(-1200);
+    rightFieldRightPenaltyStretch->mutable_p1()->CopyFrom(point);
+    point.set_x(4800);
+    point.set_y(-1200);
+    rightFieldRightPenaltyStretch->mutable_p2()->CopyFrom(point);
+    rightFieldRightPenaltyStretch->set_thickness(10);
+    SSL_FieldLineSegment* rightFieldLeftPenaltyStretch = field->add_field_lines();
+    rightFieldLeftPenaltyStretch->set_name("RightFieldLeftPenaltyStretch");
+    point.set_x(6000);
+    point.set_y(1200);
+    rightFieldLeftPenaltyStretch->mutable_p1()->CopyFrom(point);
+    point.set_x(4800);
+    point.set_y(1200);
+    rightFieldLeftPenaltyStretch->mutable_p2()->CopyFrom(point);
+    rightFieldLeftPenaltyStretch->set_thickness(10);
+
 
     SSL_GeometryCameraCalibration* camera = geometry.add_calib();
     camera->set_camera_id(0);
-    camera->set_focal_length(3.0);
-    camera->set_principal_point_x(0.0);
-    camera->set_principal_point_y(0.0);
+    camera->set_focal_length(500.0);
+    camera->set_principal_point_x(390.0);
+    camera->set_principal_point_y(290.0);
     camera->set_distortion(0.0);
-    camera->set_q0(0.0);
-    camera->set_q1(0.0);
+    camera->set_q0(0.7);
+    camera->set_q1(-0.7);
     camera->set_q2(0.0);
     camera->set_q3(0.0);
     camera->set_tx(0.0);
-    camera->set_ty(0.0);
-    camera->set_tz(0.0);
+    camera->set_ty(1250);
+    camera->set_tz(3500);
 
-    packet.mutable_detection()->CopyFrom(detection);
+    packet.mutable_detection()->CopyFrom(detection);    
     packet.mutable_geometry()->CopyFrom(geometry);
 
     std::string serializedData;

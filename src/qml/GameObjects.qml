@@ -87,10 +87,17 @@ Node {
         function onBlueRobotsChanged() {
             for (var i = 0; i < blue_bots_count; i++) {
                 let bot = blueBotsRepeater.children[i];
-                if (Math.abs(observer.blue_robots[i].velnormal) < 10.0)
-                    bbot_vel_normals[i] = lerp(bbot_vel_normals[i], observer.blue_robots[i].velnormal * 60.0, 0.01);
-                if (Math.abs(observer.blue_robots[i].veltangent) < 10.0)
-                    bbot_vel_tangents[i] = lerp(bbot_vel_tangents[i], -observer.blue_robots[i].veltangent * 60.0, 0.01);
+                // if (Math.abs(observer.blue_robots[i].velnormal) < 10.0) {
+                bbot_vel_normals[i] = observer.blue_robots[i].velnormal * 60.0;
+                // }
+                    // bbot_vel_normals[i] = lerp(bbot_vel_normals[i], observer.blue_robots[i].velnormal * 60.0, 0.01);
+                    
+                // if (Math.abs(observer.blue_robots[i].veltangent) < 10.0) {
+                bbot_vel_tangents[i] = -observer.blue_robots[i].veltangent * 60.0;
+                // }
+                if (i == 1)
+                    console.log(observer.blue_robots[i].veltangent, observer.blue_robots[i].velnormal);
+                    // bbot_vel_tangents[i] = lerp(bbot_vel_tangents[i], -observer.blue_robots[i].veltangent * 60.0, 0.01);
 
                 bbot_vel_angulars[i] = observer.blue_robots[i].velangular;
                 bbot_kickspeeds[i] = Qt.vector3d(observer.blue_robots[i].kickspeedx, 0, observer.blue_robots[i].kickspeedz);

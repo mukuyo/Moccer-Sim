@@ -14,8 +14,10 @@ import MOC
 ApplicationWindow {
     id: window
     title: "Moccer-Sim"
-    width: Screen.width
-    height: Screen.height
+    width: 1280
+    height: 720
+    // width: Screen.width
+    // height: Screen.height
     visible: true
 
     property var selectBot: false
