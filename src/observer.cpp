@@ -1,14 +1,19 @@
 #include "observer.h"
 
 Observer::Observer(QObject *parent)
-    : QObject(parent), worker(new ReceiverWorker(nullptr)), sender(new Sender(10694)) {
+    : QObject(parent), worker(new ReceiverWorker(nullptr)), controlBlueWorker(new ControlBlueWorker), sender(new Sender(10694)), senderControl(new SenderControl()) {
     worker->moveToThread(&receiverThread);
+    controlBlueWorker->moveToThread(&receiverBlueControlThread);
 
     connect(&receiverThread, &QThread::started, worker, [this]() {
         worker->startListening(20694);
     });
+    connect(&receiverBlueControlThread, &QThread::started, controlBlueWorker, [this]() {
+        controlBlueWorker->startListening(10301);
+    });
 
     connect(worker, &ReceiverWorker::receivedPacket, this, &Observer::receive, Qt::QueuedConnection);
+    // connect(controlBlueWorker, &ControlBlueWorker::receivedPacket, this, &Observer::receive, Qt::QueuedConnection);
 
     for (int i = 0; i < 16; ++i) {
         blue_robots[i] = new Robot();
@@ -16,6 +21,7 @@ Observer::Observer(QObject *parent)
     }    
 
     receiverThread.start();
+    receiverBlueControlThread.start();
 }
 
 Observer::~Observer() {
@@ -45,6 +51,11 @@ void Observer::stop() {
         receiverThread.quit();
         receiverThread.wait();
     }
+    if (receiverBlueControlThread.isRunning()) {
+        controlBlueWorker->stopListening();
+        receiverBlueControlThread.quit();
+        receiverBlueControlThread.wait();
+    }
 }
 
 QList<QObject*> Observer::getBlueRobots() const {
@@ -64,5 +75,8 @@ QList<QObject*> Observer::getYellowRobots() const {
 }
 
 void Observer:: updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QVector3D ball_position) {
-    sender->send(ball_position, blue_positions, yellow_positions);
+    for (int i = 0; i < 2; i++) {
+        sender->send(i, ball_position, blue_positions, yellow_positions);
+    }
+    senderControl->send(blue_positions, yellow_positions);
 }

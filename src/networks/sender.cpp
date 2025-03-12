@@ -8,56 +8,97 @@ Sender::Sender(quint16 port, QObject *parent) :
     socket_(ioContext_),
     endpoint_(boost::asio::ip::make_address("224.5.23.2"), port) {
     socket_.open(boost::asio::ip::udp::v4());
-    count = 0;
+
+    captureCount = 0;
+    geometryCount = 0;
 }
 
 Sender::~Sender() {
     socket_.close();
 }
 
-void Sender::send(QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {
+void Sender::send(int camera_id, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {
     SSL_WrapperPacket packet;
 
-    SSL_DetectionFrame detection;
-    detection.set_frame_number(++count);
-    detection.set_t_capture(std::chrono::duration_cast<std::chrono::seconds>(
-        std::chrono::system_clock::now().time_since_epoch()).count());
-    detection.set_t_sent(detection.t_capture() + 0.016);
-    detection.set_camera_id(0);
+    if (captureCount == 0) 
+        start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
-    SSL_DetectionBall* ball = detection.add_balls();
-    ball->set_confidence(1.0);
-    ball->set_x(ball_position.x()*10);
-    ball->set_y(ball_position.y()*10);
-    ball->set_z(ball_position.z()*10);
-    ball->set_pixel_x(0);
-    ball->set_pixel_y(0);
+    if (camera_id == 0)
+        t_capture = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - start_time)/10000.0;
+    
+    SSL_DetectionFrame detection;
+    detection.set_frame_number(captureCount);
+    detection.set_t_capture(t_capture);
+    detection.set_t_sent(t_capture);
+    detection.set_camera_id(camera_id);
+
+    setDetectionInfo(detection, camera_id, ball_position, blue_positions, yellow_positions);
+
+    packet.mutable_detection()->CopyFrom(detection);
+
+    if (geometryCount % 20 == 0) {
+        packet.mutable_geometry()->CopyFrom(setGeometryInfo());
+    }
+
+    packet.mutable_detection()->CopyFrom(detection);    
+    
+
+    std::string serializedData;
+    if (!packet.SerializeToString(&serializedData)) {
+        std::cerr << "Failed to serialize command." << std::endl;
+        return;
+    }
+    socket_.send_to(boost::asio::buffer(serializedData), endpoint_);
+
+    geometryCount++;
+    if (camera_id == 0)
+        captureCount++;
+}
+
+void Sender::setDetectionInfo(SSL_DetectionFrame detection, int camera_id, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {
+    if ((ball_position.x() > 0 && camera_id == 0) || (ball_position.x() < 0 && camera_id == 1)) {
+        SSL_DetectionBall* ball = detection.add_balls();
+        ball->set_confidence(1.0);
+        ball->set_area(0);
+        ball->set_x(ball_position.x()*10);
+        ball->set_y(ball_position.y()*10);
+        ball->set_z(ball_position.z()*10);
+        ball->set_pixel_x(0);
+        ball->set_pixel_y(0);
+    } 
     
     for (int i = 0; i < blue_positions.size(); ++i) {
-        SSL_DetectionRobot* robot = detection.add_robots_blue();
-        robot->set_robot_id(i);
-        robot->set_confidence(1.0);
-        robot->set_x(blue_positions[i].x()*10.0);
-        robot->set_y(blue_positions[i].y()*10.0);
-        robot->set_orientation(blue_positions[i].z()*M_PI/180.0);
-        robot->set_pixel_x(0);
-        robot->set_pixel_y(0);
-        robot->set_height(0);
+        if ((blue_positions[i].x() > 0 && camera_id == 0) || (blue_positions[i].x() < 0 && camera_id == 1)) {
+            SSL_DetectionRobot* robot = detection.add_robots_blue();
+            robot->set_robot_id(i);
+            robot->set_confidence(1.0);
+            robot->set_x(blue_positions[i].x()*10.0);
+            robot->set_y(blue_positions[i].y()*10.0);
+            robot->set_orientation(blue_positions[i].z()*M_PI/180.0);
+            robot->set_pixel_x(0);
+            robot->set_pixel_y(0);
+            robot->set_height(0);
+        }
     }
 
     for (int i = 0; i < yellow_positions.size(); ++i) {
-        SSL_DetectionRobot* robot = detection.add_robots_yellow();
-        robot->set_robot_id(i);
-        robot->set_confidence(1.0);
-        robot->set_x(yellow_positions[i].x()*10.0);
-        robot->set_y(yellow_positions[i].y()*10.0);
-        robot->set_orientation(yellow_positions[i].z()*M_PI/180);
-        robot->set_pixel_x(0);
-        robot->set_pixel_y(0);
-        robot->set_height(0);
+        if ((yellow_positions[i].x() > 0 && camera_id == 0) || (yellow_positions[i].x() < 0 && camera_id == 1)) {
+            SSL_DetectionRobot* robot = detection.add_robots_yellow();
+            robot->set_robot_id(i);
+            robot->set_confidence(1.0);
+            robot->set_x(yellow_positions[i].x()*10.0);
+            robot->set_y(yellow_positions[i].y()*10.0);
+            robot->set_orientation(yellow_positions[i].z()*M_PI/180);
+            robot->set_pixel_x(0);
+            robot->set_pixel_y(0);
+            robot->set_height(0);
+        }
     }
+}
 
+SSL_GeometryData Sender::setGeometryInfo() {
     SSL_GeometryData geometry;
+
     SSL_GeometryFieldSize* field = geometry.mutable_field();
     field->set_field_length(12000);
     field->set_field_width(9000);
@@ -191,16 +232,56 @@ void Sender::send(QVector3D ball_position, QList<QVector3D> blue_positions, QLis
     camera->set_tx(0.0);
     camera->set_ty(1250);
     camera->set_tz(3500);
+    camera->set_derived_camera_world_tx(0);
+    camera->set_derived_camera_world_ty(0);
+    camera->set_derived_camera_world_tz(0);
+    camera->set_pixel_image_width(780);
+    camera->set_pixel_image_height(580);
 
-    packet.mutable_detection()->CopyFrom(detection);    
-    packet.mutable_geometry()->CopyFrom(geometry);
+    return geometry;
+}
+
+SenderControl::SenderControl(QObject *parent) :
+    QObject(parent),
+    ioContext_(),
+    socket1_(ioContext_),
+    socket2_(ioContext_),
+    endpoint1_(boost::asio::ip::make_address("127.0.0.1"), 10301),
+    endpoint2_(boost::asio::ip::make_address("127.0.0.1"), 10302)
+{
+    socket1_.open(boost::asio::ip::udp::v4());
+    socket2_.open(boost::asio::ip::udp::v4());
+}
+
+SenderControl::~SenderControl() {
+    socket1_.close();
+    socket2_.close();
+}
+
+void SenderControl::send(QList<QVector3D> blue, QList<QVector3D> yellow) {
+    _send(blue, "blue");
+    _send(yellow, "yellow");
+}
+
+void SenderControl::_send(QList<QVector3D> positions, std::string team) {
+    if (positions.isEmpty()) return;
+
+    RobotControlResponse packet;
+
+    for (int i = 0; i < positions.length(); i++) {
+        RobotFeedback* feedback = packet.add_feedback();
+        feedback->set_id(i);
+        feedback->set_dribbler_ball_contact(false);
+    }
 
     std::string serializedData;
     if (!packet.SerializeToString(&serializedData)) {
-        std::cerr << "Failed to serialize command." << std::endl;
+        qCritical() << "Failed to serialize command.";
         return;
     }
-
-    socket_.send_to(boost::asio::buffer(serializedData), endpoint_);
+    if (team == "yellow") {
+        socket2_.send_to(boost::asio::buffer(serializedData), endpoint2_);
+    } else {
+        socket1_.send_to(boost::asio::buffer(serializedData), endpoint1_);
+    }
 }
-

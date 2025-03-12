@@ -14,6 +14,7 @@
 #include <QList>
 #include <QDebug>
 #include "ssl_vision_wrapper.pb.h"
+#include "ssl_simulation_robot_feedback.pb.h"
 
 using namespace std;
 
@@ -22,14 +23,38 @@ class Sender : public QObject{
 public:
     Sender(quint16 port, QObject *parent = nullptr);
     ~Sender();
-    void send(QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions);
+    void send(int camera_id, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions);
+    void setDetectionInfo(SSL_DetectionFrame detection, int camera_id, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions);
+    SSL_GeometryData setGeometryInfo();
 
 private:
     boost::asio::io_context ioContext_;
     boost::asio::ip::udp::socket socket_;
     boost::asio::ip::udp::endpoint endpoint_;
 
-    int count;
+    int captureCount;
+    int geometryCount;
+    double t_capture;
+    double start_time;
 };
+
+
+class SenderControl : public QObject
+{
+    Q_OBJECT
+public:
+    explicit SenderControl(QObject *parent = nullptr);
+    ~SenderControl();
+    void send(QList<QVector3D> blue, QList<QVector3D> yellow);
+    void _send(QList<QVector3D> positions, string team);
+
+private:
+    boost::asio::io_context ioContext_;
+    boost::asio::ip::udp::socket socket1_;
+    boost::asio::ip::udp::socket socket2_;
+    boost::asio::ip::udp::endpoint endpoint1_;
+    boost::asio::ip::udp::endpoint endpoint2_;
+};
+
 
 #endif // SENDER_H

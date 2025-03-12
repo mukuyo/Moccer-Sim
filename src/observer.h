@@ -37,9 +37,12 @@ signals:
 
 private:
     QThread receiverThread;
+    QThread receiverBlueControlThread;
     ReceiverWorker *worker;
+    ControlBlueWorker *controlBlueWorker;
 
     Sender *sender;
+    SenderControl *senderControl;
 
     Robot *blue_robots[16];
     Robot *yellow_robots[16];

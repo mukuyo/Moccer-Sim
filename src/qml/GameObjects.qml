@@ -12,8 +12,8 @@ import "../../assets/models/ball/"
 
 Node {
     id: robotNode
-    property real blue_bots_count: 2
-    property real yellow_bots_count: 2
+    property real blue_bots_count: 1
+    property real yellow_bots_count: 1
 
     property real wheel_radius: 8.15
     property real angle0: 0
