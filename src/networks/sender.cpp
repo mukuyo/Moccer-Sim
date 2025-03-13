@@ -6,66 +6,60 @@
 Sender::Sender(quint16 port, QObject *parent) :
     ioContext_(),
     socket_(ioContext_),
-    endpoint_(boost::asio::ip::make_address("224.5.23.2"), port) {
+    endpoint_(boost::asio::ip::make_address("127.0.0.1"), port) {
     socket_.open(boost::asio::ip::udp::v4());
 
     captureCount = 0;
     geometryCount = 0;
+
+    start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
 Sender::~Sender() {
     socket_.close();
 }
 
-void Sender::send(int camera_id, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {
-    SSL_WrapperPacket packet;
+void Sender::send(int camera_num, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {
+    t_capture = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    for (int i = 0; i < camera_num; i++) {
+        SSL_WrapperPacket packet;
 
-    if (captureCount == 0) 
-        start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        SSL_DetectionFrame detection;
+        detection.set_frame_number(captureCount);
+        detection.set_t_capture(t_capture);
+        detection.set_t_sent(t_capture);
+        detection.set_camera_id(i);
 
-    if (camera_id == 0)
-        t_capture = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - start_time)/10000.0;
-    
-    SSL_DetectionFrame detection;
-    detection.set_frame_number(captureCount);
-    detection.set_t_capture(t_capture);
-    detection.set_t_sent(t_capture);
-    detection.set_camera_id(camera_id);
+        setDetectionInfo(detection, i, ball_position, blue_positions, yellow_positions);
 
-    setDetectionInfo(detection, camera_id, ball_position, blue_positions, yellow_positions);
+        packet.mutable_detection()->CopyFrom(detection);
 
-    packet.mutable_detection()->CopyFrom(detection);
-
-    if (geometryCount % 20 == 0) {
-        packet.mutable_geometry()->CopyFrom(setGeometryInfo());
+        if (geometryCount % 20 == 0) {
+            packet.mutable_geometry()->CopyFrom(setGeometryInfo());
+        } 
+        
+        std::string serializedData;
+        if (!packet.SerializeToString(&serializedData)) {
+            std::cerr << "Failed to serialize command." << std::endl;
+            return;
+        }
+        socket_.send_to(boost::asio::buffer(serializedData), endpoint_);
     }
-
-    packet.mutable_detection()->CopyFrom(detection);    
-    
-
-    std::string serializedData;
-    if (!packet.SerializeToString(&serializedData)) {
-        std::cerr << "Failed to serialize command." << std::endl;
-        return;
-    }
-    socket_.send_to(boost::asio::buffer(serializedData), endpoint_);
-
     geometryCount++;
-    if (camera_id == 0)
-        captureCount++;
+    captureCount++;
 }
 
-void Sender::setDetectionInfo(SSL_DetectionFrame detection, int camera_id, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {
-    if ((ball_position.x() > 0 && camera_id == 0) || (ball_position.x() < 0 && camera_id == 1)) {
+void Sender::setDetectionInfo(SSL_DetectionFrame &detection, int camera_id, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {
+    if ((ball_position.x() >= 0 && camera_id == 0) || (ball_position.x() < 0 && camera_id == 1)) {
         SSL_DetectionBall* ball = detection.add_balls();
         ball->set_confidence(1.0);
-        ball->set_area(0);
+        // ball->set_area(0);
         ball->set_x(ball_position.x()*10);
         ball->set_y(ball_position.y()*10);
         ball->set_z(ball_position.z()*10);
         ball->set_pixel_x(0);
         ball->set_pixel_y(0);
-    } 
+    }
     
     for (int i = 0; i < blue_positions.size(); ++i) {
         if ((blue_positions[i].x() > 0 && camera_id == 0) || (blue_positions[i].x() < 0 && camera_id == 1)) {
@@ -218,25 +212,27 @@ SSL_GeometryData Sender::setGeometryInfo() {
     rightFieldLeftPenaltyStretch->mutable_p2()->CopyFrom(point);
     rightFieldLeftPenaltyStretch->set_thickness(10);
 
+    for (int i = 0; i < 2; i++) {
+        SSL_GeometryCameraCalibration* camera = geometry.add_calib();
+        camera->set_camera_id(i);
+        camera->set_focal_length(500.0);
+        camera->set_principal_point_x(390.0);
+        camera->set_principal_point_y(290.0);
+        camera->set_distortion(0.0);
+        camera->set_q0(0.7);
+        camera->set_q1(-0.7);
+        camera->set_q2(0.0);
+        camera->set_q3(0.0);
+        camera->set_tx(0.0);
+        camera->set_ty(1250);
+        camera->set_tz(3500);
+        camera->set_derived_camera_world_tx(0);
+        camera->set_derived_camera_world_ty(0);
+        camera->set_derived_camera_world_tz(0);
+        camera->set_pixel_image_width(780);
+        camera->set_pixel_image_height(580);
+    }
 
-    SSL_GeometryCameraCalibration* camera = geometry.add_calib();
-    camera->set_camera_id(0);
-    camera->set_focal_length(500.0);
-    camera->set_principal_point_x(390.0);
-    camera->set_principal_point_y(290.0);
-    camera->set_distortion(0.0);
-    camera->set_q0(0.7);
-    camera->set_q1(-0.7);
-    camera->set_q2(0.0);
-    camera->set_q3(0.0);
-    camera->set_tx(0.0);
-    camera->set_ty(1250);
-    camera->set_tz(3500);
-    camera->set_derived_camera_world_tx(0);
-    camera->set_derived_camera_world_ty(0);
-    camera->set_derived_camera_world_tz(0);
-    camera->set_pixel_image_width(780);
-    camera->set_pixel_image_height(580);
 
     return geometry;
 }

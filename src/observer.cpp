@@ -75,8 +75,6 @@ QList<QObject*> Observer::getYellowRobots() const {
 }
 
 void Observer:: updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QVector3D ball_position) {
-    for (int i = 0; i < 2; i++) {
-        sender->send(i, ball_position, blue_positions, yellow_positions);
-    }
-    senderControl->send(blue_positions, yellow_positions);
+    sender->send(2, ball_position, blue_positions, yellow_positions);
+    // senderControl->send(blue_positions, yellow_positions);
 }

@@ -12,6 +12,7 @@
 #include <string>
 #include "mocSim_Packet.pb.h"
 #include "ssl_simulation_robot_control.pb.h"
+#include "ssl_simulation_synchronous.pb.h"
 #include "ssl_simulation_robot_feedback.pb.h"
 
 using namespace std;

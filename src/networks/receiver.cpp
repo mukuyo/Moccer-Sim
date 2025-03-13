@@ -9,7 +9,7 @@ ReceiverWorker::~ReceiverWorker() {
 
 void ReceiverWorker::startListening(quint16 port) {
     udpSocket = new QUdpSocket(this);
-    if (udpSocket->bind(QHostAddress("127.0.0.1"), port)) {
+    if (udpSocket->bind(QHostAddress("224.5.23.2"), port)) {
         connect(udpSocket, &QUdpSocket::readyRead, this, &ReceiverWorker::receive);
         running = true;
         std::cout << "Listening on port " << port << " (in thread)" << std::endl;
@@ -67,39 +67,25 @@ void ControlBlueWorker::receive() {
             continue;
         }
         robotControl.ParseFromArray(datagram.data().data(), datagram.data().size());
-
-        cout << "Received robot control" << endl;
         RobotControlResponse robotControlResponse;
         processRobotControl(robotControl, robotControlResponse, "blue");
-        // for (int i = 0; i < 1; i++) {
-        //     RobotFeedback* feedback = robotControlResponse.add_feedback();
-        //     feedback->set_id(i);
-        //     feedback->set_dribbler_ball_contact(false);
-        // }
-        // std::string serializedData;
-        // if (!robotControlResponse.SerializeToString(&serializedData)) {
-        //     std::cerr << "Failed to serialize command." << std::endl;
-        //     return;
-        // }
-        // udpSocket->writeDatagram(serializedData.c_str(), serializedData.size(), datagram.senderAddress(), datagram.senderPort());
-        QByteArray buffer(robotControlResponse.ByteSize(), 0);
+
+        QByteArray buffer(robotControlResponse.ByteSizeLong(), 0);
         robotControlResponse.SerializeToArray(buffer.data(), buffer.size());
         udpSocket->writeDatagram(buffer.data(), buffer.size(), datagram.senderAddress(), datagram.senderPort());
-        // QByteArray buffer(robotControlResponse.ByteSize(), 0);
-        // robotControlResponse.SerializeToArray(buffer.data(), buffer.size());
-        // udpSocket->writeDatagram(buffer.data(), buffer.size(), "192.168.1.184", 10301);
     }
-
-    // elapsedLastPackageBlue.start();
 }
 
+// int ControlBlueWorker::robotIndex(int robot,int team) {
+//     if (robot >= cfg->Robots_Count()) return -1;
+//     return robot + team*cfg->Robots_Count();
+// }
+
 void ControlBlueWorker::processRobotControl(const RobotControl &robotControl, RobotControlResponse &robotControlResponse, string team) {
-    for (const auto &robotCommand : robotControl.robot_commands()) {
-        // int id = robotIndex(robotCommand.id(), team == "yellow" ? 1 : 0);
+    for (const auto& robotCommand : robotControl.robot_commands()) {
         int id = robotCommand.id();
-        if (id < 0) {
-            continue;
-        }
+        // int id = robotIndex(robotCommand.id(), team == "yellow" ? 1 : 0);
+        // if (id < 0) continue;
         // auto robot = robots[id];
         // auto robotCfg = team == YELLOW ? cfg->yellowSettings : cfg->blueSettings;
 
@@ -119,16 +105,39 @@ void ControlBlueWorker::processRobotControl(const RobotControl &robotControl, Ro
             // robot->kicker->setRoller(robotCommand.dribbler_speed() > 0 ? 1 : 0);
         }
 
-        // if (robotCommand.has_move_command()) {
-        //     processMoveCommand(robotControlResponse, robotCommand.move_command(), robot);
-        // }
+        if (robotCommand.has_move_command()) {
+            // processMoveCommand(robotControlResponse, robotCommand.move_command(), robot);
+        }
         
         auto feedback = robotControlResponse.add_feedback();
-        feedback->set_id(robotCommand.id());
+        feedback->set_id(id);
         feedback->set_dribbler_ball_contact(false);
         // feedback->set_dribbler_ball_contact(robot->kicker->isTouchingBall());
     }
 }
+
+// void ControlBlueWorker::processMoveCommand(RobotControlResponse &robotControlResponse, const RobotMoveCommand &moveCommand, Robot *robot) {
+//     if (moveCommand.has_wheel_velocity()) {
+//         auto &wheelVel = moveCommand.wheel_velocity();
+//         robot->setSpeed(0, wheelVel.front_right());
+//         robot->setSpeed(1, wheelVel.back_right());
+//         robot->setSpeed(2, wheelVel.back_left());
+//         robot->setSpeed(3, wheelVel.front_left());
+//     } else if (moveCommand.has_local_velocity()) {
+//         auto &vel = moveCommand.local_velocity();
+//         robot->setSpeed(vel.forward(), vel.left(), vel.angular());
+//     } else if(moveCommand.has_global_velocity()) {
+//         auto &vel = moveCommand.global_velocity();
+//         dReal orientation = -robot->getDir() * M_PI / 180.0;
+//         dReal vx = (vel.x() * cos(orientation)) - (vel.y() * sin(orientation));
+//         dReal vy = (vel.y() * cos(orientation)) + (vel.x() * sin(orientation));
+//         robot->setSpeed(vx, vy, vel.angular());
+//     }  else {
+//         SimulatorError *pError = robotControlResponse.add_errors();
+//         pError->set_code("GRSIM_UNSUPPORTED_MOVE_COMMAND");
+//         pError->set_message("Unsupported move command");
+//     }
+// }
 
 void ControlBlueWorker::stopListening() {
     running = false;
