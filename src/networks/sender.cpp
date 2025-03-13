@@ -20,7 +20,7 @@ Sender::~Sender() {
 }
 
 void Sender::send(int camera_num, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {
-    t_capture = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    t_capture = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()/1000.0;
     for (int i = 0; i < camera_num; i++) {
         SSL_WrapperPacket packet;
 
