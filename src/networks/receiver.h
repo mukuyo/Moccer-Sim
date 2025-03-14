@@ -10,7 +10,6 @@
 #include <thread>
 #include <chrono>
 #include <string>
-#include "models/robot.h"
 #include "mocSim_Packet.pb.h"
 #include "ssl_simulation_robot_control.pb.h"
 #include "ssl_simulation_synchronous.pb.h"
@@ -21,8 +20,6 @@ using namespace std;
 class VisionReceiver : public QObject
 {
     Q_OBJECT
-    // Q_PROPERTY(QList<QObject*> blue_robots READ getBlueRobots NOTIFY blueRobotsChanged)
-    // Q_PROPERTY(QList<QObject*> yellow_robots READ getYellowRobots NOTIFY yellowRobotsChanged)
 
 public:
     explicit VisionReceiver(QObject *parent = nullptr);
@@ -31,11 +28,8 @@ public:
     void startListening(quint16 port);
     void stopListening();
 
-    QList<QObject*> getBlueRobots() const;
-    QList<QObject*> getYellowRobots() const;
-
 signals:
-    void receivedPacket(const mocSim_Packet &packet);
+    void receivedPacket(const mocSim_Packet packet);
 
 private slots:
     void receive();
@@ -43,8 +37,6 @@ private slots:
 private:
     QUdpSocket *udpSocket;
 
-    Robot *blue_robots[16];
-    Robot *yellow_robots[16];
 };
 
 class ControlReceiver : public QObject

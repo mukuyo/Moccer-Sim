@@ -38,23 +38,4 @@ private:
     double start_time;
 };
 
-
-class SenderControl : public QObject
-{
-    Q_OBJECT
-public:
-    explicit SenderControl(QObject *parent = nullptr);
-    ~SenderControl();
-    void send(QList<QVector3D> blue, QList<QVector3D> yellow);
-    void _send(QList<QVector3D> positions, string team);
-
-private:
-    boost::asio::io_context ioContext_;
-    boost::asio::ip::udp::socket socket1_;
-    boost::asio::ip::udp::socket socket2_;
-    boost::asio::ip::udp::endpoint endpoint1_;
-    boost::asio::ip::udp::endpoint endpoint2_;
-};
-
-
 #endif // SENDER_H
