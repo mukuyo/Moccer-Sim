@@ -13,9 +13,8 @@
 
 class Observer : public QObject {
     Q_OBJECT
-
-    Q_PROPERTY(QList<QObject*> blue_robots READ getBlueRobots NOTIFY blueRobotsChanged)
-    Q_PROPERTY(QList<QObject*> yellow_robots READ getYellowRobots NOTIFY yellowRobotsChanged)
+    // Q_PROPERTY(QList<QObject*> blue_robots READ getBlueRobots NOTIFY blueRobotsChanged)
+    // Q_PROPERTY(QList<QObject*> yellow_robots READ getYellowRobots NOTIFY yellowRobotsChanged)
 
 public:
     explicit Observer(QObject *parent = nullptr);
@@ -26,26 +25,21 @@ public:
     void start(quint16 port);
     void stop();
 
-    void receive(const mocSim_Packet& packet);
+    // void receive(Robot *blue_robots[16], Robot *yellow_robots[16]);
 
-    QList<QObject*> getBlueRobots() const;
-    QList<QObject*> getYellowRobots() const;
+    // QList<QObject*> getBlueRobots() const;
+    // QList<QObject*> getYellowRobots() const;
 
 signals:
     void blueRobotsChanged();
     void yellowRobotsChanged();
 
 private:
-    QThread receiverThread;
-    QThread receiverBlueControlThread;
-    ReceiverWorker *worker;
-    ControlBlueWorker *controlBlueWorker;
+    VisionReceiver *visionReceiver;
+    ControlReceiver *controlReceiver;
 
     Sender *sender;
     SenderControl *senderControl;
-
-    Robot *blue_robots[16];
-    Robot *yellow_robots[16];
 };
 
 #endif // OBSERVER_H

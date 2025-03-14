@@ -53,7 +53,6 @@ void Sender::setDetectionInfo(SSL_DetectionFrame &detection, int camera_id, QVec
     if ((ball_position.x() >= 0 && camera_id == 0) || (ball_position.x() < 0 && camera_id == 1)) {
         SSL_DetectionBall* ball = detection.add_balls();
         ball->set_confidence(1.0);
-        // ball->set_area(0);
         ball->set_x(ball_position.x()*10);
         ball->set_y(ball_position.y()*10);
         ball->set_z(ball_position.z()*10);
