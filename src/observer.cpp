@@ -4,6 +4,7 @@ Observer::Observer(QObject *parent)
     : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlReceiver(new ControlReceiver(nullptr)), sender(new Sender(10694)) {
     visionReceiver->startListening(20694);
     controlReceiver->startListening(10301);
+    // controlYellowReceiver->startListening(10302);
 
     connect(visionReceiver, &VisionReceiver::receivedPacket, this, &Observer::visionReceive);
     connect(controlReceiver, &ControlReceiver::receivedPacket, this, &Observer::controlReceive);

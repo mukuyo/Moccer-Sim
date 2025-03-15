@@ -12,8 +12,8 @@ import "../../assets/models/ball/"
 
 Node {
     id: robotNode
-    property real blue_bots_count: 1
-    property real yellow_bots_count: 0
+    property real blue_bots_count: 11
+    property real yellow_bots_count: 1
 
     property real wheel_radius: 8.15
     property real angle0: 0
@@ -87,17 +87,20 @@ Node {
         function onBlueRobotsChanged() {
             for (var i = 0; i < blue_bots_count; i++) {
                 let bot = blueBotsRepeater.children[i];
-                // if (Math.abs(observer.blue_robots[i].velnormal) < 10.0) {
-                    bbot_vel_normals[i] = observer.blue_robots[i].velnormal * 60.0;
-                // }
+                if (Math.abs(observer.blue_robots[i].velnormal) < 10) {
+                    bbot_vel_normals[i] = observer.blue_robots[i].velnormal * 60 * 1.5;
+                }
                     // bbot_vel_normals[i] = lerp(bbot_vel_normals[i], observer.blue_robots[i].velnormal * 60.0, 0.01);
                     
-                // if (Math.abs(observer.blue_robots[i].veltangent) < 10.0) {
-                    bbot_vel_tangents[i] = -observer.blue_robots[i].veltangent * 60.0;
-                // }
+                if (Math.abs(observer.blue_robots[i].veltangent) < 10) {
+                    // console.log(observer.blue_robots[i].veltangent);
+                    bbot_vel_tangents[i] = -observer.blue_robots[i].veltangent * 60 * 1.5;
+                }
                 // bbot_vel_tangents[i] = lerp(bbot_vel_tangents[i], -observer.blue_robots[i].veltangent * 60.0, 0.01);
-
-                bbot_vel_angulars[i] = observer.blue_robots[i].velangular;
+                if (Math.abs(observer.blue_robots[i].velangular) < 10) {
+                    bbot_vel_angulars[i] = observer.blue_robots[i].velangular;
+                }
+                // bbot_vel_angulars[i] = observer.blue_robots[i].velangular;
                 bbot_kickspeeds[i] = Qt.vector3d(observer.blue_robots[i].kickspeedx, 0, observer.blue_robots[i].kickspeedz);
                 bbot_distance_ball[i] = Math.sqrt(Math.pow(bot.position.x - ball.position.x, 2) + Math.pow(bot.position.y - ball.position.y, 2) + Math.pow(bot.position.z - ball.position.z, 2));
                 bbot_radian_ball[i] = Math.atan2(ball.position.z-bot.position.z, ball.position.x-bot.position.x);
