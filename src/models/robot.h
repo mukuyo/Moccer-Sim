@@ -10,6 +10,8 @@
 #include <QDebug>
 
 #include "mocSim_Commands.pb.h"
+#include "ssl_simulation_robot_control.pb.h"
+#include "ssl_simulation_robot_feedback.pb.h"
 
 using namespace std;
 
@@ -33,7 +35,8 @@ public:
     explicit Robot(QObject *parent = nullptr);
     ~Robot();
 
-    void update(mocSim_Robot_Command robot_command);
+    void visionUpdate(mocSim_Robot_Command robotCommand);
+    void controlUpdate(RobotCommand robotCommand);
 
     uint32_t getId() const;
     float getKickspeedx() const;
@@ -49,6 +52,8 @@ public:
     float getWheel4() const;
 
 private:
+    void processMoveCommand(const RobotMoveCommand &moveCommand);
+
     uint32_t id;
     float kickspeedx;
     float kickspeedz;

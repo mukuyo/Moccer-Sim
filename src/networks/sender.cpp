@@ -12,6 +12,7 @@ Sender::Sender(quint16 port, QObject *parent) :
     captureCount = 0;
     geometryCount = 0;
 
+    loop_time = 0;
     start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
@@ -20,8 +21,9 @@ Sender::~Sender() {
 }
 
 void Sender::send(int camera_num, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {
-    t_capture = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()/1000.0;
-    for (int i = 0; i < camera_num; i++) {
+    t_capture = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - start_time)/1000.0;
+    
+    for (int i = 0; i < 1; i++) {
         SSL_WrapperPacket packet;
 
         SSL_DetectionFrame detection;
@@ -50,7 +52,7 @@ void Sender::send(int camera_num, QVector3D ball_position, QList<QVector3D> blue
 }
 
 void Sender::setDetectionInfo(SSL_DetectionFrame &detection, int camera_id, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {
-    if ((ball_position.x() >= 0 && camera_id == 0) || (ball_position.x() < 0 && camera_id == 1)) {
+    // if ((ball_position.x() >= 0 && camera_id == 0) || (ball_position.x() < 0 && camera_id == 1)) {
         SSL_DetectionBall* ball = detection.add_balls();
         ball->set_confidence(1.0);
         ball->set_x(ball_position.x()*10);
@@ -58,10 +60,10 @@ void Sender::setDetectionInfo(SSL_DetectionFrame &detection, int camera_id, QVec
         ball->set_z(ball_position.z()*10);
         ball->set_pixel_x(0);
         ball->set_pixel_y(0);
-    }
+    // }
     
     for (int i = 0; i < blue_positions.size(); ++i) {
-        if ((blue_positions[i].x() > 0 && camera_id == 0) || (blue_positions[i].x() < 0 && camera_id == 1)) {
+        // if ((blue_positions[i].x() > 0 && camera_id == 0) || (blue_positions[i].x() < 0 && camera_id == 1)) {
             SSL_DetectionRobot* robot = detection.add_robots_blue();
             robot->set_robot_id(i);
             robot->set_confidence(1.0);
@@ -71,11 +73,11 @@ void Sender::setDetectionInfo(SSL_DetectionFrame &detection, int camera_id, QVec
             robot->set_pixel_x(0);
             robot->set_pixel_y(0);
             robot->set_height(0);
-        }
+        // }
     }
 
     for (int i = 0; i < yellow_positions.size(); ++i) {
-        if ((yellow_positions[i].x() > 0 && camera_id == 0) || (yellow_positions[i].x() < 0 && camera_id == 1)) {
+        // if ((yellow_positions[i].x() > 0 && camera_id == 0) || (yellow_positions[i].x() < 0 && camera_id == 1)) {
             SSL_DetectionRobot* robot = detection.add_robots_yellow();
             robot->set_robot_id(i);
             robot->set_confidence(1.0);
@@ -85,7 +87,7 @@ void Sender::setDetectionInfo(SSL_DetectionFrame &detection, int camera_id, QVec
             robot->set_pixel_x(0);
             robot->set_pixel_y(0);
             robot->set_height(0);
-        }
+        // }
     }
 }
 

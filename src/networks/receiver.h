@@ -47,6 +47,9 @@ public:
     explicit ControlReceiver(QObject *parent = nullptr);
     ~ControlReceiver();
 
+signals:
+    void receivedPacket(const RobotControl packet, bool isYellow);
+
 public slots:
     void startListening(quint16 port);
     void receive();

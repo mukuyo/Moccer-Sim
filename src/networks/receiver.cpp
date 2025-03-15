@@ -17,17 +17,12 @@ void VisionReceiver::startListening(quint16 port) {
 }
 
 void VisionReceiver::receive() {
+    mocSim_Packet packet;
     while (udpSocket->hasPendingDatagrams()) {
-        QByteArray datagram;
-        datagram.resize(static_cast<int>(udpSocket->pendingDatagramSize()));
-        udpSocket->readDatagram(datagram.data(), datagram.size());
-        
-        mocSim_Packet packet;
-        if (packet.ParseFromArray(datagram.data(), datagram.size())) {
-            emit receivedPacket(packet);
-        } else {
-            std::cerr << "Failed to parse Protobuf packet" << std::endl;
-        }
+        QNetworkDatagram datagram = udpSocket->receiveDatagram();
+        if (!datagram.isValid()) continue;
+        packet.ParseFromArray(datagram.data().data(), datagram.data().size());
+        emit receivedPacket(packet);
     }
 }
 
@@ -57,19 +52,18 @@ void ControlReceiver::startListening(quint16 port) {
 }
 
 void ControlReceiver::receive() {
-    RobotControl robotControl;
+    RobotControl packet;
     while (udpSocket->hasPendingDatagrams()) {
         QNetworkDatagram datagram = udpSocket->receiveDatagram();
-        if (!datagram.isValid()) {
-            continue;
-        }
-        robotControl.ParseFromArray(datagram.data().data(), datagram.data().size());
-        RobotControlResponse robotControlResponse;
-        processRobotControl(robotControl, robotControlResponse, "blue");
+        if (!datagram.isValid()) continue;
+        packet.ParseFromArray(datagram.data().data(), datagram.data().size());
+        emit receivedPacket(packet, false);
+        // RobotControlResponse robotControlResponse;
+        // processRobotControl(robotControl, robotControlResponse, "blue");
 
-        QByteArray buffer(robotControlResponse.ByteSizeLong(), 0);
-        robotControlResponse.SerializeToArray(buffer.data(), buffer.size());
-        udpSocket->writeDatagram(buffer.data(), buffer.size(), datagram.senderAddress(), datagram.senderPort());
+        // QByteArray buffer(robotControlResponse.ByteSizeLong(), 0);
+        // robotControlResponse.SerializeToArray(buffer.data(), buffer.size());
+        // udpSocket->writeDatagram(buffer.data(), buffer.size(), datagram.senderAddress(), datagram.senderPort());
     }
 }
 

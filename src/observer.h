@@ -10,6 +10,9 @@
 #include "networks/sender.h"
 #include "models/robot.h"
 #include "mocSim_Packet.pb.h"
+#include "ssl_simulation_robot_control.pb.h"
+
+using namespace std;
 
 class Observer : public QObject {
     Q_OBJECT
@@ -25,7 +28,8 @@ public:
     void start(quint16 port);
     void stop();
 
-    void receive(mocSim_Packet packet);
+    void visionReceive(mocSim_Packet packet);
+    void controlReceive(RobotControl packet, bool isYellow);
 
     QList<QObject*> getBlueRobots() const;
     QList<QObject*> getYellowRobots() const;

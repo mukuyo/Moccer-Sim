@@ -36,6 +36,7 @@ private:
     int geometryCount;
     double t_capture;
     double start_time;
+    double loop_time;
 };
 
 #endif // SENDER_H
