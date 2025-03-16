@@ -35,19 +35,24 @@ void Observer::visionReceive(const mocSim_Packet packet) {
     }
     if (isYellow) emit yellowRobotsChanged();
     else emit blueRobotsChanged();
+    
 }
 
 void Observer::controlReceive(const RobotControl packet, bool isYellow) {
+    int receive_count = 0;
     for (const auto& robotCommand : packet.robot_commands()) {
         int id = robotCommand.id();
+        if (!robotCommand.has_move_command()) continue;
         if (isYellow) {
             yellow_robots[id]->controlUpdate(robotCommand);
         } else {
             blue_robots[id]->controlUpdate(robotCommand);
         }
+        receive_count++;
     }
+    if (receive_count == 0) return;
     if (isYellow) emit yellowRobotsChanged();
-    else emit blueRobotsChanged();
+    blueRobotsChanged();
 }
 
 QList<QObject*> Observer::getBlueRobots() const {

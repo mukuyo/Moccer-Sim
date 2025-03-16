@@ -50,8 +50,10 @@ void Robot::controlUpdate(RobotCommand robotCommand) {
         kickspeedz = z;
     }
 
+    spinner = false;
     if (robotCommand.has_dribbler_speed()) {
         // robot->kicker->setRoller(robotCommand.dribbler_speed() > 0 ? 1 : 0);
+        spinner = true;
     }
 
     if (robotCommand.has_move_command()) {
