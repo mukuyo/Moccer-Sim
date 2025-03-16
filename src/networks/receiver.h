@@ -39,13 +39,32 @@ private:
 
 };
 
-class ControlReceiver : public QObject
+class ControlBlueReceiver : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ControlReceiver(QObject *parent = nullptr);
-    ~ControlReceiver();
+    explicit ControlBlueReceiver(QObject *parent = nullptr);
+    ~ControlBlueReceiver();
+
+signals:
+    void receivedPacket(const RobotControl packet, bool isYellow);
+
+public slots:
+    void startListening(quint16 port);
+    void receive();
+    void stopListening();
+private:
+    QUdpSocket *udpSocket;
+};
+
+class ControlYellowReceiver : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit ControlYellowReceiver(QObject *parent = nullptr);
+    ~ControlYellowReceiver();
 
 signals:
     void receivedPacket(const RobotControl packet, bool isYellow);

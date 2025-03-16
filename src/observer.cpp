@@ -1,14 +1,14 @@
 #include "observer.h"
 
 Observer::Observer(QObject *parent)
-    : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlBlueReceiver(new ControlReceiver(nullptr)), controlYellowReceiver(new ControlReceiver(nullptr)), sender(new Sender(10694)) {
+    : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlBlueReceiver(new ControlBlueReceiver(nullptr)), controlYellowReceiver(new ControlYellowReceiver(nullptr)), sender(new Sender(10694)) {
     visionReceiver->startListening(20694);
     controlBlueReceiver->startListening(10301);
     controlYellowReceiver->startListening(10302);
 
     connect(visionReceiver, &VisionReceiver::receivedPacket, this, &Observer::visionReceive);
-    connect(controlBlueReceiver, &ControlReceiver::receivedPacket, this, &Observer::controlReceive);
-    connect(controlYellowReceiver, &ControlReceiver::receivedPacket, this, &Observer::controlReceive);
+    connect(controlBlueReceiver, &ControlBlueReceiver::receivedPacket, this, &Observer::controlReceive);
+    connect(controlYellowReceiver, &ControlYellowReceiver::receivedPacket, this, &Observer::controlReceive);
 
     for (int i = 0; i < 16; ++i) {
         blue_robots[i] = new Robot();

@@ -13,7 +13,7 @@ Sender::Sender(quint16 port, QObject *parent) :
     geometryCount = 0;
 
     loop_time = 0;
-    start_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    t_capture = 0;
 }
 
 Sender::~Sender() {
@@ -21,8 +21,8 @@ Sender::~Sender() {
 }
 
 void Sender::send(int camera_num, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {
-    t_capture = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - start_time)/1000.0;
-    
+    // t_capture = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - start_time)/1000.0;
+    t_capture += 1/60.0;
     for (int i = 0; i < 1; i++) {
         SSL_WrapperPacket packet;
 
@@ -73,6 +73,7 @@ void Sender::setDetectionInfo(SSL_DetectionFrame &detection, int camera_id, QVec
             robot->set_pixel_x(0);
             robot->set_pixel_y(0);
             robot->set_height(0);
+
         // }
     }
 

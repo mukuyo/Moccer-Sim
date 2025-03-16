@@ -40,8 +40,8 @@ signals:
 
 private:
     VisionReceiver *visionReceiver;
-    ControlReceiver *controlBlueReceiver;
-    ControlReceiver *controlYellowReceiver;
+    ControlBlueReceiver *controlBlueReceiver;
+    ControlYellowReceiver *controlYellowReceiver;
 
     Sender *sender;
 
