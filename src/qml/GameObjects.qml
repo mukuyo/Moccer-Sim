@@ -4,16 +4,17 @@ import Qt3D.Render
 import QtQuick3D.Physics
 import MOC
 
-import "../../assets/models/frame/"
-import "../../assets/models/bot/"
-import "../../assets/models/wheel/"
+import "../../assets/models/bot/blue/viz/body/" as BlueBody
+import "../../assets/models/bot/yellow/viz/body/" as YellowBody
+import "../../assets/models/bot/blue/viz/wheel/" as BlueWheel
+import "../../assets/models/bot/yellow/viz/wheel/" as YellowWheel
 import "../../assets/models/ball/"
 
 
 Node {
     id: robotNode
     property real blue_bots_count: 1
-    property real yellow_bots_count: 0
+    property real yellow_bots_count: 1
 
     property real wheel_radius: 8.15
     property real angle0: 0
@@ -138,7 +139,7 @@ Node {
                     source: "../../assets/models/plane/meshes/plane_mesh.cooked.cvx"
                 },
                 ConvexMeshShape {
-                    source: "../../assets/models/frame/meshes/frame_mesh.cooked.cvx"
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/frame_mesh.cooked.cvx"
                 }
             ]
         }
@@ -156,7 +157,7 @@ Node {
                     source: "../../assets/models/plane/meshes/plane_mesh.cooked.cvx"
                 },
                 ConvexMeshShape {
-                    source: "../../assets/models/frame/meshes/frame_mesh.cooked.cvx"
+                    source: "../../assets/models/bot/yellow/rigid_body/meshes/frame_mesh.cooked.cvx"
                 }
             ]
         }
@@ -167,7 +168,7 @@ Node {
         model: blue_bots_count
         delegate: Node {
             property int botIndex: index
-            Bot {
+            BlueBody.Body {
                 position: Qt.vector3d(0, 0.5, 0)
             }
             Model {
@@ -219,7 +220,7 @@ Node {
                 id: wheels
                 model: 4
                 property int botIndex: modelData
-                Wheel {
+                BlueWheel.Wheel {
                     id: wheel
                     property int wheelIndex: index
                     property var angles: [
@@ -251,7 +252,7 @@ Node {
         model: yellow_bots_count
         delegate: Node {
             property int botIndex: index
-            Bot {
+            YellowBody.Body {
                 position: Qt.vector3d(0, 0.5, 0)
             }
             Model {
@@ -263,7 +264,7 @@ Node {
             Model {
                 source: "#Cylinder"
                 scale: Qt.vector3d(0.05, 0.001, 0.05)
-                position: Qt.vector3d(0, 12.8, 0)
+                position: Qt.vector3d(0, 14.3, 0)
                 materials: [
                     DefaultMaterial {
                         diffuseColor: "yellow"
@@ -285,7 +286,7 @@ Node {
                         ];
                         return Qt.vector3d(
                             offsets[index].x,
-                            12.8,
+                            14.3,
                             offsets[index].z
                         );
                     }
@@ -303,7 +304,7 @@ Node {
                 id: wheels
                 model: 4
                 property int botIndex: modelData
-                Wheel {
+                YellowWheel.Wheel {
                     id: wheel
                     property int wheelIndex: index
                     property var angles: [

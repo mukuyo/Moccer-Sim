@@ -54,11 +54,7 @@ public slots:
     void startListening(quint16 port);
     void receive();
     void stopListening();
-    void processRobotControl(const RobotControl &robotControl, RobotControlResponse &robotControlResponse, std::string team);
-
 private:
-    // void processMoveCommand(RobotControlResponse &robotControlResponse, const RobotMoveCommand &moveCommand, Robot *robot);
-
     QUdpSocket *udpSocket;
 };
 
