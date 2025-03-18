@@ -8,13 +8,15 @@ import "../../assets/models/bot/blue/viz/body/" as BlueBody
 import "../../assets/models/bot/yellow/viz/body/" as YellowBody
 import "../../assets/models/bot/blue/viz/wheel/" as BlueWheel
 import "../../assets/models/bot/yellow/viz/wheel/" as YellowWheel
+import "../../assets/models/bot/blue/rigid_body/dribbler/" as BlueDribbler
+// import "../../assets/models/bot/yellow/rigid_body/dribbler/" as YellowDribbler
 import "../../assets/models/ball/"
 
 
 Node {
     id: robotNode
     property real blue_bots_count: 1
-    property real yellow_bots_count: 1
+    property real yellow_bots_count: 0
 
     property real wheel_radius: 8.15
     property real angle0: 0
@@ -27,7 +29,7 @@ Node {
     property real wheel_speed3: 1.0
 
     property var blue_bots_pos: [
-        Qt.vector3d(-75, 0, 0),
+        Qt.vector3d(-10, 0, 0),
         Qt.vector3d(-50, 0, -300),
         Qt.vector3d(-75, 0, -300),
         Qt.vector3d(-200, 0, 150),
@@ -74,10 +76,12 @@ Node {
 
     property var previousPos : Qt.vector3d(0, 0, 0)
     property var currentPos : Qt.vector3d(0, 0, 0)
+    property var ballVelocity : Qt.vector3d(0, 0, 0)
     property real lastUpdateTime: Date.now()
 
     property var obj_name: ""
     property real bot_cursor_id: 0
+    property var count: 0
 
     function lerp(start, end, alpha) {
         return start * (1 - alpha) + end * alpha;
@@ -138,10 +142,13 @@ Node {
             collisionShapes: [
                 ConvexMeshShape {
                     source: "../../assets/models/plane/meshes/plane_mesh.cooked.cvx"
-                },
-                ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/frame/meshes/frame_mesh.cooked.cvx"
                 }
+                // ConvexMeshShape {
+                //     source: "../../assets/models/bot/blue/rigid_body/frame/meshes/frame_mesh.cooked.cvx"
+                // }
+                // TriangleMeshShape {
+                //     source: "../../assets/models/bot/blue/rigid_body/frame/meshes/frame_mesh.cooked.tri"
+                // }
             ]
         }
     }
@@ -149,34 +156,42 @@ Node {
         id: physicsDribbler
         staticFriction: 0.5
         dynamicFriction: 0.5
-        restitution:0.8
+        restitution:0.0
     }
     Repeater3D {
         id: dribbler_blue_bots
         model: blue_bots_count
         DynamicRigidBody {
-            mass: 0.1
-            massMode: DynamicRigidBody.Mass
+            mass: 0
+            // massMode: DynamicRigidBody.Mass
+            // isKinematic: true
+            simulationEnabled: false
             // gravityEnabled: false
+        // kinematicPivot: Qt.vector3d(0, 6, 0)
+    // kinematicPosition: Qt.vector3d(0, 0, 0)
             physicsMaterial: physicsDribbler
-            position: Qt.vector3d(blue_bots_pos[index].x, 0.8, blue_bots_pos[index].z)
+            position: Qt.vector3d(blue_bots_pos[index].x, 0, blue_bots_pos[index].z)
+            kinematicPosition: Qt.vector3d(blue_bots_pos[index].x, 0, blue_bots_pos[index].z)
+            kinematicPivot: Qt.vector3d(blue_bots_pos[index].x, 0, blue_bots_pos[index].z)
             eulerRotation: Qt.vector3d(0, -90, 0)
-            linearAxisLock:DynamicRigidBody.LockX | DynamicRigidBody.LockY | DynamicRigidBody.LockZ
-            angularAxisLock:DynamicRigidBody.LockX | DynamicRigidBody.LockY
-            // dribbler.setAngularVelocity(Qt.vector3d(-10000, -10000, -10000))
+            // linearAxisLock: DynamicRigidBody.LockY
+            // angularAxisLock: DynamicRigidBody.LockX | DynamicRigidBody.LockY
             collisionShapes: [
                 ConvexMeshShape {
                     source: "../../assets/models/bot/blue/rigid_body/dribbler/meshes/dribbler_mesh.cooked.cvx"
                 }
             ]
-            Model {
-                source: "../../assets/models/bot/blue/rigid_body/dribbler/meshes/dribbler_mesh.mesh"
-                materials: PrincipledMaterial {
-                    baseColor: "#FF0000"
-                    roughness: 1
-                    metalness: 1
-                }
+            BlueDribbler.Dribbler {
+                position: Qt.vector3d(0, 0, 0)
             }
+            // Model {
+            //     source: "../../assets/models/bot/blue/rigid_body/dribbler/meshes/dribbler_mesh.mesh"
+            //     materials: PrincipledMaterial {
+            //         baseColor: "#FF0000"
+            //         roughness: 1
+            //         metalness: 1
+            //     }
+            // }
         }
     }
     Repeater3D {
@@ -203,9 +218,9 @@ Node {
         model: blue_bots_count
         delegate: Node {
             property int botIndex: index
-            BlueBody.Body {
-                position: Qt.vector3d(0, 0.5, 0)
-            }
+            // BlueBody.Body {
+            //     position: Qt.vector3d(0, 0.5, 0)
+            // }
             Model {
                 source: "#Cylinder"
                 pickable: true
@@ -373,28 +388,20 @@ Node {
     }
     DynamicRigidBody {
         id: ball
+        // mass: 1
+        // massMode: DynamicRigidBody.Mass
         position: Qt.vector3d(0, 0, 0)
+        eulerRotation: Qt.vector3d(0, 0, 0)
         physicsMaterial: PhysicsMaterial
-        collisionShapes: ConvexMeshShape {
-            source: "../../assets/models/ball/meshes/ball_mesh.cooked.cvx"
-        }
+        collisionShapes: [
+            SphereShape {
+                id: sphere0
+                diameter:  4.3
+            }
+        ]
         Ball {
-
+            position: Qt.vector3d(0, 0, 0)
         }
-        // collisionShapes: [
-        //     SphereShape {
-        //         id: sphere0
-        //         diameter:  4.3
-        //     }
-        // ]
-        // Model {
-        //     source: "#Sphere"
-        //     position: sphere0.position
-        //     scale: Qt.vector3d(1,1,1).times(sphere0.diameter*0.01)
-        //     materials: PrincipledMaterial {
-        //         baseColor: color
-        //     }
-        // }
     }
     function resetBallPosition(result) {
         ball.reset(result.scenePosition, Qt.vector3d(0, 0, 0));
@@ -450,7 +457,11 @@ Node {
                         ball.applyCentralForce(Qt.vector3d(velocity.x*Math.cos(radian + Math.PI/2), velocity.y, velocity.x*Math.sin(radian - Math.PI/2)));
                     }
                 }
-                dribbler.setAngularVelocity(Qt.vector3d(-10000, -10000, -10000))
+                // dribbler.setAngularVelocity(Qt.vector3d(50, 50, 50))
+                count = count + 1
+                dribbler.kinematicRotation = Qt.vector3d(0, 0, count)
+                // if (velocity.x != 0 || velocity.y != 0 || velocity.z != 0)
+                    // dribbler.simulationEnabled = true;
                 // dribbler.applyCentralForce(Qt.vector3d(100, 100, 100));
             }
             let yellowBotPositions = []
@@ -472,9 +483,24 @@ Node {
             if (velocity.x != 0 || velocity.y != 0 || velocity.z != 0){
                 if (!kick_flag){
                     ball.applyCentralImpulse(Qt.vector3d(velocity.x, velocity.y, velocity.z));
+                    
                 }
+            } else {
+                // if (ball.position.x - previousPos.x != 0 || ball.position.y - previousPos.y != 0 || ball.position.z - previousPos.z != 0) {
+
             }
-            velocity = Qt.vector3d(0, 0, 0);
+                let d_time = (Date.now() - lastUpdateTime) / 1000.0;
+                ballVelocity = Qt.vector3d(ball.position.x - previousPos.x, ball.position.y - previousPos.y, ball.position.z - previousPos.z);
+                ballVelocity = Qt.vector3d(ballVelocity.x / d_time, ballVelocity.y / d_time, ballVelocity.z / d_time);
+                // ball.setLinearVelocity(Qt.vector3d(ballVelocity.x, ballVelocity.y, ballVelocity.z));
+                
+                // console.log("Ball Velocity: ", ballVelocity);
+                // console.log("Ball Position: , Previous Position: ", ball.position, previousPos);
+                // console.log("time: ", d_time);
+                previousPos = Qt.vector3d(ball.position.x, ball.position.y, ball.position.z);
+                lastUpdateTime = Date.now();
+                velocity = Qt.vector3d(0, 0, 0);
+                // }
         }
     }
     Component.onCompleted: {

@@ -29,6 +29,8 @@ ApplicationWindow {
 
         PhysicsWorld {
             scene: viewport.scene
+            enableCCD: true
+            forceDebugDraw: true
         }
 
         Keys.onPressed: (event) => {
