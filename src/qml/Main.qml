@@ -30,7 +30,7 @@ ApplicationWindow {
         PhysicsWorld {
             scene: viewport.scene
             enableCCD: true
-            forceDebugDraw: true
+            // forceDebugDraw: true
         }
 
         Keys.onPressed: (event) => {
@@ -68,31 +68,18 @@ ApplicationWindow {
                     id: originNode
                     PerspectiveCamera {
                         id: camera
-                        clipFar: 2000
+                        clipFar: 20000
                         clipNear: 1
                         fieldOfView: 60
-                        position: Qt.vector3d(0, 500, 600)
+                        position: Qt.vector3d(0, 5000, 7000)
                         eulerRotation: Qt.vector3d(-47, 0, 0)
                     }
-                }
-                Model {
-                    id: top
-                    source: "#Cube"
-                    pickable: true
-                    scale: Qt.vector3d(12.62, 0.3, 0.02)
-                    position: Qt.vector3d(0, 5, -481)
-                    eulerRotation: Qt.vector3d(0, 0, 0)
-                    materials: [
-                        DefaultMaterial {
-                            diffuseColor: "black"
-                        }
-                    ]
                 }
                 MouseArea {
                     id: mouseArea
                     anchors.fill: parent
                     property real dt: 0.001
-                    property real linearSpeed: 100
+                    property real linearSpeed: 2000
                     property real lookSpeed: 100
                     property real zoomLimit: 0.16
                     property point lastPos
