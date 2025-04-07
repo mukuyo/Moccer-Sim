@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick3D
 import Qt3D.Render
 import QtQuick3D.Physics
+import Qt.labs.folderlistmodel
 import MOC
 
 import "../../assets/models/bot/blue/viz/body/" as BlueBody
@@ -29,7 +30,7 @@ Node {
     property real wheel_speed3: 1.0
 
     property var blue_bots_pos: [
-        Qt.vector3d(-10, 0, 0),
+        Qt.vector3d(-50, 0, 0),
         Qt.vector3d(-50, 0, -300),
         Qt.vector3d(-75, 0, -300),
         Qt.vector3d(-200, 0, 150),
@@ -94,11 +95,11 @@ Node {
                 let bot = blueBotsRepeater.children[i];
                 if (Math.abs(observer.blue_robots[i].velnormal) < 10) {
                     // bbot_vel_normals[i] = observer.blue_robots[i].velnormal * 60 * 1.5;
-                    bbot_vel_normals[i] = lerp(bbot_vel_normals[i], observer.blue_robots[i].velnormal * 60 * 1.5, 0.1);
+                    bbot_vel_normals[i] = lerp(bbot_vel_normals[i], observer.blue_robots[i].velnormal* 1.5, 0.1);
                 }
                 if (Math.abs(observer.blue_robots[i].veltangent) < 10) {
                     // bbot_vel_tangents[i] = -observer.blue_robots[i].veltangent * 60 * 1.5;
-                    bbot_vel_tangents[i] = lerp(bbot_vel_tangents[i], -observer.blue_robots[i].veltangent * 60 * 1.5, 0.1);
+                    bbot_vel_tangents[i] = lerp(bbot_vel_tangents[i], -observer.blue_robots[i].veltangent * 1.5, 0.1);
                 }
                 if (Math.abs(observer.blue_robots[i].velangular) < 10) {
                     bbot_vel_angulars[i] = observer.blue_robots[i].velangular;
@@ -129,26 +130,24 @@ Node {
         }
     }
 
-
-
     Repeater3D {
         id: frame_blue_bots
         model: blue_bots_count
         DynamicRigidBody {
-            // gravityEnabled: false
+            // mass: 100
+            // massMode: DynamicRigidBody.Mass
+            linearAxisLock: DynamicRigidBody.LockY
             physicsMaterial: physicsMaterial
-            position: Qt.vector3d(blue_bots_pos[index].x, 0, blue_bots_pos[index].z)
-            eulerRotation: Qt.vector3d(0, -90, 0)
+            position: Qt.vector3d(blue_bots_pos[index].x, 0.5, blue_bots_pos[index].z)
+            scale: Qt.vector3d(0.1, 0.1, 0.1)
+            eulerRotation: Qt.vector3d(-90, 0, -90)
             collisionShapes: [
-                ConvexMeshShape {
-                    source: "../../assets/models/plane/meshes/plane_mesh.cooked.cvx"
-                }
-                // ConvexMeshShape {
-                //     source: "../../assets/models/bot/blue/rigid_body/frame/meshes/frame_mesh.cooked.cvx"
-                // }
-                // TriangleMeshShape {
-                //     source: "../../assets/models/bot/blue/rigid_body/frame/meshes/frame_mesh.cooked.tri"
-                // }
+                ConvexMeshShape { source: "../../assets/models/bot/blue/rigid_body/body/meshes/back_mesh.cooked.cvx" },
+                ConvexMeshShape { source: "../../assets/models/bot/blue/rigid_body/body/meshes/front_mesh.cooked.cvx" },
+                ConvexMeshShape { source: "../../assets/models/bot/blue/rigid_body/body/meshes/left_mesh.cooked.cvx" },
+                ConvexMeshShape { source: "../../assets/models/bot/blue/rigid_body/body/meshes/right_mesh.cooked.cvx" },
+                ConvexMeshShape { source: "../../assets/models/bot/blue/rigid_body/body/meshes/dribbler_mesh.cooked.cvx" },
+                ConvexMeshShape { source: "../../assets/models/bot/blue/rigid_body/body/meshes/chip_mesh.cooked.cvx" }
             ]
         }
     }
@@ -162,25 +161,21 @@ Node {
         id: dribbler_blue_bots
         model: blue_bots_count
         DynamicRigidBody {
-            mass: 0
-            // massMode: DynamicRigidBody.Mass
-            // isKinematic: true
+            mass: 1000
+            massMode: DynamicRigidBody.Mass
+            angularAxisLock: DynamicRigidBody.LockX | DynamicRigidBody.LockY
+            linearAxisLock: DynamicRigidBody.LockY
             simulationEnabled: false
-            // gravityEnabled: false
-        // kinematicPivot: Qt.vector3d(0, 6, 0)
-    // kinematicPosition: Qt.vector3d(0, 0, 0)
+            gravityEnabled: false
             physicsMaterial: physicsDribbler
             position: Qt.vector3d(blue_bots_pos[index].x, 0, blue_bots_pos[index].z)
-            kinematicPosition: Qt.vector3d(blue_bots_pos[index].x, 0, blue_bots_pos[index].z)
-            kinematicPivot: Qt.vector3d(blue_bots_pos[index].x, 0, blue_bots_pos[index].z)
-            eulerRotation: Qt.vector3d(0, -90, 0)
-            // linearAxisLock: DynamicRigidBody.LockY
-            // angularAxisLock: DynamicRigidBody.LockX | DynamicRigidBody.LockY
-            collisionShapes: [
-                ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/dribbler/meshes/dribbler_mesh.cooked.cvx"
-                }
-            ]
+            scale: Qt.vector3d(0.1, 0.1, 0.1)
+            eulerRotation: Qt.vector3d(-90, 0, -90)
+            // collisionShapes: [
+            //     ConvexMeshShape {
+            //         source: "../../assets/models/bot/blue/rigid_body/dribbler/meshes/___1_mesh.cooked.cvx"
+            //     }
+            // ]
             BlueDribbler.Dribbler {
                 position: Qt.vector3d(0, 0, 0)
             }
@@ -199,6 +194,7 @@ Node {
         model: yellow_bots_count
         DynamicRigidBody {
             // gravityEnabled: false
+            linearAxisLock: DynamicRigidBody.LockY
             physicsMaterial: physicsMaterial
             eulerRotation: Qt.vector3d(0, 90, 0)
             position: Qt.vector3d(yellow_bots_pos[index].x, 0, yellow_bots_pos[index].z)
@@ -219,81 +215,81 @@ Node {
         delegate: Node {
             property int botIndex: index
             // BlueBody.Body {
-            //     position: Qt.vector3d(0, 0.5, 0)
+            //     position: Qt.vector3d(0, 0, 0)
             // }
-            Model {
-                source: "#Cylinder"
-                pickable: true
-                objectName: "b"+String(index)
-                scale: Qt.vector3d(0.25, 0.13, 0.25)
-            }
-            Model {
-                source: "#Cylinder"
-                scale: Qt.vector3d(0.05, 0.001, 0.05)
-                position: Qt.vector3d(0, 12.8, 0)
-                materials: [
-                    DefaultMaterial {
-                        diffuseColor: "blue"
-                    }
-                ]
-            }
+            // Model {
+            //     source: "#Cylinder"
+            //     pickable: true
+            //     objectName: "b"+String(index)
+            //     scale: Qt.vector3d(0.25, 0.13, 0.25)
+            // }
+            // Model {
+            //     source: "#Cylinder"
+            //     scale: Qt.vector3d(0.05, 0.001, 0.05)
+            //     position: Qt.vector3d(0, 12.8, 0)
+            //     materials: [
+            //         DefaultMaterial {
+            //             diffuseColor: "blue"
+            //         }
+            //     ]
+            // }
 
-            Repeater3D {
-                model: 4
-                delegate: Model {
-                    source: "#Cylinder"
-                    scale: Qt.vector3d(0.04, 0.001, 0.04)
-                    position: {
-                        var offsets = [
-                            Qt.vector3d(6.5*Math.cos(Math.PI-radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(Math.PI-radian_offset-blue_bot_radians[index])),  // Left Up
-                            Qt.vector3d(6.5*Math.cos(Math.PI/2.0-radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(Math.PI/2.0-radian_offset-blue_bot_radians[index])), // Left Down
-                            Qt.vector3d(6.5*Math.cos(Math.PI/2.0+radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(Math.PI/2.0+radian_offset-blue_bot_radians[index])), // Right Down
-                            Qt.vector3d(6.5*Math.cos(radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(radian_offset-blue_bot_radians[index]))   // Right Up
-                        ];
-                        return Qt.vector3d(
-                            offsets[index].x,
-                            12.8,
-                            offsets[index].z
-                        );
-                    }
-                    materials: [
-                        DefaultMaterial {
-                            diffuseColor: {
-                                var colors = ["#EA3EF7", "#75FA4C", "#EA3EF7", "#75FA4C"];
-                                return colors[index];
-                            }
-                        }
-                    ]
-                }
-            }
-            Repeater3D {
-                id: wheels
-                model: 4
-                property int botIndex: modelData
-                BlueWheel.Wheel {
-                    id: wheel
-                    property int wheelIndex: index
-                    property var angles: [
-                        Qt.vector3d(0, -125+blue_bot_radians[index]*180.0/Math.PI, angle0),
-                        Qt.vector3d(0, -45+blue_bot_radians[index]*180.0/Math.PI, angle1),
-                        Qt.vector3d(0,  45+blue_bot_radians[index]*180.0/Math.PI, angle2),
-                        Qt.vector3d(0, 125+blue_bot_radians[index]*180.0/Math.PI, angle3),
-                    ]
-                    property var offsets: [
-                        Qt.vector3d(wheel_radius * Math.cos((215 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((215 * Math.PI / 180.0)-blue_bot_radians[index])),
-                        Qt.vector3d(wheel_radius * Math.cos((135 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((135 * Math.PI / 180.0)-blue_bot_radians[index])),
-                        Qt.vector3d(wheel_radius * Math.cos((45 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((45 * Math.PI / 180.0)-blue_bot_radians[index])),
-                        Qt.vector3d(wheel_radius * Math.cos((-35 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((-35 * Math.PI / 180.0)-blue_bot_radians[index])),
+            // Repeater3D {
+            //     model: 4
+            //     delegate: Model {
+            //         source: "#Cylinder"
+            //         scale: Qt.vector3d(0.04, 0.001, 0.04)
+            //         position: {
+            //             var offsets = [
+            //                 Qt.vector3d(6.5*Math.cos(Math.PI-radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(Math.PI-radian_offset-blue_bot_radians[index])),  // Left Up
+            //                 Qt.vector3d(6.5*Math.cos(Math.PI/2.0-radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(Math.PI/2.0-radian_offset-blue_bot_radians[index])), // Left Down
+            //                 Qt.vector3d(6.5*Math.cos(Math.PI/2.0+radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(Math.PI/2.0+radian_offset-blue_bot_radians[index])), // Right Down
+            //                 Qt.vector3d(6.5*Math.cos(radian_offset-blue_bot_radians[index]), 0, 6.5*Math.sin(radian_offset-blue_bot_radians[index]))   // Right Up
+            //             ];
+            //             return Qt.vector3d(
+            //                 offsets[index].x,
+            //                 12.8,
+            //                 offsets[index].z
+            //             );
+            //         }
+            //         materials: [
+            //             DefaultMaterial {
+            //                 diffuseColor: {
+            //                     var colors = ["#EA3EF7", "#75FA4C", "#EA3EF7", "#75FA4C"];
+            //                     return colors[index];
+            //                 }
+            //             }
+            //         ]
+            //     }
+            // }
+            // Repeater3D {
+            //     id: wheels
+            //     model: 4
+            //     property int botIndex: modelData
+            //     BlueWheel.Wheel {
+            //         id: wheel
+            //         property int wheelIndex: index
+            //         property var angles: [
+            //             Qt.vector3d(0, -125+blue_bot_radians[index]*180.0/Math.PI, angle0),
+            //             Qt.vector3d(0, -45+blue_bot_radians[index]*180.0/Math.PI, angle1),
+            //             Qt.vector3d(0,  45+blue_bot_radians[index]*180.0/Math.PI, angle2),
+            //             Qt.vector3d(0, 125+blue_bot_radians[index]*180.0/Math.PI, angle3),
+            //         ]
+            //         property var offsets: [
+            //             Qt.vector3d(wheel_radius * Math.cos((215 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((215 * Math.PI / 180.0)-blue_bot_radians[index])),
+            //             Qt.vector3d(wheel_radius * Math.cos((135 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((135 * Math.PI / 180.0)-blue_bot_radians[index])),
+            //             Qt.vector3d(wheel_radius * Math.cos((45 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((45 * Math.PI / 180.0)-blue_bot_radians[index])),
+            //             Qt.vector3d(wheel_radius * Math.cos((-35 * Math.PI / 180.0)-blue_bot_radians[index]), 2.7, wheel_radius * Math.sin((-35 * Math.PI / 180.0)-blue_bot_radians[index])),
                         
-                    ]
-                    position: Qt.vector3d(
-                        offsets[wheelIndex].x,
-                        offsets[wheelIndex].y,
-                        offsets[wheelIndex].z
-                    )
-                    eulerRotation: angles[wheelIndex]
-                }
-            }
+            //         ]
+            //         position: Qt.vector3d(
+            //             offsets[wheelIndex].x,
+            //             offsets[wheelIndex].y,
+            //             offsets[wheelIndex].z
+            //         )
+            //         eulerRotation: angles[wheelIndex]
+            //     }
+            // }
         }
     }
 
@@ -388,8 +384,8 @@ Node {
     }
     DynamicRigidBody {
         id: ball
-        // mass: 1
-        // massMode: DynamicRigidBody.Mass
+        mass: 0.01
+        massMode: DynamicRigidBody.Mass
         position: Qt.vector3d(0, 0, 0)
         eulerRotation: Qt.vector3d(0, 0, 0)
         physicsMaterial: PhysicsMaterial
@@ -442,9 +438,7 @@ Node {
                 let bot = blueBotsRepeater.children[i];
                 let dribbler = dribbler_blue_bots.children[i];
                 let radian = bot.eulerRotation.y * Math.PI / 180.0;
-                // frame.reset(Qt.vector3d(bot.position.x+(-bbot_vel_normals[i]*Math.cos(radian) + bbot_vel_tangents[i]*Math.sin(radian)), 0, bot.position.z+(bbot_vel_normals[i]*Math.sin(radian) + bbot_vel_tangents[i]*Math.cos(radian))), Qt.vector3d(0, -90, 0));
-                frame.setLinearVelocity(Qt.vector3d(-bbot_vel_normals[i]*Math.cos(radian) + bbot_vel_tangents[i]*Math.sin(radian), 0,  bbot_vel_normals[i]*Math.sin(radian) + bbot_vel_tangents[i]*Math.cos(radian)));
-                frame.setAngularVelocity(Qt.vector3d(0, bbot_vel_angulars[i], 0));
+
                 bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
                 bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
                 blueBotPositions.push(Qt.vector3d(frame.position.x, -frame.position.z, frame.eulerRotation.y+90));
@@ -457,11 +451,11 @@ Node {
                         ball.applyCentralForce(Qt.vector3d(velocity.x*Math.cos(radian + Math.PI/2), velocity.y, velocity.x*Math.sin(radian - Math.PI/2)));
                     }
                 }
-                // dribbler.setAngularVelocity(Qt.vector3d(50, 50, 50))
+                dribbler.setAngularVelocity(Qt.vector3d(0, 0, -70))
                 count = count + 1
-                dribbler.kinematicRotation = Qt.vector3d(0, 0, count)
-                // if (velocity.x != 0 || velocity.y != 0 || velocity.z != 0)
-                    // dribbler.simulationEnabled = true;
+                // dribbler.kinematicRotation = Qt.vector3d(0, 0, count)
+                if (velocity.x != 0 || velocity.y != 0 || velocity.z != 0)
+                    dribbler.simulationEnabled = true;
                 // dribbler.applyCentralForce(Qt.vector3d(100, 100, 100));
             }
             let yellowBotPositions = []
