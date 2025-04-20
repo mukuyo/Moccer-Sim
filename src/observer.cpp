@@ -35,7 +35,6 @@ void Observer::visionReceive(const mocSim_Packet packet) {
     }
     if (isYellow) emit yellowRobotsChanged();
     else emit blueRobotsChanged();
-    
 }
 
 void Observer::controlReceive(const RobotControl packet, bool isYellow) {
@@ -71,6 +70,6 @@ QList<QObject*> Observer::getYellowRobots() const {
     return list;
 }
 
-void Observer:: updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QVector3D ball_position) {
+void Observer::updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QVector3D ball_position) {
     sender->send(1, ball_position, blue_positions, yellow_positions);
 }

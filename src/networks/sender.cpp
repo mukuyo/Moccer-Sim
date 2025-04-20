@@ -55,9 +55,9 @@ void Sender::setDetectionInfo(SSL_DetectionFrame &detection, int camera_id, QVec
     // if ((ball_position.x() >= 0 && camera_id == 0) || (ball_position.x() < 0 && camera_id == 1)) {
         SSL_DetectionBall* ball = detection.add_balls();
         ball->set_confidence(1.0);
-        ball->set_x(ball_position.x()*10);
-        ball->set_y(ball_position.y()*10);
-        ball->set_z(ball_position.z()*10);
+        ball->set_x(ball_position.x());
+        ball->set_y(ball_position.y());
+        ball->set_z(ball_position.z());
         ball->set_pixel_x(0);
         ball->set_pixel_y(0);
     // }
@@ -67,8 +67,8 @@ void Sender::setDetectionInfo(SSL_DetectionFrame &detection, int camera_id, QVec
             SSL_DetectionRobot* robot = detection.add_robots_blue();
             robot->set_robot_id(i);
             robot->set_confidence(1.0);
-            robot->set_x(blue_positions[i].x()*10.0);
-            robot->set_y(blue_positions[i].y()*10.0);
+            robot->set_x(blue_positions[i].x());
+            robot->set_y(blue_positions[i].y());
             robot->set_orientation(blue_positions[i].z()*M_PI/180.0);
             robot->set_pixel_x(0);
             robot->set_pixel_y(0);
@@ -82,8 +82,8 @@ void Sender::setDetectionInfo(SSL_DetectionFrame &detection, int camera_id, QVec
             SSL_DetectionRobot* robot = detection.add_robots_yellow();
             robot->set_robot_id(i);
             robot->set_confidence(1.0);
-            robot->set_x(yellow_positions[i].x()*10.0);
-            robot->set_y(yellow_positions[i].y()*10.0);
+            robot->set_x(yellow_positions[i].x());
+            robot->set_y(yellow_positions[i].y());
             robot->set_orientation(yellow_positions[i].z()*M_PI/180);
             robot->set_pixel_x(0);
             robot->set_pixel_y(0);

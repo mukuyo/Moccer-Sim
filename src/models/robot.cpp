@@ -48,6 +48,9 @@ void Robot::controlUpdate(RobotCommand robotCommand) {
         
         kickspeedx = length;
         kickspeedz = z;
+    } else {
+        kickspeedx = 0;
+        kickspeedz = 0;
     }
 
     spinner = false;

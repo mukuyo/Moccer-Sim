@@ -13,9 +13,9 @@ Node {
     // }
     PhysicsMaterial {
         id: fieldMaterial
-        staticFriction: 0
-        dynamicFriction: 0
-        restitution: 0.001
+        staticFriction: 0.0
+        dynamicFriction: 0.0
+        restitution: 0.0
     }
     StaticRigidBody {
         id: field
