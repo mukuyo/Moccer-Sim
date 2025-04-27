@@ -7,25 +7,27 @@ import "../../assets/models/stadium/"
 Node {
     id: rootEntity
 
-    Stadium {
-        id: stadium
-    }
+    // Stadium {
+    //     id: stadium
+    //     scale: Qt.vector3d(10, 10, 10)
+    // }
     PhysicsMaterial {
         id: fieldMaterial
-        staticFriction: 0.5
-        dynamicFriction: 0.5
-        restitution: 0.001
+        staticFriction: 0.0
+        dynamicFriction: 0.0
+        restitution: 0.0
     }
     StaticRigidBody {
         id: field
         eulerRotation: Qt.vector3d(-90, 0, 0)
         physicsMaterial: fieldMaterial
         collisionShapes: PlaneShape {}
-        scale: Qt.vector3d(15.4, 12.4, 1)
+        
         Model {
             source: "#Rectangle"
             objectName: "field"
             pickable: true
+            scale: Qt.vector3d(154, 124, 0.1)
             materials: [ 
                 DefaultMaterial {
                     diffuseMap: Texture {
@@ -40,9 +42,8 @@ Node {
         id: topWall
         pickable: true
         source: "#Cube"
-        scale: Qt.vector3d(12.62, 0.3, 0.02)
-        position: Qt.vector3d(0, 5, -481)
-        eulerRotation: Qt.vector3d(0, 0, 0)
+        scale: Qt.vector3d(126.2, 3, 0.2)
+        position: Qt.vector3d(0, 50, -4810)
         materials: [
             DefaultMaterial {
                 diffuseColor: "black"
@@ -51,8 +52,8 @@ Node {
     }
     StaticRigidBody {
         id: topWallSecret
-        position: Qt.vector3d(0, 5, -531)
-        scale: Qt.vector3d(12.62, 0.3, 1)
+        position: Qt.vector3d(0, 50, -5310)
+        scale: Qt.vector3d(126.2, 3, 10)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
     }
@@ -60,8 +61,8 @@ Node {
     Model {
         id: bottomWall
         source: "#Cube"
-        scale: Qt.vector3d(12.62, 0.3, 0.02)
-        position: Qt.vector3d(0, 5, 481)
+        scale: Qt.vector3d(126.2, 3, 0.2)
+        position: Qt.vector3d(0, 50, 4810)
         eulerRotation: Qt.vector3d(0, 180, 0)
         materials: [
             DefaultMaterial {
@@ -71,8 +72,8 @@ Node {
     }
     StaticRigidBody {
         id: bottomWallSecret
-        position: Qt.vector3d(0, 5, 531)
-        scale: Qt.vector3d(12.62, 0.3, 1)
+        position: Qt.vector3d(0, 50, 5310)
+        scale: Qt.vector3d(126.2, 3, 10)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
     }
@@ -80,8 +81,8 @@ Node {
     Model {
         id: leftWall
         source: "#Cube"
-        scale: Qt.vector3d(9.62, 0.3, 0.02)
-        position: Qt.vector3d(-631, 5, 0)
+        scale: Qt.vector3d(96.2, 3, 0.2)
+        position: Qt.vector3d(-6310, 50, 0)
         eulerRotation: Qt.vector3d(0, 90, 0)
         materials: [
             DefaultMaterial {
@@ -91,8 +92,8 @@ Node {
     }
     StaticRigidBody {
         id: leftWallSecret
-        position: Qt.vector3d(-681, 5, 0)
-        scale: Qt.vector3d(9.62, 0.3, 1)
+        position: Qt.vector3d(-6810, 50, 0)
+        scale: Qt.vector3d(96.2, 3, 10)
         eulerRotation: Qt.vector3d(0, 90, 0)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
@@ -101,8 +102,8 @@ Node {
     Model {
         id: rightWall
         source: "#Cube"
-        scale: Qt.vector3d(9.62, 0.3, 0.02)
-        position: Qt.vector3d(631, 5, 0)
+        scale: Qt.vector3d(96.2, 3, 0.2)
+        position: Qt.vector3d(6310, 50, 0)
         eulerRotation: Qt.vector3d(0, -90, 0)
         materials: [
             DefaultMaterial {
@@ -112,8 +113,8 @@ Node {
     }
     StaticRigidBody {
         id: rightWallSecret
-        position: Qt.vector3d(681, 5, 0)
-        scale: Qt.vector3d(9.62, 0.3, 1)
+        position: Qt.vector3d(6810, 50, 0)
+        scale: Qt.vector3d(96.2, 3, 10)
         eulerRotation: Qt.vector3d(0, -90, 0)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
@@ -122,8 +123,8 @@ Node {
     Model {
         id: rightGoal
         source: "#Cube"
-        scale: Qt.vector3d(1.84, 0.3, 0.02)
-        position: Qt.vector3d(618, 5, 0)
+        scale: Qt.vector3d(18.4, 3, 0.2)
+        position: Qt.vector3d(6180, 50, 0)
         eulerRotation: Qt.vector3d(0, -90, 0)
         materials: [
             DefaultMaterial {
@@ -133,8 +134,8 @@ Node {
     }
     StaticRigidBody {
         id: rightGoalSecret
-        position: Qt.vector3d(649, 5, 0)
-        scale: Qt.vector3d(1.84, 0.3, 0.62)
+        position: Qt.vector3d(6490, 50, 0)
+        scale: Qt.vector3d(18.4, 3, 6.2)
         eulerRotation: Qt.vector3d(0, -90, 0)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
@@ -142,8 +143,8 @@ Node {
 
     StaticRigidBody {
         id: rightGoalTop
-        position: Qt.vector3d(609, 5, -91)
-        scale: Qt.vector3d(0.18, 0.3, 0.02)
+        position: Qt.vector3d(6090, 50, -910)
+        scale: Qt.vector3d(1.8, 3, 0.2)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
         Model {
@@ -158,8 +159,8 @@ Node {
 
     StaticRigidBody {
         id: rightGoalBottom
-        position: Qt.vector3d(609, 5, 91)
-        scale: Qt.vector3d(0.18, 0.3, 0.02)
+        position: Qt.vector3d(6090, 50, 910)
+        scale: Qt.vector3d(1.8, 3, 0.2)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
         Model {
@@ -175,8 +176,8 @@ Node {
     Model {
         id: leftGoal
         source: "#Cube"
-        scale: Qt.vector3d(1.84, 0.3, 0.02)
-        position: Qt.vector3d(-618, 5, 0)
+        scale: Qt.vector3d(18.4, 3, 0.2)
+        position: Qt.vector3d(-6180, 50, 0)
         eulerRotation: Qt.vector3d(0, 90, 0)
         materials: [
             DefaultMaterial {
@@ -186,8 +187,8 @@ Node {
     }
     StaticRigidBody {
         id: leftGoalSecret
-        position: Qt.vector3d(-649, 5, 0)
-        scale: Qt.vector3d(1.84, 0.3, 0.62)
+        position: Qt.vector3d(-6490, 50, 0)
+        scale: Qt.vector3d(18.4, 3, 6.2)
         eulerRotation: Qt.vector3d(0, 90, 0)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
@@ -195,8 +196,8 @@ Node {
 
     StaticRigidBody {
         id: leftGoalTop
-        position: Qt.vector3d(-609, 5, -91)
-        scale: Qt.vector3d(0.18, 0.3, 0.02)
+        position: Qt.vector3d(-6090, 50, -910)
+        scale: Qt.vector3d(1.8, 3, 0.2)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
         Model {
@@ -211,8 +212,8 @@ Node {
 
     StaticRigidBody {
         id: leftGoalBottom
-        position: Qt.vector3d(-609, 5, 91)
-        scale: Qt.vector3d(0.18, 0.3, 0.02)
+        position: Qt.vector3d(-6090, 50, 910)
+        scale: Qt.vector3d(1.8, 3, 0.2)
         physicsMaterial: physicsMaterial
         collisionShapes: BoxShape {}
         Model {
@@ -228,8 +229,8 @@ Node {
     Model {
         id: centerLine
         source: "#Rectangle"
-        scale: Qt.vector3d(0.01, 9.0, 1)
-        position: Qt.vector3d(0, 0.3, 0)
+        scale: Qt.vector3d(0.1, 90, 1)
+        position: Qt.vector3d(0, 3, 0)
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
@@ -241,8 +242,8 @@ Node {
     Model {
         id: horizontalLine
         source: "#Rectangle"
-        scale: Qt.vector3d(12.0, 0.01, 1)
-        position: Qt.vector3d(0, 0.3, 0)
+        scale: Qt.vector3d(120, 0.1, 1)
+        position: Qt.vector3d(0, 3, 0)
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
@@ -254,8 +255,8 @@ Node {
     Model {
         id: topEdge
         source: "#Rectangle"
-        scale: Qt.vector3d(12.0, 0.01, 1)
-        position: Qt.vector3d(0, 0.3, -449.5)
+        scale: Qt.vector3d(120, 0.1, 1)
+        position: Qt.vector3d(0, 3, -4495)
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
@@ -267,8 +268,8 @@ Node {
     Model {
         id: bottomEdge
         source: "#Rectangle"
-        scale: Qt.vector3d(12.0, 0.01, 1)
-        position: Qt.vector3d(0, 0.3, 449.5)
+        scale: Qt.vector3d(120, 0.1, 1)
+        position: Qt.vector3d(0, 3, 4495)
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
@@ -280,8 +281,8 @@ Node {
     Model {
         id: leftEdge
         source: "#Rectangle"
-        scale: Qt.vector3d(0.01, 9.0, 1)
-        position: Qt.vector3d(-599.5, 0.3, 0)
+        scale: Qt.vector3d(0.1, 90, 1)
+        position: Qt.vector3d(-5995, 3, 0)
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
@@ -293,8 +294,8 @@ Node {
     Model {
         id: rightEdge
         source: "#Rectangle"
-        scale: Qt.vector3d(0.01, 9.0, 1)
-        position: Qt.vector3d(599.5, 0.3, 0)
+        scale: Qt.vector3d(0.1, 90, 1)
+        position: Qt.vector3d(5995, 3, 0)
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
@@ -306,8 +307,8 @@ Node {
     Model {
         id: leftPenaltyTop
         source: "#Rectangle"
-        scale: Qt.vector3d(1.8, 0.01, 1)
-        position: Qt.vector3d(-509.5, 0.3, -180)
+        scale: Qt.vector3d(18, 0.1, 1)
+        position: Qt.vector3d(-5095, 3, -1800)
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
@@ -319,8 +320,8 @@ Node {
     Model {
         id: rightPenaltyTop
         source: "#Rectangle"
-        scale: Qt.vector3d(1.8, 0.01, 1)
-        position: Qt.vector3d(509.5, 0.3, -180)
+        scale: Qt.vector3d(18, 0.1, 1)
+        position: Qt.vector3d(5095, 3, -1800)
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
@@ -332,8 +333,8 @@ Node {
     Model {
         id: leftPenaltyBottom
         source: "#Rectangle"
-        scale: Qt.vector3d(1.8, 0.01, 1)
-        position: Qt.vector3d(-509.5, 0.3, 180)
+        scale: Qt.vector3d(18, 0.1, 1)
+        position: Qt.vector3d(-5095, 3, 1800)
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
@@ -345,8 +346,8 @@ Node {
     Model {
         id: rightPenaltyBottom
         source: "#Rectangle"
-        scale: Qt.vector3d(1.8, 0.01, 1)
-        position: Qt.vector3d(509.5, 0.3, 180)
+        scale: Qt.vector3d(18, 0.1, 1)
+        position: Qt.vector3d(5095, 3, 1800)
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
@@ -358,8 +359,8 @@ Node {
     Model {
         id: leftPenaltyVertical
         source: "#Rectangle"
-        scale: Qt.vector3d(0.01, 3.6, 1)
-        position: Qt.vector3d(-420, 0.3, 0)
+        scale: Qt.vector3d(0.1, 36, 1)
+        position: Qt.vector3d(-4200, 3, 0)
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
@@ -371,8 +372,8 @@ Node {
     Model {
         id: rightPenaltyVertical
         source: "#Rectangle"
-        scale: Qt.vector3d(0.01, 3.6, 1)
-        position: Qt.vector3d(420, 0.3, 0)
+        scale: Qt.vector3d(0.1, 36, 1)
+        position: Qt.vector3d(4200, 3, 0)
         eulerRotation: Qt.vector3d(-90, 0, 0)
         materials: [
             DefaultMaterial {
@@ -381,29 +382,29 @@ Node {
         ]
     }
 
-    Model {
-        id: centerWhiteCircle
-        source: "#Cylinder"
-        scale: Qt.vector3d(1.02, 0.001, 1.02)
-        position: Qt.vector3d(0, 0.0001, 0)
-        materials: [
-            DefaultMaterial {
-                diffuseColor: "white"
-            }
-        ]
-    }
+    // Model {
+    //     id: centerWhiteCircle
+    //     source: "#Cylinder"
+    //     scale: Qt.vector3d(10.2, 0.0001, 10.2)
+    //     position: Qt.vector3d(0, 4, 0)
+    //     materials: [
+    //         DefaultMaterial {
+    //             diffuseColor: "white"
+    //         }
+    //     ]
+    // }
 
-    Model {
-        id: centerGreenCircle
-        source: "#Cylinder"
-        scale: Qt.vector3d(1, 0.001, 1)
-        position: Qt.vector3d(0, 0.2, 0)
-        materials: [ 
-            DefaultMaterial {
-                diffuseMap: Texture {
-                    source: "../../assets/textures/field_texture.jpg"
-                }
-            }
-        ]
-    }
+    // Model {
+    //     id: centerGreenCircle
+    //     source: "#Cylinder"
+    //     scale: Qt.vector3d(10, 0.01, 10)
+    //     position: Qt.vector3d(0, 10, 0)
+    //     materials: [ 
+    //         DefaultMaterial {
+    //             diffuseMap: Texture {
+    //                 source: "../../assets/textures/field_texture.jpg"
+    //             }
+    //         }
+    //     ]
+    // }
 }

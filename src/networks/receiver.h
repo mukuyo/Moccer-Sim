@@ -39,13 +39,35 @@ private:
 
 };
 
-class ControlReceiver : public QObject
+class ControlBlueReceiver : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ControlReceiver(QObject *parent = nullptr);
-    ~ControlReceiver();
+    explicit ControlBlueReceiver(QObject *parent = nullptr);
+    ~ControlBlueReceiver();
+
+signals:
+    void receivedPacket(const RobotControl packet, bool isYellow);
+
+public slots:
+    void startListening(quint16 port);
+    void receive();
+    void updateBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts);
+    void stopListening();
+
+private:
+    QUdpSocket *udpSocket;
+    QList<bool> bBotBallContacts;
+};
+
+class ControlYellowReceiver : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit ControlYellowReceiver(QObject *parent = nullptr);
+    ~ControlYellowReceiver();
 
 signals:
     void receivedPacket(const RobotControl packet, bool isYellow);
@@ -54,12 +76,11 @@ public slots:
     void startListening(quint16 port);
     void receive();
     void stopListening();
-    void processRobotControl(const RobotControl &robotControl, RobotControlResponse &robotControlResponse, std::string team);
+    void updateBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts);
 
 private:
-    // void processMoveCommand(RobotControlResponse &robotControlResponse, const RobotMoveCommand &moveCommand, Robot *robot);
-
     QUdpSocket *udpSocket;
+    QList<bool> yBotBallContacts;
 };
 
 #endif // receiver.h

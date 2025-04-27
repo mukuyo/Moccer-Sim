@@ -23,7 +23,7 @@ public:
     explicit Observer(QObject *parent = nullptr);
     ~Observer();
 
-    Q_INVOKABLE void updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QVector3D ball_position);
+    Q_INVOKABLE void updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QList<bool> bBotBallContacts, QList<bool> yBotBallContacts, QVector3D ball_position);
 
     void start(quint16 port);
     void stop();
@@ -37,15 +37,19 @@ public:
 signals:
     void blueRobotsChanged();
     void yellowRobotsChanged();
+    void sendBotBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts);
 
 private:
     VisionReceiver *visionReceiver;
-    ControlReceiver *controlReceiver;
+    ControlBlueReceiver *controlBlueReceiver;
+    ControlYellowReceiver *controlYellowReceiver;
 
     Sender *sender;
 
     Robot *blue_robots[16];
     Robot *yellow_robots[16];
+
+    RobotControlResponse robotControlResponse;
 };
 
 #endif // OBSERVER_H
