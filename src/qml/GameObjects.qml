@@ -17,7 +17,7 @@ import "../../assets/models/ball/"
 
 Node {
     id: robotNode
-    property real bBotNum: 2
+    property real bBotNum: 11
     property real yBotNum: 0
 
     property real wheelRadius: 8.15
@@ -59,7 +59,7 @@ Node {
     property var bBotVelTangents: new Array(16).fill(0.0)
     property var bBotVelAngulars: new Array(16).fill(0.0)
     property var bBotKickspeeds: new Array(16).fill(Qt.vector3d(0, 0, 0))
-    property var bBotSpinners: new Array(16).fill(false)
+    property var bBotSpinners: new Array(16).fill(0.0)
     property var bBotDistanceBall: new Array(16).fill(0.0)
     property var bBotRadianBall: new Array(16).fill(0.0)
 
@@ -360,10 +360,10 @@ Node {
         // massMode: DynamicRigidBody.Mass
         position: Qt.vector3d(0, 0, 0)
         physicsMaterial: ballMaterial
-        receiveTriggerReports: true
-        receiveContactReports: true
-        sendContactReports: true
-        sendTriggerReports: true
+        // receiveTriggerReports: true
+        // receiveContactReports: true
+        // sendContactReports: true
+        // sendTriggerReports: true
         // onBodyContact: (body, positions, impulses, normals) => {
         //     ballCollisionID = body.filterGroup;
         //     console.log("ballCollisionID", ballCollisionID);
@@ -396,10 +396,19 @@ Node {
             }
         }
         if (objName == "b") {
-            bBotsFrame.children[botCursorID].reset(scenePosition, Qt.vector3d(0, -90, 0));
+            bBotsFrame.children[botCursorID].reset(scenePosition, Qt.vector3d(0, -210, 0));
         } else if (objName == "y") {
             yBotsFrame.children[botCursorID].reset(scenePosition, Qt.vector3d(0, 90, 0));
         }
+    }
+
+    function normalizeRadian(radian) {
+        if (radian > Math.PI) {
+            return radian - 2 * Math.PI;
+        } else if (radian < -Math.PI) {
+            return radian + 2 * Math.PI;
+        }
+        return radian;
     }
 
     Timer {
@@ -416,7 +425,9 @@ Node {
                 let bot = blueBotsRepeater.children[i];
                 let radian = bot.eulerRotation.y * Math.PI / 180.0;
                 bBotDistanceBall[i] = Math.sqrt(Math.pow(bot.position.x - ball.position.x, 2) + Math.pow(bot.position.y - ball.position.y, 2) + Math.pow(bot.position.z - ball.position.z, 2));
-                bBotRadianBall[i] = Math.atan2(ball.position.z-bot.position.z, ball.position.x-bot.position.x);
+                bBotRadianBall[i] = -normalizeRadian(Math.atan2(bot.position.z-ball.position.z, bot.position.x-ball.position.x)-Math.PI/2);
+                let radianBallReduce = normalizeRadian(bBotRadianBall[i] - radian);
+                // bBotRadianBallReduce[i] = 
                 frame.setLinearVelocity(Qt.vector3d(-bBotVelNormals[i]*Math.cos(radian) + bBotVelTangents[i]*Math.sin(radian), 0,  bBotVelNormals[i]*Math.sin(radian) +  bBotVelTangents[i]*Math.cos(radian)));
                 frame.setAngularVelocity(Qt.vector3d(0, bBotVelAngulars[i], 0));
                 if (frame.eulerRotation.x > 0 || frame.eulerRotation.z > 0)
@@ -424,11 +435,23 @@ Node {
                 bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
                 bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
                 bBotPositions.push(Qt.vector3d(frame.position.x, -frame.position.z, frame.eulerRotation.y+90));
-
-                if (bBotDistanceBall[i] < 126 && Math.abs(Math.abs(bBotRadianBall[i])-(Math.abs(radian+Math.PI/2))) < Math.PI/3.0) {
+                // if (i == 1)
+                //     console.log("jj")
+                // if (i == 0)
+                //     console.log(bBotRadianBall[i]*180/3.14, radianBallReduce*180/3.14)
+                    // console.log(normalizeRadian(bBotRadianBall[i]-radian+Math.PI/2), Math.PI/13.0)
+                // if (i == 0)
+                if (bBotDistanceBall[i] < 100 && radianBallReduce < Math.PI/13.0) {
                     bBotBallContacts.push(true);
-                    if (bBotSpinners[i]) {
-                        ball.setLinearVelocity(Qt.vector3d(-1000*Math.cos(bBotRadianBall[i]), 0, -1000*Math.sin(bBotRadianBall[i])));
+
+                    if (bBotSpinners[i] > 0) {
+                        // spinFlag[i] = true;
+                        // spinDistanceBall = bBotDistanceBall[i];
+                        // spinRadianBall = bBotRadianBall[i];
+                        // ball.position = Qt.vector3d(frame.position.x+90*Math.cos(bBotRadianBall[i]), 0, frame.position.z+90*Math.sin(bBotRadianBall[i]));
+                        let ballRadian = Math.atan2(ball.position.z-bot.position.z, ball.position.x-bot.position.x);
+                        ball.reset(Qt.vector3d(frame.position.x+90*Math.cos(ballRadian), 0, frame.position.z+90*Math.sin(ballRadian)), Qt.vector3d(0, 0, 0));
+                        // ball.setLinearVelocity(Qt.vector3d(-bBotSpinners[i]*800*Math.cos(bBotRadianBall[i]), 0, -bBotSpinners[i]*800*Math.sin(bBotRadianBall[i])));
                     }
 
                     if (bBotKickspeeds[i].x != 0 || bBotKickspeeds[i].z != 0) {
@@ -478,12 +501,14 @@ Node {
         for (let i = 0; i < bBotNum; i++) {
             let frame = bBotsFrame.children[i];
             let bot = blueBotsRepeater.children[i];
+            frame.reset(Qt.vector3d(frame.position.x, 0, frame.position.z), Qt.vector3d(0, -90, 0));
             bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
             bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
         }
         for (let i = 0; i < yBotNum; i++) {
             let frame = yBotsFrame.children[i];
             let bot = yBotsRepeater.children[i];
+            frame.reset(Qt.vector3d(frame.position.x, 0, frame.position.z), Qt.vector3d(0, 90, 0));
             bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
             bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
         }

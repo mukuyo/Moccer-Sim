@@ -25,7 +25,8 @@ void Robot::visionUpdate(mocSim_Robot_Command robotCommand) {
     veltangent = robotCommand.veltangent();
     velnormal = robotCommand.velnormal();
     velangular = robotCommand.velangular();
-    spinner = robotCommand.spinner();
+    // spinner = robotCommand.spinner();
+    spinner = 1.0 ? robotCommand.spinner() : 0.0;
     wheelsspeed = robotCommand.wheelsspeed();
     wheel1 = robotCommand.wheel1();
     wheel2 = robotCommand.wheel2();
@@ -53,9 +54,9 @@ void Robot::controlUpdate(RobotCommand robotCommand) {
         kickspeedz = 0;
     }
 
-    spinner = false;
+    spinner = 0.0;
     if (robotCommand.has_dribbler_speed()) {
-        spinner = true;
+        spinner = robotCommand.dribbler_speed();
     }
 
     if (robotCommand.has_move_command()) {

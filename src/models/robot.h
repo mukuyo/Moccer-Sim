@@ -61,7 +61,7 @@ private:
     float velnormal;
     float velangular;
 
-    bool spinner;
+    float spinner;
     bool wheelsspeed;
 
     float wheel1;
