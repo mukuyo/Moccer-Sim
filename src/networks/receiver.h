@@ -80,6 +80,7 @@ public slots:
 
 private:
     QUdpSocket *udpSocket;
+    QList<bool> yBotBallContacts;
 };
 
 #endif // receiver.h
