@@ -30,6 +30,7 @@ Window {
             scene: viewport.scene
             maximumTimestep: 16.667
             enableCCD: true
+            gravity: Qt.vector3d(0, -9810, 0)
             // forceDebugDraw: true
         }
 
