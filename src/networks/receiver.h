@@ -53,9 +53,12 @@ signals:
 public slots:
     void startListening(quint16 port);
     void receive();
+    void updateBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts);
     void stopListening();
+
 private:
     QUdpSocket *udpSocket;
+    QList<bool> bBotBallContacts;
 };
 
 class ControlYellowReceiver : public QObject
@@ -73,6 +76,8 @@ public slots:
     void startListening(quint16 port);
     void receive();
     void stopListening();
+    void updateBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts);
+
 private:
     QUdpSocket *udpSocket;
 };

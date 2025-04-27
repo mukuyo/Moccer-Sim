@@ -9,6 +9,8 @@ Observer::Observer(QObject *parent)
     connect(visionReceiver, &VisionReceiver::receivedPacket, this, &Observer::visionReceive);
     connect(controlBlueReceiver, &ControlBlueReceiver::receivedPacket, this, &Observer::controlReceive);
     connect(controlYellowReceiver, &ControlYellowReceiver::receivedPacket, this, &Observer::controlReceive);
+    connect(this, &Observer::sendBotBallContacts, controlBlueReceiver, &ControlBlueReceiver::updateBallContacts);
+    connect(this, &Observer::sendBotBallContacts, controlYellowReceiver, &ControlYellowReceiver::updateBallContacts);
 
     for (int i = 0; i < 16; ++i) {
         blue_robots[i] = new Robot();
@@ -51,7 +53,7 @@ void Observer::controlReceive(const RobotControl packet, bool isYellow) {
     }
     if (receive_count == 0) return;
     if (isYellow) emit yellowRobotsChanged();
-    blueRobotsChanged();
+    else emit blueRobotsChanged();
 }
 
 QList<QObject*> Observer::getBlueRobots() const {
@@ -70,6 +72,7 @@ QList<QObject*> Observer::getYellowRobots() const {
     return list;
 }
 
-void Observer::updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QVector3D ball_position) {
+void Observer::updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QList<bool> bBotBallContacts, QList<bool> yBotBallContacts, QVector3D ball_position) {
     sender->send(1, ball_position, blue_positions, yellow_positions);
+    emit sendBotBallContacts(bBotBallContacts, yBotBallContacts);
 }

@@ -55,7 +55,6 @@ void Robot::controlUpdate(RobotCommand robotCommand) {
 
     spinner = false;
     if (robotCommand.has_dribbler_speed()) {
-        // robot->kicker->setRoller(robotCommand.dribbler_speed() > 0 ? 1 : 0);
         spinner = true;
     }
 

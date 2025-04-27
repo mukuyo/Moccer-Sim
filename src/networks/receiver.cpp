@@ -58,8 +58,38 @@ void ControlBlueReceiver::receive() {
         if (!datagram.isValid()) continue;
         packet.ParseFromArray(datagram.data().data(), datagram.data().size());
         emit receivedPacket(packet, false);
+
+        RobotControlResponse robotControlResponse;
+        for (int i = 0; i < bBotBallContacts.size(); ++i) {
+            auto feedback = robotControlResponse.add_feedback();
+            feedback->set_id(i);
+            feedback->set_dribbler_ball_contact(bBotBallContacts[i]);
+        }
+        std::string serializedData;
+        if (!robotControlResponse.SerializeToString(&serializedData)) {
+            std::cerr << "Failed to serialize command." << std::endl;
+            return;
+        }
+        udpSocket->writeDatagram(QByteArray::fromStdString(serializedData),
+                                 datagram.senderAddress(), datagram.senderPort());
+        
+        // feedback->set_id(robotCommand.id());
+        // feedback->set_dribbler_ball_contact(bBotBallContacts[robotCommand.id()]);
+        // robotControlResponse.SerializeToArray(buffer.data(), buffer.size());
+        // blueControlSocket->writeDatagram(buffer.data(), buffer.size(), datagram.senderAddress(), datagram.senderPort());
     }
 }
+
+void ControlBlueReceiver::updateBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts) {
+    this->bBotBallContacts = bBotBallContacts;
+
+    // std::cout << "Received bbotBallContacts: ";
+    // for (bool contact : bBotBallContacts) {
+    //     std::cout << contact << " ";
+    // }
+    // std::cout << std::endl;
+}
+
 
 void ControlBlueReceiver::stopListening() {
     if (udpSocket) {
@@ -94,6 +124,16 @@ void ControlYellowReceiver::receive() {
         packet.ParseFromArray(datagram.data().data(), datagram.data().size());
         emit receivedPacket(packet, true);
     }
+}
+
+void ControlYellowReceiver::updateBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts) {
+    // this->bBotBallContacts = bBotBallContacts;
+
+    // std::cout << "Received bbotBallContacts: ";
+    // for (bool contact : bBotBallContacts) {
+    //     std::cout << contact << " ";
+    // }
+    // std::cout << std::endl;
 }
 
 void ControlYellowReceiver::stopListening() {
