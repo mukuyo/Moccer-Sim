@@ -32,7 +32,10 @@ To properly visualize the simulation, download the required 3D models and place 
 ```
 ~/ws/Moccer-Sim/assets/
 ```
-Currently, we are not distributing 3D models.
+
+You can download sample 3D models from the following link:  
+[Download 3D Models](https://drive.google.com/drive/folders/17iXSCv_ecgYn4Mx0ziXjV6I9hVO665dg?usp=share_link)
+
 
 ### 3. Generating Mesh Files
 ```bash
