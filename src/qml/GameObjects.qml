@@ -382,12 +382,12 @@ Node {
                 if (bBotDistanceBall[i] < 120 && Math.abs(normalizeRadian(bBotRadianBall[i] - radian)) < Math.PI/15.0) {
                     bBotBallContacts.push(true);
 
-                    if (bBotSpinners[i] > 0) {
+                    if (bBotSpinners[i] > 0 && (bBotKickspeeds[i].x == 0 && bBotKickspeeds[i].y == 0)) {
                         let ballRadian = -bot.eulerRotation.y * Math.PI / 180.0 - Math.PI/2
                         ball.reset(Qt.vector3d(frame.position.x+90*Math.cos(ballRadian), 25, frame.position.z+90*Math.sin(ballRadian)), Qt.vector3d(0, 0, 0));
                     }
 
-                    if (bBotKickspeeds[i].x != 0 || bBotKickspeeds[i].z != 0) {
+                    if (bBotKickspeeds[i].x != 0 || bBotKickspeeds[i].y != 0) {
                         kick_flag = true;
                         ball.setLinearVelocity(Qt.vector3d(bBotKickspeeds[i].x*Math.cos(radian + Math.PI/2), bBotKickspeeds[i].y, bBotKickspeeds[i].x*Math.sin(radian - Math.PI/2)));
                     }
@@ -415,12 +415,12 @@ Node {
                 if (yBotDistanceBall[i] < 120 && Math.abs(normalizeRadian(yBotRadianBall[i] - radian)) < Math.PI/15.0) {
                     yBotBallContacts.push(true);
 
-                    if (yBotSpinners[i] > 0) {
+                    if (yBotSpinners[i] > 0 && (yBotKickspeeds[i].x == 0 && yBotKickspeeds[i].y == 0)) {
                         let ballRadian = -bot.eulerRotation.y * Math.PI / 180.0 - Math.PI/2
                         ball.reset(Qt.vector3d(frame.position.x+90*Math.cos(ballRadian), 25, frame.position.z+90*Math.sin(ballRadian)), Qt.vector3d(0, 0, 0));
                     }
 
-                    if (yBotKickspeeds[i].x != 0 || yBotKickspeeds[i].z != 0) {
+                    if (yBotKickspeeds[i].x != 0 || yBotKickspeeds[i].y != 0) {
                         kick_flag = true;
                         ball.setLinearVelocity(Qt.vector3d(yBotKickspeeds[i].x*Math.cos(radian + Math.PI/2), yBotKickspeeds[i].y, yBotKickspeeds[i].x*Math.sin(radian - Math.PI/2)));
                     }
