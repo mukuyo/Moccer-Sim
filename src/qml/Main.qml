@@ -31,6 +31,9 @@ Window {
             maximumTimestep: 16.667
             enableCCD: true
             gravity: Qt.vector3d(0, -9810, 0)
+            typicalLength: 1000
+            typicalSpeed: 10000
+            defaultDensity: 1.0
             // forceDebugDraw: true
         }
 

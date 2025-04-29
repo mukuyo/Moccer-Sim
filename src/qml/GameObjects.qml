@@ -6,12 +6,12 @@ import Qt.labs.folderlistmodel
 import MOC
 
 // import "../../assets/models/bot/blue/viz/body/" as BlueBody
-import "../../assets/models/bot/blue/rigid_body/body/" as BlueBody
-import "../../assets/models/bot/blue/rigid_body/body/" as YellowBody
+import "../../assets/models/bot/blue/rigid_body/" as BlueBody
+import "../../assets/models/bot/blue/rigid_body/" as YellowBody
 // import "../../assets/models/bot/blue/viz/wheel/" as BlueWheel
 // import "../../assets/models/bot/yellow/viz/wheel/" as YellowWheel
-import "../../assets/models/bot/blue/rigid_body/dribbler/" as BlueDribbler
-import "../../assets/models/bot/blue/rigid_body/dribbler/" as YellowDribbler
+// import "../../assets/models/bot/blue/rigid_body/dribbler/" as BlueDribbler
+// import "../../assets/models/bot/blue/rigid_body/dribbler/" as YellowDribbler
 import "../../assets/models/ball/"
 
 
@@ -135,27 +135,23 @@ Node {
             sendContactReports: true
             collisionShapes: [
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/body/meshes/back_mesh.cooked.cvx"
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/body_mesh.cooked.cvx"
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/body/meshes/front_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/left_mesh.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/body/meshes/left_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/right_mesh.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/body/meshes/right_mesh.cooked.cvx" 
-                    eulerRotation: Qt.vector3d(-90, 0, 0)
-                },
-                ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/body/meshes/dribbler_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/dribbler_mesh.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/body/meshes/chip_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/chip_mesh.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 }
             ]
@@ -170,27 +166,23 @@ Node {
             position: Qt.vector3d(yBotsPos[index].x, 0.5, yBotsPos[index].z)
             collisionShapes: [
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/body/meshes/back_mesh.cooked.cvx"
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/body_mesh.cooked.cvx"
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/body/meshes/front_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/left_mesh.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/body/meshes/left_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/right_mesh.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/body/meshes/right_mesh.cooked.cvx" 
-                    eulerRotation: Qt.vector3d(-90, 0, 0)
-                },
-                ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/body/meshes/dribbler_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/dribbler_mesh.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/body/meshes/chip_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/chip_mesh.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 }
             ]
@@ -202,7 +194,7 @@ Node {
         model: bBotNum
         delegate: Node {
             property int botIndex: index
-            BlueBody.Body {
+            BlueBody.Frame {
                 eulerRotation: Qt.vector3d(-90, 0, 0)
             }
             Model {
@@ -259,7 +251,7 @@ Node {
         model: yBotNum
         delegate: Node {
             property int botIndex: index
-            YellowBody.Body {
+            YellowBody.Frame {
                 eulerRotation: Qt.vector3d(-90, 0, 0)
             }
             Model {
