@@ -20,13 +20,12 @@ Robot::~Robot() = default;
 
 void Robot::visionUpdate(mocSim_Robot_Command robotCommand) {
     id = robotCommand.id();
-    kickspeedx = robotCommand.kickspeedx();
-    kickspeedz = robotCommand.kickspeedz();
-    veltangent = robotCommand.veltangent();
-    velnormal = robotCommand.velnormal();
+    kickspeedx = robotCommand.kickspeedx()*1000.0;
+    kickspeedz = robotCommand.kickspeedz()*1000.0;
+    veltangent = robotCommand.veltangent()*1000.0;
+    velnormal = robotCommand.velnormal()*1000.0;
     velangular = robotCommand.velangular();
-    // spinner = robotCommand.spinner();
-    spinner = 1.0 ? robotCommand.spinner() : 0.0;
+    spinner = robotCommand.spinner() ? 1.0 : 0.0;
     wheelsspeed = robotCommand.wheelsspeed();
     wheel1 = robotCommand.wheel1();
     wheel2 = robotCommand.wheel2();
@@ -39,7 +38,8 @@ void Robot::controlUpdate(RobotCommand robotCommand) {
 
     if (robotCommand.has_kick_speed() && robotCommand.kick_speed() > 0) {
         double kickSpeed = robotCommand.kick_speed();
-        double limit = robotCommand.kick_angle() > 0 ? 10 : 10;
+        double limit = robotCommand.kick_angle() > 0 ? 10000 : 10000;
+        kickSpeed = kickSpeed * 1000.0;
         if (kickSpeed > limit) {
             kickSpeed = limit;
         }
@@ -73,8 +73,8 @@ void Robot::processMoveCommand(const RobotMoveCommand &moveCommand) {
         // robot->setSpeed(3, wheelVel.front_left());
     } else if (moveCommand.has_local_velocity()) {
         auto &vel = moveCommand.local_velocity();
-        velnormal = vel.left();
-        veltangent = vel.forward();
+        velnormal = vel.left()*1000.0;
+        veltangent = vel.forward()*1000.0;
         velangular = vel.angular();
     } else if(moveCommand.has_global_velocity()) {
         // auto &vel = moveCommand.global_velocity();

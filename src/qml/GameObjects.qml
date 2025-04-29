@@ -17,8 +17,8 @@ import "../../assets/models/ball/"
 
 Node {
     id: robotNode
-    property real bBotNum: 1
-    property real yBotNum: 1
+    property real bBotNum: 4
+    property real yBotNum: 4
 
     property real wheelRadius: 8.15
     property real angle0: 0
@@ -85,11 +85,11 @@ Node {
         function onBlueRobotsChanged() {
             for (var i = 0; i < bBotNum; i++) {
                 let bot = bBotsRepeater.children[i];
-                // if (Math.abs(observer.blue_robots[i].velnormal) < 10) {
-                    bBotVelNormals[i] = lerp(bBotVelNormals[i], observer.blue_robots[i].velnormal* 1000, 0.5);
+                // if (Math.abs(observer.blue_robots[i].velnormal) < 10000) {
+                    bBotVelNormals[i] = lerp(bBotVelNormals[i], observer.blue_robots[i].velnormal, 0.5);
                 // }
-                // if (Math.abs(observer.blue_robots[i].veltangent) < 10) {
-                    bBotVelTangents[i] = lerp(bBotVelTangents[i], -observer.blue_robots[i].veltangent * 1000, 0.5);
+                // if (Math.abs(observer.blue_robots[i].veltangent) < 10000) {
+                    bBotVelTangents[i] = lerp(bBotVelTangents[i], -observer.blue_robots[i].veltangent, 0.5);
                 // }
                 // if (Math.abs(observer.blue_robots[i].velangular) < 5) {
                 // if (i == 3)
@@ -103,7 +103,7 @@ Node {
                         // bBotVelAngulars[i] = 5
                 // }
                 // console.log(bBotVelNormals[i], bBotVelTangents);
-                bBotKickspeeds[i] = Qt.vector3d(observer.blue_robots[i].kickspeedx*1000.0, 0, observer.blue_robots[i].kickspeedz*1000.0);
+                bBotKickspeeds[i] = Qt.vector3d(observer.blue_robots[i].kickspeedx, observer.blue_robots[i].kickspeedz, observer.blue_robots[i].kickspeedx);
                 bBotSpinners[i] = observer.blue_robots[i].spinner;
             }
         }
@@ -111,15 +111,15 @@ Node {
             for (var i = 0; i < yBotNum; i++) {
                 let bot = yBotsRepeater.children[i];
                 // if (Math.abs(observer.yellow_robots[i].velnormal) < 8) {
-                    yBotVelNormals[i] = lerp(yBotVelNormals[i], observer.yellow_robots[i].velnormal * 1000, 0.5);
+                    yBotVelNormals[i] = lerp(yBotVelNormals[i], observer.yellow_robots[i].velnormal, 0.5);
                 // }
                 // if (Math.abs(observer.yellow_robots[i].veltangent) < 6) {
-                    yBotVelTangents[i] = lerp(yBotVelTangents[i], -observer.yellow_robots[i].veltangent * 1000, 0.5);
+                    yBotVelTangents[i] = lerp(yBotVelTangents[i], -observer.yellow_robots[i].veltangent, 0.5);
                 // }
-                if (Math.abs(observer.yellow_robots[i].velangular) < 20) {
+                // if (Math.abs(observer.yellow_robots[i].velangular) < 20) {
                     yBotVelAngulars[i] = observer.yellow_robots[i].velangular;
-                }
-                yBotKickspeeds[i] = Qt.vector3d(observer.yellow_robots[i].kickspeedx*1000.0, 0, observer.yellow_robots[i].kickspeedz*1000.0);
+                // }
+                yBotKickspeeds[i] = Qt.vector3d(observer.yellow_robots[i].kickspeedx, observer.yellow_robots[i].kickspeedz, observer.yellow_robots[i].kickspeedx);
                 yBotSpinners[i] = observer.yellow_robots[i].spinner;
             }
         }
@@ -367,7 +367,7 @@ Node {
             for (let i = 0; i < bBotNum; i++) {
                 let frame = bBotsFrame.children[i];
                 let bot = bBotsRepeater.children[i];
-                let radian = -bot.eulerRotation.y * Math.PI / 180.0 - Math.PI/2;
+                let radian = bot.eulerRotation.y * Math.PI / 180.0;
                 bBotDistanceBall[i] = Math.sqrt(Math.pow(bot.position.x - ball.position.x, 2) + Math.pow(bot.position.y - ball.position.y, 2) + Math.pow(bot.position.z - ball.position.z, 2));
                 bBotRadianBall[i] = -normalizeRadian(Math.atan2(bot.position.z-ball.position.z, bot.position.x-ball.position.x)-Math.PI/2);
 
@@ -383,8 +383,8 @@ Node {
                     bBotBallContacts.push(true);
 
                     if (bBotSpinners[i] > 0) {
-                        let ballRadian = Math.atan2(ball.position.z-bot.position.z, ball.position.x-bot.position.x);
-                        ball.reset(Qt.vector3d(frame.position.x+95*Math.cos(radian), 25, frame.position.z+95*Math.sin(radian)), Qt.vector3d(0, 0, 0));
+                        let ballRadian = -bot.eulerRotation.y * Math.PI / 180.0 - Math.PI/2
+                        ball.reset(Qt.vector3d(frame.position.x+90*Math.cos(ballRadian), 25, frame.position.z+90*Math.sin(ballRadian)), Qt.vector3d(0, 0, 0));
                     }
 
                     if (bBotKickspeeds[i].x != 0 || bBotKickspeeds[i].z != 0) {
@@ -416,7 +416,8 @@ Node {
                     yBotBallContacts.push(true);
 
                     if (yBotSpinners[i] > 0) {
-                        ball.reset(Qt.vector3d(frame.position.x+95*Math.cos(radian), 25, frame.position.z+95*Math.sin(radian)), Qt.vector3d(0, 0, 0));
+                        let ballRadian = -bot.eulerRotation.y * Math.PI / 180.0 - Math.PI/2
+                        ball.reset(Qt.vector3d(frame.position.x+90*Math.cos(ballRadian), 25, frame.position.z+90*Math.sin(ballRadian)), Qt.vector3d(0, 0, 0));
                     }
 
                     if (yBotKickspeeds[i].x != 0 || yBotKickspeeds[i].z != 0) {
@@ -428,7 +429,6 @@ Node {
                 }
             }
             let ballPosition = Qt.vector3d(ball.position.x, -ball.position.z, ball.position.y);
-
             observer.updateObjects(bBotPositions, yBotPositions, bBotBallContacts, yBotBallContacts, ballPosition);
         
             if (teleopVelocity.x != 0 || teleopVelocity.y != 0 || teleopVelocity.z != 0){
@@ -440,7 +440,6 @@ Node {
                     teleopVelocity = Qt.vector3d(0, 0, 0);
                 }
             }
-            
         }
     }
     Component.onCompleted: {
