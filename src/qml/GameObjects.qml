@@ -17,8 +17,8 @@ import "../../assets/models/ball/"
 
 Node {
     id: robotNode
-    property real bBotNum: 6
-    property real yBotNum: 6
+    property real bBotNum: 1
+    property real yBotNum: 1
 
     property real wheelRadius: 8.15
     property real angle0: 0
@@ -103,7 +103,7 @@ Node {
                         // bBotVelAngulars[i] = 5
                 // }
                 // console.log(bBotVelNormals[i], bBotVelTangents);
-                bBotKickspeeds[i] = Qt.vector3d(observer.blue_robots[i].kickspeedx, 0, observer.blue_robots[i].kickspeedz);
+                bBotKickspeeds[i] = Qt.vector3d(observer.blue_robots[i].kickspeedx*1000.0, 0, observer.blue_robots[i].kickspeedz*1000.0);
                 bBotSpinners[i] = observer.blue_robots[i].spinner;
             }
         }
@@ -119,7 +119,7 @@ Node {
                 if (Math.abs(observer.yellow_robots[i].velangular) < 20) {
                     yBotVelAngulars[i] = observer.yellow_robots[i].velangular;
                 }
-                yBotKickspeeds[i] = Qt.vector3d(observer.yellow_robots[i].kickspeedx, 0, observer.yellow_robots[i].kickspeedz);
+                yBotKickspeeds[i] = Qt.vector3d(observer.yellow_robots[i].kickspeedx*1000.0, 0, observer.yellow_robots[i].kickspeedz*1000.0);
                 yBotSpinners[i] = observer.yellow_robots[i].spinner;
             }
         }
@@ -322,6 +322,7 @@ Node {
         Ball {}
     }
     function resetBallPosition(result) {
+        teleopVelocity = Qt.vector3d(0, 0, 0);
         ball.reset(result.scenePosition, Qt.vector3d(0, 0, 0));
     }
     function resetBotPosition(results) {
@@ -366,7 +367,7 @@ Node {
             for (let i = 0; i < bBotNum; i++) {
                 let frame = bBotsFrame.children[i];
                 let bot = bBotsRepeater.children[i];
-                let radian = bot.eulerRotation.y * Math.PI / 180.0;
+                let radian = -bot.eulerRotation.y * Math.PI / 180.0 - Math.PI/2;
                 bBotDistanceBall[i] = Math.sqrt(Math.pow(bot.position.x - ball.position.x, 2) + Math.pow(bot.position.y - ball.position.y, 2) + Math.pow(bot.position.z - ball.position.z, 2));
                 bBotRadianBall[i] = -normalizeRadian(Math.atan2(bot.position.z-ball.position.z, bot.position.x-ball.position.x)-Math.PI/2);
 
@@ -383,15 +384,12 @@ Node {
 
                     if (bBotSpinners[i] > 0) {
                         let ballRadian = Math.atan2(ball.position.z-bot.position.z, ball.position.x-bot.position.x);
-                        ball.reset(Qt.vector3d(frame.position.x+95*Math.cos(ballRadian), 0, frame.position.z+95*Math.sin(ballRadian)), Qt.vector3d(0, 0, 0));
+                        ball.reset(Qt.vector3d(frame.position.x+95*Math.cos(radian), 25, frame.position.z+95*Math.sin(radian)), Qt.vector3d(0, 0, 0));
                     }
 
                     if (bBotKickspeeds[i].x != 0 || bBotKickspeeds[i].z != 0) {
                         kick_flag = true;
-                        velocity.x = bBotKickspeeds[i].x*1000;
-                        velocity.y = bBotKickspeeds[i].z*1000;
-                        velocity.z = 0;
-                        ball.setLinearVelocity(Qt.vector3d(velocity.x*Math.cos(radian + Math.PI/2), velocity.y, velocity.x*Math.sin(radian - Math.PI/2)));
+                        ball.setLinearVelocity(Qt.vector3d(bBotKickspeeds[i].x*Math.cos(radian + Math.PI/2), bBotKickspeeds[i].y, bBotKickspeeds[i].x*Math.sin(radian - Math.PI/2)));
                     }
                 } else {
                     bBotBallContacts.push(false);
@@ -414,20 +412,16 @@ Node {
                 bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
                 yBotPositions.push(Qt.vector3d(frame.position.x, -frame.position.z, frame.eulerRotation.y+90));
 
-                if (yBotDistanceBall[i] < 120 && Math.abs(normalizeRadian(yBotRadianBall[i] - radian) < Math.PI/15.0)) {
+                if (yBotDistanceBall[i] < 120 && Math.abs(normalizeRadian(yBotRadianBall[i] - radian)) < Math.PI/15.0) {
                     yBotBallContacts.push(true);
 
                     if (yBotSpinners[i] > 0) {
-                        let ballRadian = Math.atan2(ball.position.z-bot.position.z, ball.position.x-bot.position.x);
-                        ball.reset(Qt.vector3d(frame.position.x+95*Math.cos(ballRadian), 0, frame.position.z+95*Math.sin(ballRadian)), Qt.vector3d(0, 0, 0));
+                        ball.reset(Qt.vector3d(frame.position.x+95*Math.cos(radian), 25, frame.position.z+95*Math.sin(radian)), Qt.vector3d(0, 0, 0));
                     }
 
                     if (yBotKickspeeds[i].x != 0 || yBotKickspeeds[i].z != 0) {
                         kick_flag = true;
-                        velocity.x = yBotKickspeeds[i].x*1000
-                        velocity.y = yBotKickspeeds[i].z*1000
-                        velocity.z = 0;
-                        ball.setLinearVelocity(Qt.vector3d(velocity.x*Math.cos(radian + Math.PI/2), velocity.y, velocity.x*Math.sin(radian - Math.PI/2)));
+                        ball.setLinearVelocity(Qt.vector3d(yBotKickspeeds[i].x*Math.cos(radian + Math.PI/2), yBotKickspeeds[i].y, yBotKickspeeds[i].x*Math.sin(radian - Math.PI/2)));
                     }
                 } else {
                     yBotBallContacts.push(false);
@@ -437,18 +431,15 @@ Node {
 
             observer.updateObjects(bBotPositions, yBotPositions, bBotBallContacts, yBotBallContacts, ballPosition);
         
-            // if (velocity.x != 0 || velocity.y != 0 || velocity.z != 0){
-            //     if (!kick_flag) {
-            //         // ball.applyCentralImpulse(Qt.vector3d(velocity.x, velocity.y, velocity.z));
-            //         // ball.setLinearVelocity(Qt.vector3d(velocity.x, velocity.y, velocity.z));
-            //         ball.setLinearVelocity(Qt.vector3d(velocity.x, velocity.y, velocity.z));
-            //         // let ballFriction = 0.99;
-            //         // velocity.x *= ballFriction;
-            //         // velocity.y *= ballFriction;
-            //         // velocity.z *= ballFriction;
-            //     }
-            // }
-            // collisionID = -1;
+            if (teleopVelocity.x != 0 || teleopVelocity.y != 0 || teleopVelocity.z != 0){
+                if (!kick_flag) {
+                    ball.setLinearVelocity(Qt.vector3d(teleopVelocity.x, teleopVelocity.y, teleopVelocity.z));
+                    let ballFriction = 0.99;
+                    teleopVelocity = Qt.vector3d(teleopVelocity.x * ballFriction, teleopVelocity.y * ballFriction, teleopVelocity.z * ballFriction);
+                } else {
+                    teleopVelocity = Qt.vector3d(0, 0, 0);
+                }
+            }
             
         }
     }

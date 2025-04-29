@@ -40,13 +40,13 @@ Window {
         Keys.onPressed: (event) => {
             event.accepted = true;
             if (event.key === Qt.Key_W) {
-                game_objects.velocity.z += -game_objects.acceleration;
+                game_objects.teleopVelocity.z += -game_objects.acceleration;
             } else if (event.key === Qt.Key_S) {
-                game_objects.velocity.z += game_objects.acceleration;
+                game_objects.teleopVelocity.z += game_objects.acceleration;
             } else if (event.key === Qt.Key_A) {
-                game_objects.velocity.x += -game_objects.acceleration;
+                game_objects.teleopVelocity.x += -game_objects.acceleration;
             } else if (event.key === Qt.Key_D) {
-                game_objects.velocity.x += game_objects.acceleration;
+                game_objects.teleopVelocity.x += game_objects.acceleration;
             }
         }
 
@@ -179,8 +179,8 @@ Window {
                     Field {}
                     GameObjects {
                         id: game_objects
-                        property vector3d velocity: Qt.vector3d(0, 0, 0)
-                        property real acceleration: 40.0
+                        property vector3d teleopVelocity: Qt.vector3d(0, 0, 0)
+                        property real acceleration: 100.0
                         property var field_cursor : Qt.vector3d(0, 0, 0)
                     }
                 }
