@@ -7,10 +7,10 @@ import "../../assets/models/stadium/"
 Node {
     id: rootEntity
 
-    // Stadium {
-    //     id: stadium
-    //     scale: Qt.vector3d(10, 10, 10)
-    // }
+    Stadium {
+        id: stadium
+        scale: Qt.vector3d(10, 10, 10)
+    }
     PhysicsMaterial {
         id: fieldMaterial
         staticFriction: 0.0
