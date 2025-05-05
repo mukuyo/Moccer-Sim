@@ -19,8 +19,8 @@ import "../../assets/models/ball/"
 
 Node {
     id: robotNode
-    property real bBotNum: 11
-    property real yBotNum: 11
+    property real bBotNum: 2
+    property real yBotNum: 1
 
     property real wheelRadius: 8.15
     property real angle0: 0
@@ -64,6 +64,7 @@ Node {
     property var bBotSpinners: new Array(16).fill(0.0)
     property var bBotDistanceBall: new Array(16).fill(0.0)
     property var bBotRadianBall: new Array(16).fill(0.0)
+    property var bBotsCamera: []
 
     property var yBotRadians: new Array(16).fill(0)
     property var yBotVelNormals: new Array(16).fill(0.0)
@@ -73,10 +74,12 @@ Node {
     property var yBotSpinners: new Array(16).fill(0.0)
     property var yBotDistanceBall: new Array(16).fill(0.0)
     property var yBotRadianBall: new Array(16).fill(0.0)
+    property var yBotsCamera: []
 
     property real radianOffset: -Math.atan(350.0/547.72)
     property var objName: ""
     property real botCursorID: 0
+    property var kick_flag: false
 
     function lerp(start, end, alpha) {
         return start * (1 - alpha) + end * alpha;
@@ -86,6 +89,8 @@ Node {
         target: observer
         function onBlueRobotsChanged() {
             for (var i = 0; i < bBotNum; i++) {
+                
+                console.log("Blue Robot " + i + " Velocities: ", observer.blue_robots[i].velnormal, observer.blue_robots[i].veltangent, observer.blue_robots[i].velangular);
                 let bot = bBotsRepeater.children[i];
                 bBotVelNormals[i] = lerp(bBotVelNormals[i], observer.blue_robots[i].velnormal, 0.5);
                 bBotVelTangents[i] = lerp(bBotVelTangents[i], -observer.blue_robots[i].veltangent, 0.5);
@@ -178,6 +183,17 @@ Node {
             BlueBody.Rione {
                 eulerRotation: Qt.vector3d(-90, 0, 0)
                 position: Qt.vector3d(0, 5, 0)
+            }
+            PerspectiveCamera {
+                id: pCamera
+                position: Qt.vector3d(0, 90, -70)
+                clipFar: 20000
+                clipNear: 1
+                fieldOfView: 60
+                eulerRotation: Qt.vector3d(-30, 0, 0)
+                Component.onCompleted: {
+                    bBotsCamera.push(pCamera);
+                }
             }
             Model {
                 source: "#Cylinder"
@@ -421,6 +437,8 @@ Node {
             bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
             bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
         }
+    //    const camObj = bBotsRepeater.itemAt(1).findChild(PerspectiveCamera);
+        view3D.camera = bBotsCamera[0];
     }
 }
 

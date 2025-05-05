@@ -14,7 +14,7 @@ import MOC
 Window {
     id: window
     title: "Moccer-Sim"
-    width: 1280
+    width: 1100
     height: 720
     // width: Screen.width
     // height: Screen.height
@@ -63,7 +63,9 @@ Window {
                 id: viewport
                 anchors.fill: parent
                 renderMode: View3D.Offscreen
-
+                property var cameraList: []
+                // property PerspectiveCamera currentCamera: null
+                // camera: 
                 FrameAnimation {
                     id: frameUpdater
                     running: true
@@ -182,6 +184,7 @@ Window {
                         property vector3d teleopVelocity: Qt.vector3d(0, 0, 0)
                         property real acceleration: 100.0
                         property var field_cursor : Qt.vector3d(0, 0, 0)
+                        property var view3D: viewport
                     }
                 }
             }
