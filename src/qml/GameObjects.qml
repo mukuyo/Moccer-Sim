@@ -89,8 +89,6 @@ Node {
         target: observer
         function onBlueRobotsChanged() {
             for (var i = 0; i < bBotNum; i++) {
-                
-                console.log("Blue Robot " + i + " Velocities: ", observer.blue_robots[i].velnormal, observer.blue_robots[i].veltangent, observer.blue_robots[i].velangular);
                 let bot = bBotsRepeater.children[i];
                 bBotVelNormals[i] = lerp(bBotVelNormals[i], observer.blue_robots[i].velnormal, 0.5);
                 bBotVelTangents[i] = lerp(bBotVelTangents[i], -observer.blue_robots[i].veltangent, 0.5);
@@ -399,7 +397,14 @@ Node {
         }
         return { positions: botPositions, ballContacts: botBallContacts };
     }
-
+    Camera {
+        id: camera
+        // position: Qt.vector3d(0, 1000, -2000)
+        // clipFar: 20000
+        // clipNear: 1
+        // fieldOfView: 60
+        // eulerRotation: Qt.vector3d(-30, 0, 0)
+    }
     Timer {
         interval: 16
         running: true
@@ -420,6 +425,7 @@ Node {
                     teleopVelocity = Qt.vector3d(0, 0, 0);
                 }
             }
+            camera.getBallPosition(ball.position, bBotsCamera[1].position, bBotsCamera[1].forward, bBotsCamera[1].up, 640, 480, 60);
         }
     }
     Component.onCompleted: {
@@ -437,8 +443,10 @@ Node {
             bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
             bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
         }
+        
     //    const camObj = bBotsRepeater.itemAt(1).findChild(PerspectiveCamera);
-        view3D.camera = bBotsCamera[0];
+        // view3D.camera = bBotsCamera[1];
+
     }
 }
 

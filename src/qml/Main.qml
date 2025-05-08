@@ -64,8 +64,6 @@ Window {
                 anchors.fill: parent
                 renderMode: View3D.Offscreen
                 property var cameraList: []
-                // property PerspectiveCamera currentCamera: null
-                // camera: 
                 FrameAnimation {
                     id: frameUpdater
                     running: true

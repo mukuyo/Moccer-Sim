@@ -6,7 +6,7 @@
 Sender::Sender(quint16 port, QObject *parent) :
     ioContext_(),
     socket_(ioContext_),
-    endpoint_(boost::asio::ip::make_address("224.5.23.2"), port) {
+    endpoint_(boost::asio::ip::make_address("127.0.0.1"), port) {
     socket_.open(boost::asio::ip::udp::v4());
 
     captureCount = 0;
