@@ -15,12 +15,13 @@ import "../../assets/models/bot/blue/viz/" as YellowBody
 // import "../../assets/models/bot/blue/rigid_body/dribbler/" as BlueDribbler
 // import "../../assets/models/bot/blue/rigid_body/dribbler/" as YellowDribbler
 import "../../assets/models/ball/"
+import "../../assets/models/circle/ball/"
 
 
 Node {
     id: robotNode
-    property real bBotNum: 2
-    property real yBotNum: 1
+    property real bBotNum: 11
+    property real yBotNum: 11
 
     property real wheelRadius: 8.15
     property real angle0: 0
@@ -188,7 +189,7 @@ Node {
                 clipFar: 20000
                 clipNear: 1
                 fieldOfView: 60
-                eulerRotation: Qt.vector3d(-30, 0, 0)
+                eulerRotation: Qt.vector3d(-35, 0, 0)
                 Component.onCompleted: {
                     bBotsCamera.push(pCamera);
                 }
@@ -318,6 +319,11 @@ Node {
         ]
         Ball {}
     }
+    // Circle {
+    //     eulerRotation: Qt.vector3d(90, 0, 0)
+    //     position: Qt.vector3d(0, 5, 0)
+    //     scale: Qt.vector3d(2, 2, 2)
+    // }
     function resetBallPosition(result) {
         teleopVelocity = Qt.vector3d(0, 0, 0);
         ball.reset(result.scenePosition, Qt.vector3d(0, 0, 0));
@@ -355,6 +361,7 @@ Node {
     function botMovement(isYellow) {
         let botPositions = []
         let botBallContacts = []
+        let ballPixels = []
 
         let botNum = isYellow ? yBotNum : bBotNum;
         let botFrame = isYellow ? yBotsFrame : bBotsFrame;
@@ -364,6 +371,7 @@ Node {
         let botVelAngulars = isYellow ? yBotVelAngulars : bBotVelAngulars;
         let botKickspeeds = isYellow ? yBotKickspeeds : bBotKickspeeds;
         let botSpinners = isYellow ? yBotSpinners : bBotSpinners;
+        let botPixelBalls = isYellow ? window.yBotPixelBalls : window.bBotPixelBalls;
 
         for (let i = 0; i < botNum; i++) {
             let frame = botFrame.children[i];
@@ -394,17 +402,17 @@ Node {
             } else {
                 botBallContacts.push(false);
             }
+            if (!isYellow) {
+                let cameraPosition = Qt.vector3d(-70*Math.sin(radian)+frame.position.x, bBotsCamera[i].position.y + frame.position.y, -70*Math.cos(radian)+frame.position.z);
+                botPixelBalls[i] = camera.getBallPosition(ball.position, cameraPosition, bBotsCamera[i].forward, bBotsCamera[i].up, 640, 480, 60);
+            }
         }
-        return { positions: botPositions, ballContacts: botBallContacts };
+        return { positions: botPositions, ballContacts: botBallContacts, pixels: botPixelBalls };
     }
     Camera {
         id: camera
-        // position: Qt.vector3d(0, 1000, -2000)
-        // clipFar: 20000
-        // clipNear: 1
-        // fieldOfView: 60
-        // eulerRotation: Qt.vector3d(-30, 0, 0)
     }
+
     Timer {
         interval: 16
         running: true
@@ -414,8 +422,8 @@ Node {
             let yellowBotData = botMovement(true);
 
             let ballPosition = Qt.vector3d(ball.position.x, -ball.position.z, ball.position.y);
+            // observer.updateObjects(blueBotData.positions, yellowBotData.positions, blueBotData.ballContacts, yellowBotData.ballContacts, blueBotData.pixels, yellowBotData.pixels, ballPosition);
             observer.updateObjects(blueBotData.positions, yellowBotData.positions, blueBotData.ballContacts, yellowBotData.ballContacts, ballPosition);
-
             if (teleopVelocity.x != 0 || teleopVelocity.y != 0 || teleopVelocity.z != 0){
                 if (!kick_flag) {
                     ball.setLinearVelocity(Qt.vector3d(teleopVelocity.x, teleopVelocity.y, teleopVelocity.z));
@@ -425,7 +433,7 @@ Node {
                     teleopVelocity = Qt.vector3d(0, 0, 0);
                 }
             }
-            camera.getBallPosition(ball.position, bBotsCamera[1].position, bBotsCamera[1].forward, bBotsCamera[1].up, 640, 480, 60);
+            // canvas.requestPaint();
         }
     }
     Component.onCompleted: {
@@ -445,7 +453,7 @@ Node {
         }
         
     //    const camObj = bBotsRepeater.itemAt(1).findChild(PerspectiveCamera);
-        // view3D.camera = bBotsCamera[1];
+        // view3D.camera = bBotsCamera[0];
 
     }
 }

@@ -20,6 +20,8 @@ Window {
     // height: Screen.height
     visible: true
     flags: Qt.ExpandedClientAreaHint | Qt.NoTitleBarBackgroundHint
+    property var bBotPixelBalls: new Array(16).fill(Qt.vector3d(0, 0, 0))
+    property var yBotPixelBalls: new Array(16).fill(Qt.vector3d(0, 0, 0))
 
     Item {
         width: parent.width
@@ -68,6 +70,64 @@ Window {
                     id: frameUpdater
                     running: true
                 }
+                Canvas {
+                    id: canvas
+                    anchors.fill: parent
+                    onPaint: {
+                        var ctx = getContext("2d");
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                        const virtualWidth = 640;
+                        const virtualHeight = 480;
+
+                        const actualWidth = canvas.width;
+                        const actualHeight = canvas.height;
+
+                        // 仮想サイズと実Canvasサイズのアスペクト比を比較
+                        const virtualAspect = virtualWidth / virtualHeight;
+                        const actualAspect = actualWidth / actualHeight;
+
+                        let scale, offsetX = 0, offsetY = 0;
+
+                        if (actualAspect > virtualAspect) {
+                            // 横長画面: 上下に余白（黒帯）
+                            scale = actualHeight / virtualHeight;
+                            offsetX = (actualWidth - virtualWidth * scale) / 2;
+                        } else {
+                            // 縦長画面: 左右に余白（黒帯）
+                            scale = actualWidth / virtualWidth;
+                            offsetY = (actualHeight - virtualHeight * scale) / 2;
+                        }
+
+                        // bBotPixelBalls[0] の位置を仮想解像度で取得
+                        const virtualX = bBotPixelBalls[0].x;
+                        const virtualY = bBotPixelBalls[0].y;
+
+                        // 仮想→実Canvas座標に変換（アスペクト保持）
+                        const canvasX = virtualX * scale + offsetX;
+                        const canvasY = virtualY * scale + offsetY;
+
+                        ctx.fillStyle = "red";
+                        // if ( bBotPixelBalls[0].x == -1 && bBotPixelBalls[0].y == -1 ) {
+                            ctx.fillStyle = "transparent";
+                        // }
+                        ctx.beginPath();
+                        ctx.arc(canvasX, canvasY, 4, 0, 2 * Math.PI);
+                        ctx.fill();
+                    }
+
+                    Component.onCompleted: requestPaint()
+                }
+                Text {
+                    id: ballText
+                    width: 90
+                    x: 1100 - 95
+                    y: 5
+                    font.pixelSize: 15
+                    color: "white"
+                    horizontalAlignment: Text.AlignRight
+                    text: "(" + bBotPixelBalls[0].x + "," + bBotPixelBalls[0].y + ")"
+                }
                 Node {
                     id: originNode
                     PerspectiveCamera {
@@ -75,7 +135,7 @@ Window {
                         clipFar: 20000
                         clipNear: 1
                         fieldOfView: 60
-                        position: Qt.vector3d(0, 5000, 7000)
+                        position: Qt.vector3d(0, 4500, 6140)
                         eulerRotation: Qt.vector3d(-47, 0, 0)
                     }
                 }
@@ -175,14 +235,19 @@ Window {
                 }
                 Node {
                     id: node
+
                     Lighting {}
                     Field {}
+
                     GameObjects {
                         id: game_objects
+                        property var window: window
+                        property var canvas: canvas
                         property vector3d teleopVelocity: Qt.vector3d(0, 0, 0)
                         property real acceleration: 100.0
                         property var field_cursor : Qt.vector3d(0, 0, 0)
                         property var view3D: viewport
+                        property var ballText: ballText
                     }
                 }
             }

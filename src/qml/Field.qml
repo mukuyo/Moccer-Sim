@@ -3,6 +3,7 @@ import QtQuick3D
 import QtQuick3D.Physics
 
 import "../../assets/models/stadium/"
+import "../../assets/models/circle/line/"
 
 Node {
     id: rootEntity
@@ -381,7 +382,10 @@ Node {
             }
         ]
     }
-
+    LineCircle {
+        position: Qt.vector3d(0, 4, 0)
+        eulerRotation: Qt.vector3d(90, 0, 0)
+    }
     // Model {
     //     id: centerWhiteCircle
     //     source: "#Cylinder"
