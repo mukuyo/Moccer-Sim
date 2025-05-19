@@ -128,6 +128,11 @@ Window {
                     horizontalAlignment: Text.AlignRight
                     text: "(" + bBotPixelBalls[0].x + "," + bBotPixelBalls[0].y + ")"
                 }
+                Setting {
+                    id: setting
+                    property var windowWidth : window.width
+                    property var windowHeight : window.height
+                }
                 Node {
                     id: originNode
                     PerspectiveCamera {
@@ -249,6 +254,7 @@ Window {
                         property var view3D: viewport
                         property var ballText: ballText
                     }
+                    
                 }
             }
         }
