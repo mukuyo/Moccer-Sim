@@ -7,18 +7,14 @@ Item {
     width: windowWidth
     height: windowHeight
 
-    property real triangleAngle: 0
-    // property real lineEnd: 30
-    property real rightLineEnd: 30
-
     ListModel {
         id: menuModel
-        ListElement { label: "Display" }
-        ListElement { label: "Physics" }
-        ListElement { label: "Geometry" }
-        ListElement { label: "Robots" }
-        ListElement { label: "Camera" }
-        ListElement { label: "Communication" }
+        ListElement { label: "Display"; expandValue: 62 }
+        ListElement { label: "Physics"; expandValue: 65 }
+        ListElement { label: "Geometry"; expandValue: 85 }
+        ListElement { label: "Robots"; expandValue: 60 }
+        ListElement { label: "Camera"; expandValue: 65 }
+        ListElement { label: "Communication"; expandValue: 135 }
     }
 
     Rectangle {
@@ -57,39 +53,20 @@ Item {
             color: "white"
         }
 
-Column {
-    x: 49
-    y: 54
-    spacing: 14
+        Column {
+            x: 32
+            y: 63
+            spacing: 18
 
-    Repeater {
-        model: menuModel
-        Text {
-            text: model.label
-            font.pixelSize: 20
-            color: "white"
+            Repeater {
+                model: menuModel
+                List {
+                    label: model.label
+                    expandValue: model.expandValue
+                }
+            }
         }
-    }
-}
 
-Column {
-    x: 32
-    y: 63
-    spacing: 18
-
-    Repeater {
-        model: menuModel
-        List {
-
-        }
-    }
-}
-        // List {
-        //     x: 32
-        //     y: 61
-        // }
-
-        // 右パネルのスライドイン
         SequentialAnimation on x {
             id: rightAnim
             running: true
