@@ -25,6 +25,7 @@ Item {
     Text {
         x: 15
         y: -9
+        height: menuHeight
         text: label
         font.pixelSize: 20
         color: "white"
