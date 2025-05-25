@@ -1,7 +1,8 @@
 #include "observer.h"
 
 Observer::Observer(QObject *parent)
-    : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlBlueReceiver(new ControlBlueReceiver(nullptr)), controlYellowReceiver(new ControlYellowReceiver(nullptr)), sender(new Sender(10694)) {
+    : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlBlueReceiver(new ControlBlueReceiver(nullptr)), controlYellowReceiver(new ControlYellowReceiver(nullptr)), sender(new Sender(10694)), config("../config/config.ini", QSettings::IniFormat) {
+    
     visionReceiver->startListening(20694);
     controlBlueReceiver->startListening(10301);
     controlYellowReceiver->startListening(10302);
@@ -15,7 +16,7 @@ Observer::Observer(QObject *parent)
     for (int i = 0; i < 16; ++i) {
         blue_robots[i] = new Robot();
         yellow_robots[i] = new Robot();
-    } 
+    }
 }
 
 Observer::~Observer() {
@@ -70,6 +71,13 @@ QList<QObject*> Observer::getYellowRobots() const {
         list.append(yellow_robots[i]);
     }
     return list;
+}
+
+int Observer::getWindowWidth() const {
+    return config.value("Display/WindowWidth", 1100).toInt();
+}
+int Observer::getWindowHeight() const {
+    return config.value("Display/WindowHeight", 800).toInt();
 }
 
 void Observer::updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QList<bool> bBotBallContacts, QList<bool> yBotBallContacts, QVector3D ball_position) {

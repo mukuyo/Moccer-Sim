@@ -28,30 +28,30 @@ Item {
         height: 40
 
         Rectangle {
-            x: 5
+            x: 0
             y: 10
-            width: 25
-            height: 3
+            width: 30
+            height: 4.2
             radius: 2
             color: "white"
             opacity: 0.6
         }
 
         Rectangle {
-            x: 5
-            y: 18
-            width: 25
-            height: 3
+            x: 0
+            y: 20
+            width: 30
+            height: 4.2
             radius: 2
             color: "white"
             opacity: 0.6
         }
 
         Rectangle {
-            x: 5
-            y: 26
-            width: 25
-            height: 3
+            x: 0
+            y: 30
+            width: 30
+            height: 4.2
             radius: 2
             color: "white"
             opacity: 0.6
@@ -175,6 +175,52 @@ Item {
                 to: windowWidth
                 duration: 1000
                 easing.type: Easing.OutCubic
+            }
+        }
+        Rectangle {
+            x: windowWidth / 3 - 40
+            y: 10
+            width: 30
+            height: 4.2
+            radius: 2
+            color: "white"
+            opacity: 0.6
+        }
+
+        Rectangle {
+            x: windowWidth / 3 - 40
+            y: 20
+            width: 30
+            height: 4.2
+            radius: 2
+            color: "white"
+            opacity: 0.6
+        }
+
+        Rectangle {
+            x: windowWidth / 3 - 40
+            y: 30
+            width: 30
+            height: 4.2
+            radius: 2
+            color: "white"
+            opacity: 0.6
+        }
+
+        Rectangle {
+            id: saveButton
+            width: windowWidth / 3 - 60
+            height: 45
+            x: 30
+            y: windowHeight - 65
+            color: "#8A8F91"
+            opacity: 1.0
+            radius: 5
+            Text {
+                anchors.centerIn: parent
+                text: "Save"
+                font.pixelSize: 18
+                color: "white"
             }
         }
     }

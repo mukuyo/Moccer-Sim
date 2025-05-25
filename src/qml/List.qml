@@ -14,11 +14,10 @@ Item {
     width: 80 * (expandValue / 65)
     height: 20 + menuHeight
 
-    // 設定項目モデル
     ListModel {
         id: settingItems
-        ListElement { name: "Width"; value: 50 }
-        ListElement { name: "Height"; value: 75 }
+        ListElement { name: "Width"; value: 1100; MaxValue: 2560 }
+        ListElement { name: "Height"; value: 720; MaxValue: 1240 }
         ListElement { name: "Continuous Collision Detection"; value: 0 }
     }
 
@@ -127,6 +126,7 @@ Item {
             Repeater {
                 model: settingItems
                 Column {
+                    property int index: index
                     spacing: 3
 
                     Text {
@@ -144,12 +144,18 @@ Item {
         width: parent.width-60
         x: 15
         from: 0
-        to: 100
+        to: model.MaxValue
         stepSize: 1
         value: model.value
 
         onValueChanged: {
             if (textField.text !== Math.round(value).toString()) {
+                if (model.name === "Width") {
+                    console.log("Width changed to: " + value);
+                    window.windowWidth = value;
+                } else if (model.name === "Height") {
+                    window.windowHeight = value;
+                }          
                 model.value = value
                 textField.text = Math.round(value).toString()
             }
@@ -176,8 +182,13 @@ Item {
             if (!isNaN(newValue) && newValue >= slider.from && newValue <= slider.to) {
                 slider.value = newValue
                 model.value = newValue
+                if (model.name === "Width") {
+                    windowWidth = value;
+                } else if (model.name === "Height") {
+                    windowHeight = value;
+                }          
             } else {
-                text = slider.value.toString() // 無効な入力をリセット
+                text = slider.value.toString()
             }
         }
     }
@@ -201,5 +212,10 @@ Item {
         property: "menuHeight"
         duration: 300
         easing.type: Easing.InOutQuad
+    }
+
+    Component.onCompleted: {
+        settingItems.setProperty(0, "MaxValue", Screen.width);
+        settingItems.setProperty(1, "MaxValue", Screen.height);
     }
 }

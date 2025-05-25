@@ -14,12 +14,11 @@ import MOC
 Window {
     id: window
     title: "Moccer-Sim"
-    width: 1100
-    height: 720
-    // width: Screen.width
-    // height: Screen.height
+    width: observer.windowWidth
+    height: observer.windowHeight
     visible: true
     flags: Qt.ExpandedClientAreaHint | Qt.NoTitleBarBackgroundHint
+
     property var bBotPixelBalls: new Array(16).fill(Qt.vector3d(0, 0, 0))
     property var yBotPixelBalls: new Array(16).fill(Qt.vector3d(0, 0, 0))
 
@@ -212,4 +211,5 @@ Window {
             }
         }
     }
+
 }
