@@ -17,6 +17,9 @@ Observer::Observer(QObject *parent)
         blue_robots[i] = new Robot();
         yellow_robots[i] = new Robot();
     }
+
+    windowWidth = config.value("window/width", 1100).toInt();
+    windowHeight = config.value("window/height", 720).toInt();
 }
 
 Observer::~Observer() {
@@ -74,10 +77,21 @@ QList<QObject*> Observer::getYellowRobots() const {
 }
 
 int Observer::getWindowWidth() const {
-    return config.value("Display/WindowWidth", 1100).toInt();
+    return windowWidth;
 }
 int Observer::getWindowHeight() const {
-    return config.value("Display/WindowHeight", 800).toInt();
+    return windowHeight;
+}
+
+void Observer::setWindowWidth(int width) { 
+    windowWidth = width; 
+    config.setValue("window/width", width);
+    emit settingChanged(); 
+}
+void Observer::setWindowHeight(int height) { 
+    windowHeight = height; 
+    config.setValue("window/height", height);
+    emit settingChanged(); 
 }
 
 void Observer::updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QList<bool> bBotBallContacts, QList<bool> yBotBallContacts, QVector3D ball_position) {

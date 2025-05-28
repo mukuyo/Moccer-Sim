@@ -39,9 +39,9 @@ public:
     int getWindowWidth() const;
     int getWindowHeight() const;
     
-    void setWindowWidth(int width) { windowWidth = width; emit settingChanged(); }
-    void setWindowHeight(int height) { windowHeight = height; emit settingChanged(); }
-
+    void setWindowWidth(int width);
+    void setWindowHeight(int height);
+    
 signals:
     void blueRobotsChanged();
     void yellowRobotsChanged();

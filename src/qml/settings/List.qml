@@ -18,7 +18,7 @@ Item {
         id: settingItems
         ListElement { name: "Width"; value: 1100; MaxValue: 2560 }
         ListElement { name: "Height"; value: 720; MaxValue: 1240 }
-        ListElement { name: "Continuous Collision Detection"; value: 0 }
+        ListElement { name: "CCD"; value: 0 }
     }
 
     Text {
@@ -151,10 +151,9 @@ Item {
         onValueChanged: {
             if (textField.text !== Math.round(value).toString()) {
                 if (model.name === "Width") {
-                    console.log("Width changed to: " + value);
-                    window.windowWidth = value;
+                    setting.tempWindowWidth = value;
                 } else if (model.name === "Height") {
-                    window.windowHeight = value;
+                    tempWindowHeight = value;
                 }          
                 model.value = value
                 textField.text = Math.round(value).toString()
@@ -183,9 +182,9 @@ Item {
                 slider.value = newValue
                 model.value = newValue
                 if (model.name === "Width") {
-                    windowWidth = value;
+                    setting.tempWindowWidth = value;
                 } else if (model.name === "Height") {
-                    windowHeight = value;
+                    tempWindowHeight = value;
                 }          
             } else {
                 text = slider.value.toString()
@@ -217,5 +216,7 @@ Item {
     Component.onCompleted: {
         settingItems.setProperty(0, "MaxValue", Screen.width);
         settingItems.setProperty(1, "MaxValue", Screen.height);
+        settingItems.setProperty(0, "value", observer.windowWidth);
+        settingItems.setProperty(1, "value", observer.windowHeight);
     }
 }

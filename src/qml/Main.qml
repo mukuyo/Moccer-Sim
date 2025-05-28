@@ -11,14 +11,17 @@ import QtQuick3D.Physics
 import Qt3D.Render
 import MOC
 
+import "settings/"
+
 Window {
     id: window
     title: "Moccer-Sim"
-    width: observer.windowWidth
-    height: observer.windowHeight
+    width: windowWidth
+    height: windowHeight
     visible: true
     flags: Qt.ExpandedClientAreaHint | Qt.NoTitleBarBackgroundHint
-
+    property int windowWidth: observer.windowWidth
+    property int windowHeight: observer.windowHeight
     property var bBotPixelBalls: new Array(16).fill(Qt.vector3d(0, 0, 0))
     property var yBotPixelBalls: new Array(16).fill(Qt.vector3d(0, 0, 0))
 
@@ -211,5 +214,15 @@ Window {
             }
         }
     }
-
+    Connections {
+        target: observer
+        function onSettingChanged() {
+            window.width = observer.windowWidth
+            window.height = observer.windowHeight
+        }
+    }
+    // Component.onCompleted: {
+    //     windowWidth = observer.windowWidth;
+    //     windowHeight = observer.windowHeight;
+    // }
 }
