@@ -91,8 +91,10 @@ Node {
         function onBlueRobotsChanged() {
             for (var i = 0; i < bBotNum; i++) {
                 let bot = bBotsRepeater.children[i];
-                bBotVelNormals[i] = lerp(bBotVelNormals[i], observer.blue_robots[i].velnormal, 0.5);
-                bBotVelTangents[i] = lerp(bBotVelTangents[i], -observer.blue_robots[i].veltangent, 0.5);
+                // bBotVelNormals[i] = lerp(bBotVelNormals[i], observer.blue_robots[i].velnormal, 0.5);
+                // bBotVelTangents[i] = lerp(bBotVelTangents[i], -observer.blue_robots[i].veltangent, 0.5);
+                bBotVelNormals[i] = observer.blue_robots[i].velnormal;
+                bBotVelTangents[i] = -observer.blue_robots[i].veltangent;
                 bBotVelAngulars[i] = observer.blue_robots[i].velangular;
                 bBotKickspeeds[i] = Qt.vector3d(observer.blue_robots[i].kickspeedx, observer.blue_robots[i].kickspeedz, observer.blue_robots[i].kickspeedx);
                 bBotSpinners[i] = observer.blue_robots[i].spinner;
@@ -109,13 +111,19 @@ Node {
             }
         }
     }
+    PhysicsMaterial {
+        id: robotMaterial
+        staticFriction: 0.0
+        dynamicFriction: 0.0
+        restitution: 0.0
+    }
 
     Repeater3D {
         id: bBotsFrame
         model: bBotNum
         DynamicRigidBody {
             linearAxisLock: DynamicRigidBody.LockY
-            physicsMaterial: physicsMaterial
+            physicsMaterial: robotMaterial
             position: Qt.vector3d(bBotsPos[index].x, 0, bBotsPos[index].z)
             sendContactReports: true
             collisionShapes: [
@@ -148,7 +156,9 @@ Node {
         model: yBotNum
         DynamicRigidBody {
             linearAxisLock: DynamicRigidBody.LockY
-            position: Qt.vector3d(yBotsPos[index].x, 0.5, yBotsPos[index].z)
+            physicsMaterial: robotMaterial
+            position: Qt.vector3d(yBotsPos[index].x, 0, yBotsPos[index].z)
+            sendContactReports: true
             collisionShapes: [
                 ConvexMeshShape {
                     source: "../../assets/models/bot/blue/rigid_body/meshes/body_mesh.cooked.cvx"
@@ -303,8 +313,8 @@ Node {
 
     PhysicsMaterial {
         id: ballMaterial
-        staticFriction: 0.1
-        dynamicFriction: 0.1
+        staticFriction: 0.3
+        dynamicFriction: 0.3
         restitution: 0
     }
     DynamicRigidBody {
@@ -392,7 +402,10 @@ Node {
                 botBallContacts.push(true);
                 if (botSpinners[i] > 0 && (botKickspeeds[i].x == 0 && botKickspeeds[i].y == 0)) {
                     let ballRadian = -bot.eulerRotation.y * Math.PI / 180.0 - Math.PI/2
+                    ball.simulationEnabled = false;
                     ball.reset(Qt.vector3d(frame.position.x+90*Math.cos(ballRadian), 25, frame.position.z+90*Math.sin(ballRadian)), Qt.vector3d(0, 0, 0));
+                } else {
+                    ball.simulationEnabled = true;
                 }
 
                 if (botKickspeeds[i].x != 0 || botKickspeeds[i].y != 0) {
@@ -401,6 +414,7 @@ Node {
                 }
             } else {
                 botBallContacts.push(false);
+                ball.simulationEnabled = true;
             }
             if (!isYellow) {
                 let cameraPosition = Qt.vector3d(-70*Math.sin(radian)+frame.position.x, bBotsCamera[i].position.y + frame.position.y, -70*Math.cos(radian)+frame.position.z);
