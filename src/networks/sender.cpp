@@ -69,7 +69,9 @@ void Sender::setDetectionInfo(SSL_DetectionFrame &detection, int camera_id, QVec
             robot->set_confidence(1.0);
             robot->set_x(blue_positions[i].x());
             robot->set_y(blue_positions[i].y());
-            robot->set_orientation(blue_positions[i].z()*M_PI/180.0);
+            float tempOrientation = blue_positions[i].z();
+            tempOrientation = fmod(tempOrientation + 180, 360) - 180; // Normalize to [-180, 180]
+            robot->set_orientation(tempOrientation*M_PI/180);
             robot->set_pixel_x(0);
             robot->set_pixel_y(0);
             robot->set_height(0);

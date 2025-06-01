@@ -19,7 +19,7 @@ Make sure all necessary packages are installed. Open your terminal and run:
 ### Mac OS
 ```bash
 brew update
-brew install qt eigen protobuf@21 yaml-cpp vulkan-volk assimp bullet
+brew install qt cmake boost@1.85 eigen protobuf@21 yaml-cpp vulkan-volk assimp bullet
 ```
 ### Ubuntu
 ```bash
@@ -39,8 +39,8 @@ You can download sample 3D models from the following link:
 
 ### 3. Generating Mesh Files
 ```bash
-chmod +x generating_mesh.sh
-./generating_mesh.sh
+chmod +x generate_mesh.sh
+./generate_mesh.sh
 ```
 
 ### 4. Building the Project
