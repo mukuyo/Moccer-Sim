@@ -97,9 +97,6 @@ Item {
                 }
             }
         }
-        ToggleSwitch {
-
-        }
     }
 
     Rectangle {

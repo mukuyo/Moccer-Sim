@@ -3,20 +3,20 @@ import QtQuick.Controls
 
 Item {
     property bool switchState: false
-    
+
     Rectangle {
         id: toggleBackground
-        width: 60
-        height: 30
-        radius: 15
+        width: 40
+        height: 20
+        radius: 10
         anchors.centerIn: parent
         color: switchState ? "#4cd964" : "#ccc"
 
         Rectangle {
             id: knob
-            width: 26
-            height: 26
-            radius: 13
+            width: 16
+            height: 16
+            radius: 8
             color: "white"
             anchors.verticalCenter: parent.verticalCenter
             x: switchState ? parent.width - width - 2 : 2
