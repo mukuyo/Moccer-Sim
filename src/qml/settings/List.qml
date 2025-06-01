@@ -16,9 +16,9 @@ Item {
 
     ListModel {
         id: settingItems
-        ListElement { name: "Width"; value: 1100; MaxValue: 2560 }
-        ListElement { name: "Height"; value: 720; MaxValue: 1240 }
-        ListElement { name: "CCD"; value: 0 }
+        ListElement { name: "Width"; slider: true; toggle: false; value: 1100; MaxValue: 2560 }
+        ListElement { name: "Height"; slider: true; toggle: false; value: 720; MaxValue: 1240 }
+        ListElement { name: "CCD"; slider: false; toggle: true; value: 0 }
     }
 
     Text {
@@ -134,64 +134,100 @@ Item {
                         color: "white"
                         font.pixelSize: 18
                     }
+                    ToggleSwitch {
+                        id: toggleSwitch
+                        x: 85
+                        y: 12
+                        visible: model.toggle
+                        // switchState: model.value === 1
+                        // onSwitchStateChanged: {
+                        //     model.value = switchState ? 1 : 0;
+                        //     if (model.name === "CCD") {
+                        //         observer.enableCCD = switchState;
+                        //     }
+                        // }
+                    }
+                    Item {
+                        width: 280
+                        height: 30
+                        visible: model.slider
 
-Item {
-    width: 280
-    height: 30
+                        Slider {
+                            id: slider
+                            width: parent.width-60
+                            x: 15
+                            from: 0
+                            to: model.MaxValue
+                            stepSize: 1
+                            value: model.value
 
-    Slider {
-        id: slider
-        width: parent.width-60
-        x: 15
-        from: 0
-        to: model.MaxValue
-        stepSize: 1
-        value: model.value
+                            onValueChanged: {
+                                if (textField.text !== Math.round(value).toString()) {
+                                    if (model.name === "Width") {
+                                        setting.tempWindowWidth = value;
+                                    } else if (model.name === "Height") {
+                                        tempWindowHeight = value;
+                                    }          
+                                    model.value = value
+                                    textField.text = Math.round(value).toString()
+                                }
+                            }
+                        }
 
-        onValueChanged: {
-            if (textField.text !== Math.round(value).toString()) {
-                if (model.name === "Width") {
-                    setting.tempWindowWidth = value;
-                } else if (model.name === "Height") {
-                    tempWindowHeight = value;
-                }          
-                model.value = value
-                textField.text = Math.round(value).toString()
-            }
-        }
-    }
+                        TextField {
+                            id: textField
+                            x: parent.width - 30
+                            width: 40
+                            height: 24
+                            text: model.value.toString()
+                            
+                            font.pixelSize: 14
+                            color: "white"
+                            horizontalAlignment: Text.AlignRight
 
-    TextField {
-        id: textField
-        x: parent.width - 30
-        width: 40
-        height: 24
-        text: model.value.toString()
-        
-        font.pixelSize: 14
-        color: "white"
-        horizontalAlignment: Text.AlignRight
-        // background: Rectangle {
-        //     color: "#222"
-        //     radius: 4
-        // }
+                            onEditingFinished: {
+                                let newValue = parseInt(text)
+                                if (!isNaN(newValue) && newValue >= slider.from && newValue <= slider.to) {
+                                    slider.value = newValue
+                                    model.value = newValue
+                                    if (model.name === "Width") {
+                                        setting.tempWindowWidth = value;
+                                    } else if (model.name === "Height") {
+                                        tempWindowHeight = value;
+                                    }          
+                                } else {
+                                    text = slider.value.toString()
+                                }
+                            }
+                        }
+                    }
 
-        onEditingFinished: {
-            let newValue = parseInt(text)
-            if (!isNaN(newValue) && newValue >= slider.from && newValue <= slider.to) {
-                slider.value = newValue
-                model.value = newValue
-                if (model.name === "Width") {
-                    setting.tempWindowWidth = value;
-                } else if (model.name === "Height") {
-                    tempWindowHeight = value;
-                }          
-            } else {
-                text = slider.value.toString()
-            }
-        }
-    }
-}
+                    // Item {
+                    //     width: 280
+                    //     height: 30
+                    //     visible: model.toggle
+                    //     Row {
+                    //         spacing: 10
+                    //         anchors.centerIn: parent
+
+                    //         ToggleSwitch {
+                    //             id: toggleSwitch
+                    //             switchState: model.value === 1
+                    //             onSwitchStateChanged: {
+                    //                 model.value = switchState ? 1 : 0;
+                    //                 if (model.name === "CCD") {
+                    //                     observer.enableCCD = switchState;
+                    //                 }
+                    //             }
+                    //         }
+
+                    //         Text {
+                    //             text: model.name + " " + (model.value === 1 ? "ON" : "OFF")
+                    //             color: "white"
+                    //             font.pixelSize: 18
+                    //         }
+                    //     }
+                    // }
 
                 }
             }
