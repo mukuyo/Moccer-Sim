@@ -103,8 +103,10 @@ Node {
         function onYellowRobotsChanged() {
             for (var i = 0; i < yBotNum; i++) {
                 let bot = yBotsRepeater.children[i];
-                yBotVelNormals[i] = lerp(yBotVelNormals[i], observer.yellow_robots[i].velnormal, 0.5);
-                yBotVelTangents[i] = lerp(yBotVelTangents[i], -observer.yellow_robots[i].veltangent, 0.5);
+                yBotVelNormals[i] = observer.yellow_robots[i].velnormal;
+                yBotVelTangents[i] = -observer.yellow_robots[i].veltangent;
+                // yBotVelNormals[i] = lerp(yBotVelNormals[i], observer.yellow_robots[i].velnormal, 0.5);
+                // yBotVelTangents[i] = lerp(yBotVelTangents[i], -observer.yellow_robots[i].veltangent, 0.5);
                 yBotVelAngulars[i] = observer.yellow_robots[i].velangular;
                 yBotKickspeeds[i] = Qt.vector3d(observer.yellow_robots[i].kickspeedx, observer.yellow_robots[i].kickspeedz, observer.yellow_robots[i].kickspeedx);
                 yBotSpinners[i] = observer.yellow_robots[i].spinner;
