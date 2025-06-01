@@ -15,12 +15,89 @@ Item {
     height: 20 + menuHeight
 
     ListModel {
-        id: settingItems
-        ListElement { name: "Width"; slider: true; toggle: false; value: 1100; MaxValue: 2560 }
-        ListElement { name: "Height"; slider: true; toggle: false; value: 720; MaxValue: 1240 }
-        ListElement { name: "CCD"; slider: false; toggle: true; value: 0 }
+        id: displayItems
+        ListElement { name: "Width"; detail: ""; slider: true; toggle: false; InitValue: 1100; MaxValue: 2560 }
+        ListElement { name: "Height"; detail: ""; slider: true; toggle: false; InitValue: 720; MaxValue: 1240 }
+        ListElement { name: "Force Debug Draw"; detail: "This property enables drawing \nof all active shapes in the physics world"; slider: false; toggle: true; InitValue: 0 }
     }
-
+    ListModel {
+        id: physicsItems
+        ListElement { name: "Desired FPS"; detail: ""; slider: true; toggle: false; InitValue: 60; MaxValue: 120 }
+        ListElement { name: "Gravity"; detail: ""; slider: true; toggle: false; InitValue: 9.81; MaxValue: 100 }
+        ListElement { name: "CCD"; detail: "Continuous Collision Detection"; slider: false; toggle: true; InitValue: 1 }
+        ListElement { name: "Ball Radius"; detail: ""; slider: true; toggle: false; InitValue: 0.1; MaxValue: 0.5 }
+        ListElement { name: "Ball Mass"; detail: ""; slider: true; toggle: false; InitValue: 0.043; MaxValue: 10 }
+        ListElement { name: "Ball Static Friction"; detail: ""; slider: true; toggle: false; InitValue: 0.3; MaxValue: 1 }
+        ListElement { name: "Ball Dynamic Friction"; detail: ""; slider: true; toggle: false; InitValue: 0.2; MaxValue: 1 }
+        ListElement { name: "Ball Restitution"; detail: ""; slider: true; toggle: false; InitValue: 0.0; MaxValue: 1 }
+    }
+    ListModel {
+        id: geometryItems
+        ListElement {name: "Line Thickness"; detail: ""; slider: true; toggle: false; InitValue: 0.5; MaxValue: 2 }
+        ListElement { name: "Field Width"; detail: ""; slider: true; toggle: false; InitValue: 68; MaxValue: 100 }
+        ListElement { name: "Field Height"; detail: ""; slider: true; toggle: false; InitValue: 105; MaxValue: 150 }
+        ListElement { name: "Goal Width"; detail: ""; slider: true; toggle: false; InitValue: 7.32; MaxValue: 10 }
+        ListElement { name: "Goal Depth"; detail: ""; slider: true; toggle: false; InitValue: 2.44; MaxValue: 5 }
+        ListElement { name: "Goal Height"; detail: ""; slider: true; toggle: false; InitValue: 2.44; MaxValue: 5 }
+        ListElement { name: "Penalty Area Width"; detail: ""; slider: true; toggle: false; InitValue: 16.5; MaxValue: 20 }
+        ListElement { name: "Penalty Area Depth"; detail: ""; slider: true; toggle: false; InitValue: 40.3; MaxValue: 50 }
+    }
+    ListModel {
+        id: robotItems
+        ListElement { name: "Lightweight Mode"; detail: "This property enables lightweight mode for robots"; slider: false; toggle: true; InitValue: 0 }
+        ListElement { name: "Blue Robot Counts"; detail: ""; slider: true; toggle: false; InitValue: 9; MaxValue: 16 }
+        ListElement { name: "Yellow Robot Counts"; detail: ""; slider: true; toggle: false; InitValue: 9; MaxValue: 16 }
+    }
+    ListModel {
+        id: cameraItems
+        ListElement { name: "Camera Distance"; detail: ""; slider: true; toggle: false; InitValue: 10; MaxValue: 20 }
+        ListElement { name: "Camera Height"; detail: ""; slider: true; toggle: false; InitValue: 5; MaxValue: 10 }
+        ListElement { name: "Camera Angle"; detail: ""; slider: true; toggle: false; InitValue: 30; MaxValue: 60 }
+    }
+    ListModel {
+        id: communicationItems
+        ListElement { name: "Vision Multicast Address"; detail: "Address for vision data multicast"; slider: false; toggle: false; InitValue: 0 }
+        ListElement { name: "Vision Multicast Port"; detail: "Port for vision data multicast"; slider: false; toggle: false; InitValue: 12345 }
+        ListElement { name: "Command Listen Port"; detail: "Port for command listening"; slider: false; toggle: false; InitValue: 12346 }
+        ListElement { name: "Blue Control Port"; detail: "Port for blue team control"; slider: false; toggle: false; InitValue: 12347 }
+        ListElement { name: "Yellow Control Port"; detail: "Port for yellow team control"; slider: false; toggle: false; InitValue: 12348 }
+    }
+    ListModel {
+        id: itemModel
+    }
+    Component.onCompleted: {
+        if (label == "Display") {
+            itemModel.clear();
+            for (var i = 0; i < displayItems.count; i++) {
+                itemModel.append(displayItems.get(i));
+            }
+        } else if (label == "Physics") {
+            itemModel.clear();
+            for (var i = 0; i < physicsItems.count; i++) {
+                itemModel.append(physicsItems.get(i));
+            }
+        } else if (label == "Geometry") {
+            itemModel.clear();
+            for (var i = 0; i < geometryItems.count; i++) {
+                itemModel.append(geometryItems.get(i));
+            }
+        } else if (label == "Robots") {
+            itemModel.clear();
+            for (var i = 0; i < robotItems.count; i++) {
+                itemModel.append(robotItems.get(i));
+            }
+        } else if (label == "Camera") {
+            itemModel.clear();
+            for (var i = 0; i < cameraItems.count; i++) {
+                itemModel.append(cameraItems.get(i));
+            }
+        } else if (label == "Communication") {
+            itemModel.clear();
+            for (var i = 0; i < communicationItems.count; i++) {
+                itemModel.append(communicationItems.get(i));
+            }
+        }
+    }
     Text {
         x: 15
         y: -9
@@ -90,7 +167,7 @@ Item {
 
                 menuVisible = !menuVisible
                 heightAnim.from = menuHeight
-                heightAnim.to = menuVisible ? 170 : 0
+                heightAnim.to = menuVisible ? 190 : 0
                 heightAnim.running = true
             }
             cursorShape: Qt.PointingHandCursor
@@ -124,7 +201,7 @@ Item {
             spacing: 0
 
             Repeater {
-                model: settingItems
+                model: itemModel
                 Column {
                     property int index: index
                     spacing: 3
@@ -134,10 +211,18 @@ Item {
                         color: "white"
                         font.pixelSize: 18
                     }
+                    Text {
+                        text: model.detail
+                        x: 18
+                        color: "white"
+                        opacity: 0.7
+                        font.pixelSize: 14
+                        visible: model.detail !== ""
+                    }
                     ToggleSwitch {
                         id: toggleSwitch
-                        x: 85
-                        y: 12
+                        x: 270
+                        y: 24
                         visible: model.toggle
                         // switchState: model.value === 1
                         // onSwitchStateChanged: {
@@ -159,7 +244,7 @@ Item {
                             from: 0
                             to: model.MaxValue
                             stepSize: 1
-                            value: model.value
+                            value: model.InitValue
 
                             onValueChanged: {
                                 if (textField.text !== Math.round(value).toString()) {
@@ -179,7 +264,7 @@ Item {
                             x: parent.width - 30
                             width: 40
                             height: 24
-                            text: model.value.toString()
+                            text: model.InitValue.toString()
                             
                             font.pixelSize: 14
                             color: "white"
@@ -189,7 +274,7 @@ Item {
                                 let newValue = parseInt(text)
                                 if (!isNaN(newValue) && newValue >= slider.from && newValue <= slider.to) {
                                     slider.value = newValue
-                                    model.value = newValue
+                                    model.InitValue = newValue
                                     if (model.name === "Width") {
                                         setting.tempWindowWidth = value;
                                     } else if (model.name === "Height") {
@@ -201,34 +286,6 @@ Item {
                             }
                         }
                     }
-
-                    // Item {
-                    //     width: 280
-                    //     height: 30
-                    //     visible: model.toggle
-                    //     Row {
-                    //         spacing: 10
-                    //         anchors.centerIn: parent
-
-                    //         ToggleSwitch {
-                    //             id: toggleSwitch
-                    //             switchState: model.value === 1
-                    //             onSwitchStateChanged: {
-                    //                 model.value = switchState ? 1 : 0;
-                    //                 if (model.name === "CCD") {
-                    //                     observer.enableCCD = switchState;
-                    //                 }
-                    //             }
-                    //         }
-
-                    //         Text {
-                    //             text: model.name + " " + (model.value === 1 ? "ON" : "OFF")
-                    //             color: "white"
-                    //             font.pixelSize: 18
-                    //         }
-                    //     }
-                    // }
-
                 }
             }
         }
@@ -249,10 +306,10 @@ Item {
         easing.type: Easing.InOutQuad
     }
 
-    Component.onCompleted: {
-        settingItems.setProperty(0, "MaxValue", Screen.width);
-        settingItems.setProperty(1, "MaxValue", Screen.height);
-        settingItems.setProperty(0, "value", observer.windowWidth);
-        settingItems.setProperty(1, "value", observer.windowHeight);
-    }
+    // Component.onCompleted: {
+    //     settingItems.setProperty(0, "MaxValue", Screen.width);
+    //     settingItems.setProperty(1, "MaxValue", Screen.height);
+    //     settingItems.setProperty(0, "value", observer.windowWidth);
+    //     settingItems.setProperty(1, "value", observer.windowHeight);
+    // }
 }

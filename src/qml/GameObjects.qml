@@ -126,27 +126,27 @@ Node {
         DynamicRigidBody {
             linearAxisLock: DynamicRigidBody.LockY
             physicsMaterial: robotMaterial
-            position: Qt.vector3d(bBotsPos[index].x, 0, bBotsPos[index].z)
+            position: Qt.vector3d(bBotsPos[index].x, 25, bBotsPos[index].z)
             sendContactReports: true
             collisionShapes: [
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/body_mesh.cooked.cvx"
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/body.cooked.cvx"
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/centerLeft_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/centerLeft.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/centerRight_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/centerRight.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/dribbler_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/dribbler.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/chip_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/chip.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 }
             ]
@@ -159,27 +159,27 @@ Node {
         DynamicRigidBody {
             linearAxisLock: DynamicRigidBody.LockY
             physicsMaterial: robotMaterial
-            position: Qt.vector3d(yBotsPos[index].x, 0, yBotsPos[index].z)
+            position: Qt.vector3d(yBotsPos[index].x, 25, yBotsPos[index].z)
             sendContactReports: true
             collisionShapes: [
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/body_mesh.cooked.cvx"
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/body.cooked.cvx"
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/centerLeft_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/centerLeft.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/centerRight_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/centerRight.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/dribbler_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/dribbler.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/chip_mesh.cooked.cvx" 
+                    source: "../../assets/models/bot/blue/rigid_body/meshes/chip.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 }
             ]
@@ -326,7 +326,7 @@ Node {
         collisionShapes: [
             ConvexMeshShape {
                 id: ballShape
-                source: "../../assets/models/ball/meshes/ball_mesh.cooked.cvx"
+                source: "../../assets/models/ball/meshes/ball.cooked.cvx"
             }
         ]
         Ball {}
