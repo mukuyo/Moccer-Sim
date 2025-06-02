@@ -38,9 +38,11 @@ public:
     QList<QObject*> getYellowRobots() const;
     int getWindowWidth() const;
     int getWindowHeight() const;
+    int getVisionMulticastPort() const;
     
     void setWindowWidth(int width);
     void setWindowHeight(int height);
+    void setVisionMulticastPort(int port) { config.setValue("Network/CommandListenPort", port); }
     
 signals:
     void blueRobotsChanged();
@@ -62,6 +64,7 @@ private:
 
     int windowWidth;
     int windowHeight;
+    int visionMulticastPort;
 
     RobotControlResponse robotControlResponse;
 };

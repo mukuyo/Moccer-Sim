@@ -12,12 +12,12 @@ Item {
 
     ListModel {
         id: menuModel
-        ListElement { label: "Display"; expandValue: 62 }
-        ListElement { label: "Physics"; expandValue: 65 }
-        ListElement { label: "Geometry"; expandValue: 85 }
-        ListElement { label: "Robots"; expandValue: 60 }
-        ListElement { label: "Camera"; expandValue: 65 }
-        ListElement { label: "Communication"; expandValue: 135 }
+        ListElement { label: "Display"; expandValue: 62; heightValue: 190 }
+        ListElement { label: "Physics"; expandValue: 65; heightValue: 450 }
+        ListElement { label: "Geometry"; expandValue: 85; heightValue: 190 }
+        ListElement { label: "Robots"; expandValue: 60; heightValue: 190 }
+        ListElement { label: "Camera"; expandValue: 65; heightValue: 190 }
+        ListElement { label: "Communication"; expandValue: 135; heightValue: 190; }
     }
 
     HBMenu {}
@@ -51,6 +51,8 @@ Item {
                 List {
                     label: model.label
                     expandValue: model.expandValue
+                    property var heightValue: model.heightValue
+                    // property int visionMulticastPort: model.visionMulticastPort
                 }
             }
         }

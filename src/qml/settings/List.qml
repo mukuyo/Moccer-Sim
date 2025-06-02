@@ -56,7 +56,7 @@ Item {
     }
     ListModel {
         id: communicationItems
-        ListElement { name: "Vision Multicast Address"; detail: "Address for vision data multicast"; slider: false; toggle: false; InitValue: 0 }
+        ListElement { name: "Vision Multicast Address"; detail: "Address for vision data multicast"; slider: false; toggle: false; InitValue: 10020 }
         ListElement { name: "Vision Multicast Port"; detail: "Port for vision data multicast"; slider: false; toggle: false; InitValue: 12345 }
         ListElement { name: "Command Listen Port"; detail: "Port for command listening"; slider: false; toggle: false; InitValue: 12346 }
         ListElement { name: "Blue Control Port"; detail: "Port for blue team control"; slider: false; toggle: false; InitValue: 12347 }
@@ -167,7 +167,7 @@ Item {
 
                 menuVisible = !menuVisible
                 heightAnim.from = menuHeight
-                heightAnim.to = menuVisible ? 190 : 0
+                heightAnim.to = menuVisible ? heightValue : 0
                 heightAnim.running = true
             }
             cursorShape: Qt.PointingHandCursor
@@ -198,7 +198,7 @@ Item {
         Column {
             id: menuColumn
             x: 12
-            spacing: 0
+            spacing: 2
 
             Repeater {
                 model: itemModel
@@ -207,40 +207,102 @@ Item {
                     spacing: 3
 
                     Text {
+                        height: 55
                         text: "・" + model.name
                         color: "white"
                         font.pixelSize: 18
                     }
-                    Text {
-                        text: model.detail
-                        x: 18
-                        color: "white"
-                        opacity: 0.7
-                        font.pixelSize: 14
-                        visible: model.detail !== ""
+                    // TextField {
+                    //     x: 20
+                    //     text: model.InitValue.toString()
+                    //     visible: !model.slider && !model.toggle
+
+                    //     // font.pixelSize: 14
+                    //     // color: "white"
+                    //     // horizontalAlignment: Text.AlignRight
+
+                    //     // onEditingFinished: {
+                    //     //     let newValue = parseFloat(text)
+                    //     //     if (!isNaN(newValue) && newValue >= 0 && newValue <= model.MaxValue) {
+                    //     //         model.InitValue = newValue;
+                    //     //         model.value = newValue;
+                    //     //         if (model.name === "Width") {
+                    //     //             setting.tempWindowWidth = newValue;
+                    //     //         } else if (model.name === "Height") {
+                    //     //             tempWindowHeight = newValue;
+                    //     //         }
+                    //     //     } else {
+                    //     //         text = model.InitValue.toString()
+                    //     //     }
+                    //     // }
+                    // }
+                    Item {
+                        visible: !model.slider && !model.toggle
+
+                        TextField {
+                            x: 250
+                            width: 50
+                            height: 24
+                            text: model.InitValue.toString()
+                            
+                            font.pixelSize: 14
+                            color: "white"
+                            horizontalAlignment: Text.AlignRight
+
+                            onEditingFinished: {
+                                let newValue = parseInt(text)
+                                if (!isNaN(newValue) && newValue >= 0) {
+                                    model.InitValue = newValue;
+                                    model.value = newValue;
+                                    if (model.name === "Vision Multicast Port") {
+                                        // setting.tempWindowWidth = newValue;
+                                        observer.visionMulticastPort = newValue;
+                                        console.log("Vision Multicast Port set to:", newValue);
+                                    } else if (model.name === "Height") {
+                                        tempWindowHeight = newValue;
+                                    }
+                                } else {
+                                    text = model.InitValue.toString()
+                                }
+                            }
+                        }
                     }
-                    ToggleSwitch {
-                        id: toggleSwitch
-                        x: 270
-                        y: 24
-                        visible: model.toggle
-                        // switchState: model.value === 1
-                        // onSwitchStateChanged: {
-                        //     model.value = switchState ? 1 : 0;
-                        //     if (model.name === "CCD") {
-                        //         observer.enableCCD = switchState;
-                        //     }
-                        // }
+                    Item {
+                        y: 25
+                        visible: model.detail !== "" || model.toggle || model.slider
+                        Text {
+                            text: model.detail
+                            x: 18
+                            height: 30
+                            color: "white"
+                            opacity: 0.7
+                            font.pixelSize: 14
+                            visible: model.detail !== ""
+                        }
+                        
+                        ToggleSwitch {
+                            id: toggleSwitch
+                            x: 270
+                            y: 0
+                            visible: model.toggle
+                            // switchState: model.value === 1
+                            // onSwitchStateChanged: {
+                            //     model.value = switchState ? 1 : 0;
+                            //     if (model.name === "CCD") {
+                            //         observer.enableCCD = switchState;
+                            //     }
+                            // }
+                        }
                     }
                     Item {
                         width: 280
-                        height: 30
                         visible: model.slider
 
                         Slider {
                             id: slider
                             width: parent.width-60
                             x: 15
+                            y: 25
                             from: 0
                             to: model.MaxValue
                             stepSize: 1
@@ -262,8 +324,9 @@ Item {
                         TextField {
                             id: textField
                             x: parent.width - 30
+                            y: 25
                             width: 40
-                            height: 24
+                            // height: 24
                             text: model.InitValue.toString()
                             
                             font.pixelSize: 14

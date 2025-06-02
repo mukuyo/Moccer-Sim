@@ -25,6 +25,7 @@ Window {
     property var bBotPixelBalls: new Array(16).fill(Qt.vector3d(0, 0, 0))
     property var yBotPixelBalls: new Array(16).fill(Qt.vector3d(0, 0, 0))
     property bool isForceDebugDraw: false
+    // property int visionMulticastPort: observer.visionMulticastPort
 
     Item {
         width: parent.width
@@ -192,7 +193,7 @@ Window {
                         id: setting
                         property var windowWidth : window.width
                         property var windowHeight : window.height
-                        // property bool isForceDebugDraw : isForceDebugDraw
+                        property var visionMulticastPort: observer.visionMulticastPort
                     }
                 }
                 Node {
@@ -204,7 +205,6 @@ Window {
                     GameObjects {
                         id: game_objects
                         property var window: window
-                        // property var canvas: canvas
                         property vector3d teleopVelocity: Qt.vector3d(0, 0, 0)
                         property real acceleration: 100.0
                         property var field_cursor : Qt.vector3d(0, 0, 0)
@@ -221,10 +221,12 @@ Window {
         function onSettingChanged() {
             window.width = observer.windowWidth
             window.height = observer.windowHeight
+
         }
     }
     // Component.onCompleted: {
     //     windowWidth = observer.windowWidth;
     //     windowHeight = observer.windowHeight;
+    //     visionMulticastPort = observer.visionMulticastPort;
     // }
 }

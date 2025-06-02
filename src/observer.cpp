@@ -1,11 +1,11 @@
 #include "observer.h"
 
 Observer::Observer(QObject *parent)
-    : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlBlueReceiver(new ControlBlueReceiver(nullptr)), controlYellowReceiver(new ControlYellowReceiver(nullptr)), sender(new Sender(10694)), config("../config/config.ini", QSettings::IniFormat) {
-    
-    visionReceiver->startListening(20694);
-    controlBlueReceiver->startListening(10301);
-    controlYellowReceiver->startListening(10302);
+    : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlBlueReceiver(new ControlBlueReceiver(nullptr)), controlYellowReceiver(new ControlYellowReceiver(nullptr)), config("../config/config.ini", QSettings::IniFormat) {
+    sender = new Sender(config.value("Network/visionMulticastPort", 10020).toInt(), this);
+    visionReceiver->startListening(config.value("Network/CommandListenPort", 20011).toInt());
+    controlBlueReceiver->startListening(config.value("Network/BlueTeamControlPort", 10301).toInt());
+    controlYellowReceiver->startListening(config.value("Network/YellowTeamControlPort", 10302).toInt());
 
     connect(visionReceiver, &VisionReceiver::receivedPacket, this, &Observer::visionReceive);
     connect(controlBlueReceiver, &ControlBlueReceiver::receivedPacket, this, &Observer::controlReceive);
@@ -18,8 +18,10 @@ Observer::Observer(QObject *parent)
         yellow_robots[i] = new Robot();
     }
 
-    windowWidth = config.value("window/width", 1100).toInt();
-    windowHeight = config.value("window/height", 720).toInt();
+    windowWidth = config.value("Display/width", 1100).toInt();
+    windowHeight = config.value("Display/height", 720).toInt();
+
+    visionMulticastPort = config.value("Network/visionMulticastPort", 10020).toInt();
 }
 
 Observer::~Observer() {
@@ -81,6 +83,9 @@ int Observer::getWindowWidth() const {
 }
 int Observer::getWindowHeight() const {
     return windowHeight;
+}
+int Observer::getVisionMulticastPort() const {
+    return visionMulticastPort;
 }
 
 void Observer::setWindowWidth(int width) { 
