@@ -24,6 +24,7 @@ public:
     Sender(quint16 port, QObject *parent = nullptr);
     ~Sender();
     void send(int camera_id, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions);
+    void setPort(quint16 newPort);
     void setDetectionInfo(SSL_DetectionFrame &detection, int camera_num, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions);
     SSL_GeometryData setGeometryInfo();
 

@@ -20,7 +20,8 @@ class Observer : public QObject {
     Q_PROPERTY(QList<QObject*> blue_robots READ getBlueRobots NOTIFY blueRobotsChanged)
     Q_PROPERTY(QList<QObject*> yellow_robots READ getYellowRobots NOTIFY yellowRobotsChanged)
     Q_PROPERTY(int windowWidth READ getWindowWidth WRITE setWindowWidth NOTIFY settingChanged)
-    Q_PROPERTY(int windowHeight READ getWindowHeight WRITE setWindowHeight NOTIFY settingChanged)  
+    Q_PROPERTY(int windowHeight READ getWindowHeight WRITE setWindowHeight NOTIFY settingChanged)
+    Q_PROPERTY(int visionMulticastPort READ getVisionMulticastPort WRITE setVisionMulticastPort NOTIFY settingChanged)
 
 public:
     explicit Observer(QObject *parent = nullptr);
@@ -42,7 +43,7 @@ public:
     
     void setWindowWidth(int width);
     void setWindowHeight(int height);
-    void setVisionMulticastPort(int port) { config.setValue("Network/CommandListenPort", port); }
+    void setVisionMulticastPort(int port);
     
 signals:
     void blueRobotsChanged();

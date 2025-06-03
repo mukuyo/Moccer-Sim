@@ -98,6 +98,12 @@ void Observer::setWindowHeight(int height) {
     config.setValue("window/height", height);
     emit settingChanged(); 
 }
+void Observer::setVisionMulticastPort(int port) { 
+    visionMulticastPort = port; 
+    config.setValue("Network/visionMulticastPort", port);
+    sender->setPort(port);
+    emit settingChanged(); 
+}
 
 void Observer::updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QList<bool> bBotBallContacts, QList<bool> yBotBallContacts, QVector3D ball_position) {
     sender->send(1, ball_position, blue_positions, yellow_positions);

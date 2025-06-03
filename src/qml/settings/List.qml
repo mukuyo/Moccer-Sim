@@ -244,7 +244,10 @@ Item {
                             width: 50
                             height: 24
                             text: model.InitValue.toString()
-                            
+                            // placeholderText: "Enter port or IP (e.g. 12345 or 224.5.23.2)"
+                            // validator: RegularExpressionValidator {
+                            //     regularExpression: /^(\d{1,5}|(\d{1,3}\.){3}\d{1,3})$/
+                            // }
                             font.pixelSize: 14
                             color: "white"
                             horizontalAlignment: Text.AlignRight
