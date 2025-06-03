@@ -21,6 +21,7 @@ class Observer : public QObject {
     Q_PROPERTY(QList<QObject*> yellow_robots READ getYellowRobots NOTIFY yellowRobotsChanged)
     Q_PROPERTY(int windowWidth READ getWindowWidth WRITE setWindowWidth NOTIFY settingChanged)
     Q_PROPERTY(int windowHeight READ getWindowHeight WRITE setWindowHeight NOTIFY settingChanged)
+    Q_PROPERTY(QString visionMulticastAddress READ getVisionMulticastAddress WRITE setVisionMulticastAddress NOTIFY settingChanged)
     Q_PROPERTY(int visionMulticastPort READ getVisionMulticastPort WRITE setVisionMulticastPort NOTIFY settingChanged)
 
 public:
@@ -39,10 +40,12 @@ public:
     QList<QObject*> getYellowRobots() const;
     int getWindowWidth() const;
     int getWindowHeight() const;
+    QString getVisionMulticastAddress() const;
     int getVisionMulticastPort() const;
     
     void setWindowWidth(int width);
     void setWindowHeight(int height);
+    void setVisionMulticastAddress(const QString &address);
     void setVisionMulticastPort(int port);
     
 signals:
@@ -65,6 +68,8 @@ private:
 
     int windowWidth;
     int windowHeight;
+
+    QString visionMulticastAddress;
     int visionMulticastPort;
 
     RobotControlResponse robotControlResponse;

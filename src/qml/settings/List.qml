@@ -11,6 +11,7 @@ Item {
     property real triangleAngle: 0
     property bool menuVisible: false
     property real menuHeight: 0
+    
     width: 80 * (expandValue / 65)
     height: 20 + menuHeight
 
@@ -56,7 +57,7 @@ Item {
     }
     ListModel {
         id: communicationItems
-        ListElement { name: "Vision Multicast Address"; detail: "Address for vision data multicast"; slider: false; toggle: false; InitValue: 10020 }
+        ListElement { name: "Vision Multicast Address"; detail: "Address for vision data multicast"; slider: false; toggle: false; InitValue: -1; InitString: "-1" }
         ListElement { name: "Vision Multicast Port"; detail: "Port for vision data multicast"; slider: false; toggle: false; InitValue: 12345 }
         ListElement { name: "Command Listen Port"; detail: "Port for command listening"; slider: false; toggle: false; InitValue: 12346 }
         ListElement { name: "Blue Control Port"; detail: "Port for blue team control"; slider: false; toggle: false; InitValue: 12347 }
@@ -212,55 +213,64 @@ Item {
                         color: "white"
                         font.pixelSize: 18
                     }
-                    // TextField {
-                    //     x: 20
-                    //     text: model.InitValue.toString()
-                    //     visible: !model.slider && !model.toggle
-
-                    //     // font.pixelSize: 14
-                    //     // color: "white"
-                    //     // horizontalAlignment: Text.AlignRight
-
-                    //     // onEditingFinished: {
-                    //     //     let newValue = parseFloat(text)
-                    //     //     if (!isNaN(newValue) && newValue >= 0 && newValue <= model.MaxValue) {
-                    //     //         model.InitValue = newValue;
-                    //     //         model.value = newValue;
-                    //     //         if (model.name === "Width") {
-                    //     //             setting.tempWindowWidth = newValue;
-                    //     //         } else if (model.name === "Height") {
-                    //     //             tempWindowHeight = newValue;
-                    //     //         }
-                    //     //     } else {
-                    //     //         text = model.InitValue.toString()
-                    //     //     }
-                    //     // }
-                    // }
                     Item {
-                        visible: !model.slider && !model.toggle
+                        x: 215
+                        visible: model.InitValue === -1
+                        Column {
+                            spacing: 5
+
+                            TextField {
+                                width: 90
+                                text: model.InitString || ""
+                                placeholderText: "ex: 192.168.0.1"
+                                font.pixelSize: 14
+                                validator: RegularExpressionValidator {
+                                    regularExpression: /^((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
+                                }
+                                horizontalAlignment: Text.AlignHCenter
+                                Component.onCompleted: {
+                                    text = observer.visionMulticastAddress
+                                }
+                                onEditingFinished: {
+                                    if (text !== "") {
+                                        model.InitString = text;
+                                        if (model.name === "Vision Multicast Address") {
+                                            observer.visionMulticastAddress = text;
+                                        }
+                                    } else {
+                                        text = model.InitString || "";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    Item {
+                        visible: !model.slider && !model.toggle && model.InitValue !== -1
 
                         TextField {
                             x: 250
                             width: 50
                             height: 24
                             text: model.InitValue.toString()
-                            // placeholderText: "Enter port or IP (e.g. 12345 or 224.5.23.2)"
-                            // validator: RegularExpressionValidator {
-                            //     regularExpression: /^(\d{1,5}|(\d{1,3}\.){3}\d{1,3})$/
-                            // }
                             font.pixelSize: 14
                             color: "white"
                             horizontalAlignment: Text.AlignRight
-
+                            Component.onCompleted: {
+                                if (model.name === "Vision Multicast Port") {
+                                    text = observer.visionMulticastPort.toString();
+                                } else if (model.name === "Height") {
+                                    text = tempWindowHeight.toString();
+                                } else {
+                                    text = model.InitValue.toString();
+                                }
+                            }
                             onEditingFinished: {
                                 let newValue = parseInt(text)
                                 if (!isNaN(newValue) && newValue >= 0) {
                                     model.InitValue = newValue;
                                     model.value = newValue;
                                     if (model.name === "Vision Multicast Port") {
-                                        // setting.tempWindowWidth = newValue;
                                         observer.visionMulticastPort = newValue;
-                                        console.log("Vision Multicast Port set to:", newValue);
                                     } else if (model.name === "Height") {
                                         tempWindowHeight = newValue;
                                     }
@@ -373,9 +383,12 @@ Item {
     }
 
     // Component.onCompleted: {
-    //     settingItems.setProperty(0, "MaxValue", Screen.width);
-    //     settingItems.setProperty(1, "MaxValue", Screen.height);
-    //     settingItems.setProperty(0, "value", observer.windowWidth);
-    //     settingItems.setProperty(1, "value", observer.windowHeight);
+        // let currentValue = communicationItems.get(0).InitString
+        // if (communicationItems.)
+        // communicationItems.setProperty(0, "InitString", observer.visionMulticastAddress);
+        // settingItems.setProperty(0, "MaxValue", Screen.width);
+        // settingItems.setProperty(1, "MaxValue", Screen.height);
+        // settingItems.setProperty(0, "value", observer.windowWidth);
+        // settingItems.setProperty(1, "value", observer.windowHeight);
     // }
 }

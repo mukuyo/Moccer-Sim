@@ -3,10 +3,10 @@
 #include <thread>
 #include <chrono>
 
-Sender::Sender(quint16 port, QObject *parent) :
+Sender::Sender(string address, quint16 port, QObject *parent) :
     ioContext_(),
     socket_(ioContext_),
-    endpoint_(boost::asio::ip::make_address("127.0.0.1"), port) {
+    endpoint_(boost::asio::ip::make_address(address), port) {
     socket_.open(boost::asio::ip::udp::v4());
 
     captureCount = 0;
@@ -20,9 +20,9 @@ Sender::~Sender() {
     socket_.close();
 }
 
-void Sender::setPort(quint16 newPort) {
-    endpoint_ = boost::asio::ip::udp::endpoint(
-        boost::asio::ip::make_address("127.0.0.1"), newPort);
+void Sender::setPort(string address, quint16 newPort) {
+    port = newPort;
+    endpoint_ = boost::asio::ip::udp::endpoint(boost::asio::ip::make_address(address), port);
 }
 
 void Sender::send(int camera_num, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {

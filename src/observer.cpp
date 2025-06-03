@@ -2,7 +2,10 @@
 
 Observer::Observer(QObject *parent)
     : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlBlueReceiver(new ControlBlueReceiver(nullptr)), controlYellowReceiver(new ControlYellowReceiver(nullptr)), config("../config/config.ini", QSettings::IniFormat) {
-    sender = new Sender(config.value("Network/visionMulticastPort", 10020).toInt(), this);
+    visionMulticastAddress = config.value("Network/visionMulticastAddress", "224.5.23.2").toString();
+    visionMulticastPort = config.value("Network/visionMulticastPort", 10020).toInt();
+
+    sender = new Sender(visionMulticastAddress.toStdString(), visionMulticastPort, this);
     visionReceiver->startListening(config.value("Network/CommandListenPort", 20011).toInt());
     controlBlueReceiver->startListening(config.value("Network/BlueTeamControlPort", 10301).toInt());
     controlYellowReceiver->startListening(config.value("Network/YellowTeamControlPort", 10302).toInt());
@@ -21,7 +24,6 @@ Observer::Observer(QObject *parent)
     windowWidth = config.value("Display/width", 1100).toInt();
     windowHeight = config.value("Display/height", 720).toInt();
 
-    visionMulticastPort = config.value("Network/visionMulticastPort", 10020).toInt();
 }
 
 Observer::~Observer() {
@@ -87,6 +89,9 @@ int Observer::getWindowHeight() const {
 int Observer::getVisionMulticastPort() const {
     return visionMulticastPort;
 }
+QString Observer::getVisionMulticastAddress() const {
+    return visionMulticastAddress;
+}
 
 void Observer::setWindowWidth(int width) { 
     windowWidth = width; 
@@ -101,8 +106,14 @@ void Observer::setWindowHeight(int height) {
 void Observer::setVisionMulticastPort(int port) { 
     visionMulticastPort = port; 
     config.setValue("Network/visionMulticastPort", port);
-    sender->setPort(port);
+    sender->setPort(visionMulticastAddress.toStdString(), visionMulticastPort);
     emit settingChanged(); 
+}
+void Observer::setVisionMulticastAddress(const QString &address) {
+    visionMulticastAddress = address;
+    config.setValue("Network/visionMulticastAddress", QString::fromStdString(visionMulticastAddress.toStdString()));
+    sender->setPort(visionMulticastAddress.toStdString() , visionMulticastPort);
+    emit settingChanged();
 }
 
 void Observer::updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QList<bool> bBotBallContacts, QList<bool> yBotBallContacts, QVector3D ball_position) {
