@@ -1,12 +1,14 @@
 import QtQuick
 import QtQuick3D
 import Qt3D.Render
+import Qt3D.Extras
 import QtQuick3D.Physics
 import Qt.labs.folderlistmodel
 import MOC
 
-import "../../assets/models/bot/blue/viz/" as BlueBody
-import "../../assets/models/bot/blue/viz/" as YellowBody
+import "../../assets/models/bot/blue/viz/Rione" as BlueBody
+import "../../assets/models/bot/blue/viz/Light" as LightBlueBody
+import "../../assets/models/bot/blue/viz/Rione" as YellowBody
 // import "../../assets/models/bot/blue/rigid_body/" as BlueBody
 // import "../../assets/models/bot/blue/rigid_body/" as YellowBody
 // import "../../assets/models/bot/blue/viz/body/" as BlueBody
@@ -192,9 +194,16 @@ Node {
         delegate: Node {
             property int botIndex: index
             BlueBody.Rione {
+                visible: !isLightweightMode
                 eulerRotation: Qt.vector3d(-90, 0, 0)
                 position: Qt.vector3d(0, 5, 0)
             }
+            LightBlueBody.Frame {
+                visible: isLightweightMode
+                eulerRotation: Qt.vector3d(-90, 0, 0)
+                position: Qt.vector3d(0, 5, 0)
+            }
+
             PerspectiveCamera {
                 id: pCamera
                 position: Qt.vector3d(0, 90, -70)
@@ -428,7 +437,6 @@ Node {
     Camera {
         id: camera
     }
-
     Timer {
         interval: 16
         running: true

@@ -10,6 +10,12 @@ Item {
     property int tempWindowWidth: observer.windowWidth
     property int tempWindowHeight: observer.windowHeight
 
+    property string tempVisionMulticastAddress: observer.visionMulticastAddress
+    property int tempVisionMulticastPort: observer.visionMulticastPort
+    property int tempCommandListenPort: observer.commandListenPort
+    property int tempBlueTeamControlPort: observer.blueTeamControlPort
+    property int tempYellowTeamControlPort: observer.yellowTeamControlPort
+
     ListModel {
         id: menuModel
         ListElement { label: "Display"; expandValue: 62; heightValue: 190 }
@@ -17,7 +23,7 @@ Item {
         ListElement { label: "Geometry"; expandValue: 85; heightValue: 190 }
         ListElement { label: "Robots"; expandValue: 60; heightValue: 190 }
         ListElement { label: "Camera"; expandValue: 65; heightValue: 190 }
-        ListElement { label: "Communication"; expandValue: 135; heightValue: 190; }
+        ListElement { label: "Communication"; expandValue: 135; heightValue: 280; }
     }
 
     HBMenu {}
@@ -96,6 +102,11 @@ Item {
                 onClicked: {
                     observer.windowWidth = tempWindowWidth;
                     observer.windowHeight = tempWindowHeight;
+                    observer.visionMulticastAddress = tempVisionMulticastAddress;
+                    observer.visionMulticastPort = tempVisionMulticastPort;
+                    observer.commandListenPort = tempCommandListenPort;
+                    observer.blueTeamControlPort = tempBlueTeamControlPort;
+                    observer.yellowTeamControlPort = tempYellowTeamControlPort;
                 }
             }
         }

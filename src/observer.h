@@ -23,6 +23,10 @@ class Observer : public QObject {
     Q_PROPERTY(int windowHeight READ getWindowHeight WRITE setWindowHeight NOTIFY settingChanged)
     Q_PROPERTY(QString visionMulticastAddress READ getVisionMulticastAddress WRITE setVisionMulticastAddress NOTIFY settingChanged)
     Q_PROPERTY(int visionMulticastPort READ getVisionMulticastPort WRITE setVisionMulticastPort NOTIFY settingChanged)
+    Q_PROPERTY(int commandListenPort READ getCommandListenPort WRITE setCommandListenPort NOTIFY settingChanged)
+    Q_PROPERTY(int blueTeamControlPort READ getBlueTeamControlPort WRITE setBlueTeamControlPort NOTIFY settingChanged)
+    Q_PROPERTY(int yellowTeamControlPort READ getYellowTeamControlPort WRITE setYellowTeamControlPort NOTIFY settingChanged)
+    Q_PROPERTY(bool lightWeightMode READ getLightWeightMode WRITE setLightWeightMode NOTIFY settingChanged)
 
 public:
     explicit Observer(QObject *parent = nullptr);
@@ -42,11 +46,19 @@ public:
     int getWindowHeight() const;
     QString getVisionMulticastAddress() const;
     int getVisionMulticastPort() const;
+    int getCommandListenPort() const;
+    int getBlueTeamControlPort() const;
+    int getYellowTeamControlPort() const;
+    bool getLightWeightMode() const;
     
     void setWindowWidth(int width);
     void setWindowHeight(int height);
     void setVisionMulticastAddress(const QString &address);
     void setVisionMulticastPort(int port);
+    void setCommandListenPort(int port);
+    void setBlueTeamControlPort(int port);
+    void setYellowTeamControlPort(int port);
+    void setLightWeightMode(bool mode);
     
 signals:
     void blueRobotsChanged();
@@ -71,6 +83,11 @@ private:
 
     QString visionMulticastAddress;
     int visionMulticastPort;
+    int commandListenPort;
+    int blueTeamControlPort;
+    int yellowTeamControlPort;
+
+    bool lightWeightMode;
 
     RobotControlResponse robotControlResponse;
 };

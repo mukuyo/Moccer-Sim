@@ -33,8 +33,12 @@ Item {
             anchors.fill: parent
             onClicked: {
                 switchState = !switchState;
-                isForceDebugDraw = !isForceDebugDraw
-                console.log("Switch state changed to:", isForceDebugDraw);
+                if (model.name === "Force Debug Draw") {
+                    isForceDebugDraw = !isForceDebugDraw
+                } else if (model.name === "Lightweight Mode") {
+                    isLightweightMode = !isLightweightMode
+                    console.log("Lightweight Mode:", isLightweightMode);
+                }
             }
         }
     }

@@ -27,6 +27,7 @@ public:
 
     void startListening(quint16 port);
     void stopListening();
+    void setPort(quint16 newPort);
 
 signals:
     void receivedPacket(const mocSim_Packet packet);
@@ -36,6 +37,7 @@ private slots:
 
 private:
     QUdpSocket *udpSocket;
+    int currentPort;
 
 };
 
@@ -52,6 +54,7 @@ signals:
 
 public slots:
     void startListening(quint16 port);
+    void setPort(quint16 newPort);
     void receive();
     void updateBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts);
     void stopListening();
@@ -59,6 +62,7 @@ public slots:
 private:
     QUdpSocket *udpSocket;
     QList<bool> bBotBallContacts;
+    int currentPort;
 };
 
 class ControlYellowReceiver : public QObject
@@ -74,6 +78,7 @@ signals:
 
 public slots:
     void startListening(quint16 port);
+    void setPort(quint16 newPort);
     void receive();
     void stopListening();
     void updateBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts);
@@ -81,6 +86,7 @@ public slots:
 private:
     QUdpSocket *udpSocket;
     QList<bool> yBotBallContacts;
+    int currentPort;
 };
 
 #endif // receiver.h

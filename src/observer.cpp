@@ -4,11 +4,16 @@ Observer::Observer(QObject *parent)
     : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlBlueReceiver(new ControlBlueReceiver(nullptr)), controlYellowReceiver(new ControlYellowReceiver(nullptr)), config("../config/config.ini", QSettings::IniFormat) {
     visionMulticastAddress = config.value("Network/visionMulticastAddress", "224.5.23.2").toString();
     visionMulticastPort = config.value("Network/visionMulticastPort", 10020).toInt();
+    commandListenPort = config.value("Network/commandListenPort", 20011).toInt();
+    blueTeamControlPort = config.value("Network/blueTeamControlPort", 10301).toInt();
+    yellowTeamControlPort = config.value("Network/yellowTeamControlPort", 10302).toInt();
+
+    lightWeightMode = config.value("Network/lightWeightMode", false).toBool();
 
     sender = new Sender(visionMulticastAddress.toStdString(), visionMulticastPort, this);
-    visionReceiver->startListening(config.value("Network/CommandListenPort", 20011).toInt());
-    controlBlueReceiver->startListening(config.value("Network/BlueTeamControlPort", 10301).toInt());
-    controlYellowReceiver->startListening(config.value("Network/YellowTeamControlPort", 10302).toInt());
+    visionReceiver->startListening(commandListenPort);
+    controlBlueReceiver->startListening(blueTeamControlPort);
+    controlYellowReceiver->startListening(yellowTeamControlPort);
 
     connect(visionReceiver, &VisionReceiver::receivedPacket, this, &Observer::visionReceive);
     connect(controlBlueReceiver, &ControlBlueReceiver::receivedPacket, this, &Observer::controlReceive);
@@ -92,6 +97,18 @@ int Observer::getVisionMulticastPort() const {
 QString Observer::getVisionMulticastAddress() const {
     return visionMulticastAddress;
 }
+int Observer::getCommandListenPort() const {
+    return commandListenPort;
+}
+int Observer::getBlueTeamControlPort() const {
+    return blueTeamControlPort;
+}
+int Observer::getYellowTeamControlPort() const {
+    return yellowTeamControlPort;
+}
+bool Observer::getLightWeightMode() const {
+    return lightWeightMode;
+}
 
 void Observer::setWindowWidth(int width) { 
     windowWidth = width; 
@@ -113,6 +130,29 @@ void Observer::setVisionMulticastAddress(const QString &address) {
     visionMulticastAddress = address;
     config.setValue("Network/visionMulticastAddress", QString::fromStdString(visionMulticastAddress.toStdString()));
     sender->setPort(visionMulticastAddress.toStdString() , visionMulticastPort);
+    emit settingChanged();
+}
+void Observer::setCommandListenPort(int port) {
+    commandListenPort = port;
+    config.setValue("Network/commandListenPort", port);
+    visionReceiver->startListening(commandListenPort);
+    emit settingChanged();
+}
+void Observer::setBlueTeamControlPort(int port) {
+    blueTeamControlPort = port;
+    config.setValue("Network/blueTeamControlPort", port);
+    controlBlueReceiver->startListening(blueTeamControlPort);
+    emit settingChanged();
+}
+void Observer::setYellowTeamControlPort(int port) {
+    yellowTeamControlPort = port;
+    config.setValue("Network/yellowTeamControlPort", port);
+    controlYellowReceiver->startListening(yellowTeamControlPort);
+    emit settingChanged();
+}
+void Observer::setLightWeightMode(bool mode) {
+    lightWeightMode = mode;
+    config.setValue("Robot/lightWeightMode", mode);
     emit settingChanged();
 }
 

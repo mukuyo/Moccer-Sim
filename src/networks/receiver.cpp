@@ -8,8 +8,13 @@ VisionReceiver::~VisionReceiver() {
 }
 
 void VisionReceiver::startListening(quint16 port) {
+    if (udpSocket->state() != QAbstractSocket::BoundState) {
+        udpSocket->close();
+    }
+
     if (udpSocket->bind(QHostAddress("127.0.0.1"), port)) {
-        connect(udpSocket, &QUdpSocket::readyRead, this, &VisionReceiver::receive);
+        currentPort = port;
+        connect(udpSocket, &QUdpSocket::readyRead, this, &VisionReceiver::receive, Qt::UniqueConnection);
         std::cout << "Listening on port " << port << std::endl;
     } else {
         std::cerr << "Failed to bind UDP socket to port " << port << std::endl;
@@ -27,25 +32,34 @@ void VisionReceiver::receive() {
 }
 
 void VisionReceiver::stopListening() {
-    if (udpSocket) {
+    if (udpSocket && udpSocket->state() == QAbstractSocket::BoundState) {
         udpSocket->close();
-        udpSocket->deleteLater();
-        udpSocket = nullptr;
     }
 }
 
+void VisionReceiver::setPort(quint16 newPort) {
+    if (newPort == currentPort) return;
+    stopListening();
+    startListening(newPort);
+}
+
 ControlBlueReceiver::ControlBlueReceiver(QObject *parent)
-    : QObject(parent), udpSocket(nullptr){}
+    : QObject(parent), udpSocket(new QUdpSocket(this)){}
 
 ControlBlueReceiver::~ControlBlueReceiver() {
     stopListening();
 }
 
 void ControlBlueReceiver::startListening(quint16 port) {
-    udpSocket = new QUdpSocket(this);
+    if (udpSocket->state() != QAbstractSocket::BoundState) {
+        udpSocket->close();
+    }
+    cout << "Starting to listen on port: " << port << std::endl;
+    
     if (udpSocket->bind(QHostAddress("127.0.0.1"), port)) {
-        connect(udpSocket, &QUdpSocket::readyRead, this, &ControlBlueReceiver::receive);
-        std::cout << "Listening on port " << port << " (in thread)" << std::endl;
+        currentPort = port;
+        connect(udpSocket, &QUdpSocket::readyRead, this, &ControlBlueReceiver::receive, Qt::UniqueConnection);
+        std::cout << "Listening on port " << port << std::endl;
     } else {
         std::cerr << "Failed to bind UDP socket to port " << port << std::endl;
     }
@@ -79,27 +93,34 @@ void ControlBlueReceiver::updateBallContacts(const QList<bool> &bBotBallContacts
     this->bBotBallContacts = bBotBallContacts;
 }
 
+void ControlBlueReceiver::setPort(quint16 newPort) {
+    if (newPort == currentPort) return;
+    stopListening();
+    startListening(newPort);
+}
 
 void ControlBlueReceiver::stopListening() {
-    if (udpSocket) {
+    if (udpSocket && udpSocket->state() == QAbstractSocket::BoundState) {
         udpSocket->close();
-        udpSocket->deleteLater();
-        udpSocket = nullptr;
     }
 }
 
 ControlYellowReceiver::ControlYellowReceiver(QObject *parent)
-    : QObject(parent), udpSocket(nullptr){}
+    : QObject(parent), udpSocket(new QUdpSocket(this)){}
 
 ControlYellowReceiver::~ControlYellowReceiver() {
     stopListening();
 }
 
 void ControlYellowReceiver::startListening(quint16 port) {
-    udpSocket = new QUdpSocket(this);
+    if (udpSocket->state() != QAbstractSocket::BoundState) {
+        udpSocket->close();
+    }
+
     if (udpSocket->bind(QHostAddress("127.0.0.1"), port)) {
-        connect(udpSocket, &QUdpSocket::readyRead, this, &ControlYellowReceiver::receive);
-        std::cout << "Listening on port " << port << " (in thread)" << std::endl;
+        currentPort = port;
+        connect(udpSocket, &QUdpSocket::readyRead, this, &ControlYellowReceiver::receive, Qt::UniqueConnection);
+        std::cout << "Listening on port " << port << std::endl;
     } else {
         std::cerr << "Failed to bind UDP socket to port " << port << std::endl;
     }
@@ -134,9 +155,13 @@ void ControlYellowReceiver::updateBallContacts(const QList<bool> &bBotBallContac
 }
 
 void ControlYellowReceiver::stopListening() {
-    if (udpSocket) {
+    if (udpSocket && udpSocket->state() == QAbstractSocket::BoundState) {
         udpSocket->close();
-        udpSocket->deleteLater();
-        udpSocket = nullptr;
     }
+}
+
+void ControlYellowReceiver::setPort(quint16 newPort) {
+    if (newPort == currentPort) return;
+    stopListening();
+    startListening(newPort);
 }

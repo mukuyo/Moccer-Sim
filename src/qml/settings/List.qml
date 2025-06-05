@@ -58,10 +58,10 @@ Item {
     ListModel {
         id: communicationItems
         ListElement { name: "Vision Multicast Address"; detail: "Address for vision data multicast"; slider: false; toggle: false; InitValue: -1; InitString: "-1" }
-        ListElement { name: "Vision Multicast Port"; detail: "Port for vision data multicast"; slider: false; toggle: false; InitValue: 12345 }
-        ListElement { name: "Command Listen Port"; detail: "Port for command listening"; slider: false; toggle: false; InitValue: 12346 }
-        ListElement { name: "Blue Control Port"; detail: "Port for blue team control"; slider: false; toggle: false; InitValue: 12347 }
-        ListElement { name: "Yellow Control Port"; detail: "Port for yellow team control"; slider: false; toggle: false; InitValue: 12348 }
+        ListElement { name: "Vision Multicast Port"; detail: "Port for vision data multicast"; slider: false; toggle: false; InitValue: 10020 }
+        ListElement { name: "Command Listen Port"; detail: "Port for command listening"; slider: false; toggle: false; InitValue: 20011 }
+        ListElement { name: "Blue Control Port"; detail: "Port for blue team control"; slider: false; toggle: false; InitValue: 30011 }
+        ListElement { name: "Yellow Control Port"; detail: "Port for yellow team control"; slider: false; toggle: false; InitValue: 30012 }
     }
     ListModel {
         id: itemModel
@@ -220,7 +220,7 @@ Item {
                             spacing: 5
 
                             TextField {
-                                width: 90
+                                width: 86
                                 text: model.InitString || ""
                                 placeholderText: "ex: 192.168.0.1"
                                 font.pixelSize: 14
@@ -235,7 +235,7 @@ Item {
                                     if (text !== "") {
                                         model.InitString = text;
                                         if (model.name === "Vision Multicast Address") {
-                                            observer.visionMulticastAddress = text;
+                                            tempVisionMulticastAddress = text;
                                         }
                                     } else {
                                         text = model.InitString || "";
@@ -249,17 +249,21 @@ Item {
 
                         TextField {
                             x: 250
-                            width: 50
+                            width: 54
                             height: 24
                             text: model.InitValue.toString()
                             font.pixelSize: 14
                             color: "white"
-                            horizontalAlignment: Text.AlignRight
+                            horizontalAlignment: Text.AlignHCenter
                             Component.onCompleted: {
                                 if (model.name === "Vision Multicast Port") {
                                     text = observer.visionMulticastPort.toString();
-                                } else if (model.name === "Height") {
-                                    text = tempWindowHeight.toString();
+                                } else if (model.name === "Command Listen Port") {
+                                    text = observer.commandListenPort.toString();
+                                } else if (model.name === "Blue Control Port") {
+                                    text = observer.blueTeamControlPort.toString();
+                                } else if (model.name === "Yellow Control Port") {
+                                    text = observer.yellowTeamControlPort.toString();
                                 } else {
                                     text = model.InitValue.toString();
                                 }
@@ -270,9 +274,13 @@ Item {
                                     model.InitValue = newValue;
                                     model.value = newValue;
                                     if (model.name === "Vision Multicast Port") {
-                                        observer.visionMulticastPort = newValue;
-                                    } else if (model.name === "Height") {
-                                        tempWindowHeight = newValue;
+                                        tempVisionMulticastPort = newValue;
+                                    } else if (model.name === "Command Listen Port") {
+                                        tempCommandListenPort = newValue;
+                                    } else if (model.name === "Blue Control Port") {
+                                        tempBlueControlPort = newValue;
+                                    } else if (model.name === "Yellow Control Port") {
+                                        tempYellowControlPort = newValue;
                                     }
                                 } else {
                                     text = model.InitValue.toString()
@@ -381,14 +389,4 @@ Item {
         duration: 300
         easing.type: Easing.InOutQuad
     }
-
-    // Component.onCompleted: {
-        // let currentValue = communicationItems.get(0).InitString
-        // if (communicationItems.)
-        // communicationItems.setProperty(0, "InitString", observer.visionMulticastAddress);
-        // settingItems.setProperty(0, "MaxValue", Screen.width);
-        // settingItems.setProperty(1, "MaxValue", Screen.height);
-        // settingItems.setProperty(0, "value", observer.windowWidth);
-        // settingItems.setProperty(1, "value", observer.windowHeight);
-    // }
 }
