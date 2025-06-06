@@ -15,6 +15,8 @@ Item {
     property int tempCommandListenPort: observer.commandListenPort
     property int tempBlueTeamControlPort: observer.blueTeamControlPort
     property int tempYellowTeamControlPort: observer.yellowTeamControlPort
+    property bool tempForceDebugDrawMode: observer.forceDebugDrawMode
+    property bool tempLightWeightMode: observer.lightWeightMode
 
     ListModel {
         id: menuModel
@@ -107,6 +109,8 @@ Item {
                     observer.commandListenPort = tempCommandListenPort;
                     observer.blueTeamControlPort = tempBlueTeamControlPort;
                     observer.yellowTeamControlPort = tempYellowTeamControlPort;
+                    observer.forceDebugDrawMode = tempForceDebugDrawMode;
+                    observer.lightWeightMode = tempLightWeightMode;
                 }
             }
         }

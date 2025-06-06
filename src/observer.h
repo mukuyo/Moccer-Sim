@@ -26,6 +26,7 @@ class Observer : public QObject {
     Q_PROPERTY(int commandListenPort READ getCommandListenPort WRITE setCommandListenPort NOTIFY settingChanged)
     Q_PROPERTY(int blueTeamControlPort READ getBlueTeamControlPort WRITE setBlueTeamControlPort NOTIFY settingChanged)
     Q_PROPERTY(int yellowTeamControlPort READ getYellowTeamControlPort WRITE setYellowTeamControlPort NOTIFY settingChanged)
+    Q_PROPERTY(bool forceDebugDrawMode READ getForceDebugDrawMode WRITE setForceDebugDrawMode NOTIFY settingChanged)
     Q_PROPERTY(bool lightWeightMode READ getLightWeightMode WRITE setLightWeightMode NOTIFY settingChanged)
 
 public:
@@ -49,6 +50,7 @@ public:
     int getCommandListenPort() const;
     int getBlueTeamControlPort() const;
     int getYellowTeamControlPort() const;
+    bool getForceDebugDrawMode() const;
     bool getLightWeightMode() const;
     
     void setWindowWidth(int width);
@@ -58,6 +60,7 @@ public:
     void setCommandListenPort(int port);
     void setBlueTeamControlPort(int port);
     void setYellowTeamControlPort(int port);
+    void setForceDebugDrawMode(bool mode);
     void setLightWeightMode(bool mode);
     
 signals:
@@ -87,6 +90,7 @@ private:
     int blueTeamControlPort;
     int yellowTeamControlPort;
 
+    bool forceDebugDrawMode;
     bool lightWeightMode;
 
     RobotControlResponse robotControlResponse;

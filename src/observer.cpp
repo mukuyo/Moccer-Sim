@@ -8,7 +8,8 @@ Observer::Observer(QObject *parent)
     blueTeamControlPort = config.value("Network/blueTeamControlPort", 10301).toInt();
     yellowTeamControlPort = config.value("Network/yellowTeamControlPort", 10302).toInt();
 
-    lightWeightMode = config.value("Network/lightWeightMode", false).toBool();
+    forceDebugDrawMode = config.value("Display/ForceDebugMode", false).toBool();
+    lightWeightMode = config.value("Robot/LightWeightMode", false).toBool();
 
     sender = new Sender(visionMulticastAddress.toStdString(), visionMulticastPort, this);
     visionReceiver->startListening(commandListenPort);
@@ -106,6 +107,9 @@ int Observer::getBlueTeamControlPort() const {
 int Observer::getYellowTeamControlPort() const {
     return yellowTeamControlPort;
 }
+bool Observer::getForceDebugDrawMode() const {
+    return forceDebugDrawMode;
+}
 bool Observer::getLightWeightMode() const {
     return lightWeightMode;
 }
@@ -135,24 +139,29 @@ void Observer::setVisionMulticastAddress(const QString &address) {
 void Observer::setCommandListenPort(int port) {
     commandListenPort = port;
     config.setValue("Network/commandListenPort", port);
-    visionReceiver->startListening(commandListenPort);
+    visionReceiver->setPort(commandListenPort);
     emit settingChanged();
 }
 void Observer::setBlueTeamControlPort(int port) {
     blueTeamControlPort = port;
     config.setValue("Network/blueTeamControlPort", port);
-    controlBlueReceiver->startListening(blueTeamControlPort);
+    controlBlueReceiver->setPort(blueTeamControlPort);
     emit settingChanged();
 }
 void Observer::setYellowTeamControlPort(int port) {
     yellowTeamControlPort = port;
     config.setValue("Network/yellowTeamControlPort", port);
-    controlYellowReceiver->startListening(yellowTeamControlPort);
+    controlYellowReceiver->setPort(yellowTeamControlPort);
+    emit settingChanged();
+}
+void Observer::setForceDebugDrawMode(bool mode) {
+    forceDebugDrawMode = mode;
+    config.setValue("Display/ForceDebugMode", mode);
     emit settingChanged();
 }
 void Observer::setLightWeightMode(bool mode) {
     lightWeightMode = mode;
-    config.setValue("Robot/lightWeightMode", mode);
+    config.setValue("Robot/LightWeightMode", mode);
     emit settingChanged();
 }
 

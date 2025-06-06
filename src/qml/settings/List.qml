@@ -45,7 +45,7 @@ Item {
     }
     ListModel {
         id: robotItems
-        ListElement { name: "Lightweight Mode"; detail: "This property enables lightweight mode for robots"; slider: false; toggle: true; InitValue: 0 }
+        ListElement { name: "LightWeight Mode"; detail: "This property enables lightweight mode for robots"; slider: false; toggle: true; InitValue: 0; MaxValue: -1 }
         ListElement { name: "Blue Robot Counts"; detail: ""; slider: true; toggle: false; InitValue: 9; MaxValue: 16 }
         ListElement { name: "Yellow Robot Counts"; detail: ""; slider: true; toggle: false; InitValue: 9; MaxValue: 16 }
     }
@@ -57,11 +57,11 @@ Item {
     }
     ListModel {
         id: communicationItems
-        ListElement { name: "Vision Multicast Address"; detail: "Address for vision data multicast"; slider: false; toggle: false; InitValue: -1; InitString: "-1" }
-        ListElement { name: "Vision Multicast Port"; detail: "Port for vision data multicast"; slider: false; toggle: false; InitValue: 10020 }
-        ListElement { name: "Command Listen Port"; detail: "Port for command listening"; slider: false; toggle: false; InitValue: 20011 }
-        ListElement { name: "Blue Control Port"; detail: "Port for blue team control"; slider: false; toggle: false; InitValue: 30011 }
-        ListElement { name: "Yellow Control Port"; detail: "Port for yellow team control"; slider: false; toggle: false; InitValue: 30012 }
+        ListElement { name: "Vision Multicast Address"; detail: "Address for vision data multicast"; slider: false; toggle: false; InitValue: -1; MaxValue: -1; InitString: "-1" }
+        ListElement { name: "Vision Multicast Port"; detail: "Port for vision data multicast"; slider: false; toggle: false; InitValue: 10020; MaxValue: -1 }
+        ListElement { name: "Command Listen Port"; detail: "Port for command listening"; slider: false; toggle: false; InitValue: 20011; MaxValue: -1 }
+        ListElement { name: "Blue Control Port"; detail: "Port for blue team control"; slider: false; toggle: false; InitValue: 30011; MaxValue: -1 }
+        ListElement { name: "Yellow Control Port"; detail: "Port for yellow team control"; slider: false; toggle: false; InitValue: 30012; MaxValue: -1 }
     }
     ListModel {
         id: itemModel

@@ -24,8 +24,6 @@ Window {
     property int windowHeight: observer.windowHeight
     property var bBotPixelBalls: new Array(16).fill(Qt.vector3d(0, 0, 0))
     property var yBotPixelBalls: new Array(16).fill(Qt.vector3d(0, 0, 0))
-    property bool isForceDebugDraw: false
-    property bool isLightweightMode: false
 
     Item {
         width: parent.width
@@ -40,7 +38,7 @@ Window {
             typicalLength: 1000
             typicalSpeed: 10000
             defaultDensity: 1.0
-            forceDebugDraw: isForceDebugDraw
+            forceDebugDraw: observer.forceDebugDrawMode
         }
 
         Keys.onPressed: (event) => {

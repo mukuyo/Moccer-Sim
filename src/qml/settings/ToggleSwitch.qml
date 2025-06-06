@@ -34,11 +34,17 @@ Item {
             onClicked: {
                 switchState = !switchState;
                 if (model.name === "Force Debug Draw") {
-                    isForceDebugDraw = !isForceDebugDraw
-                } else if (model.name === "Lightweight Mode") {
-                    isLightweightMode = !isLightweightMode
-                    console.log("Lightweight Mode:", isLightweightMode);
+                    tempForceDebugDrawMode = !tempForceDebugDrawMode
+                } else if (model.name === "LightWeight Mode") {
+                    tempLightWeightMode = !tempLightWeightMode
                 }
+            }
+        }
+        Component.onCompleted: {
+            if (model.name === "Force Debug Draw") {
+                switchState = tempForceDebugDrawMode;
+            } else if (model.name === "LightWeight Mode") {
+                switchState = tempLightWeightMode;
             }
         }
     }

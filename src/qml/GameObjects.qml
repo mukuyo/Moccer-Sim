@@ -7,15 +7,9 @@ import Qt.labs.folderlistmodel
 import MOC
 
 import "../../assets/models/bot/blue/viz/Rione" as BlueBody
-import "../../assets/models/bot/blue/viz/Light" as LightBlueBody
+import "../../assets/models/bot/blue/rigid_body" as BlueLightBody
 import "../../assets/models/bot/blue/viz/Rione" as YellowBody
-// import "../../assets/models/bot/blue/rigid_body/" as BlueBody
-// import "../../assets/models/bot/blue/rigid_body/" as YellowBody
-// import "../../assets/models/bot/blue/viz/body/" as BlueBody
-// import "../../assets/models/bot/blue/viz/wheel/" as BlueWheel
-// import "../../assets/models/bot/yellow/viz/wheel/" as YellowWheel
-// import "../../assets/models/bot/blue/rigid_body/dribbler/" as BlueDribbler
-// import "../../assets/models/bot/blue/rigid_body/dribbler/" as YellowDribbler
+import "../../assets/models/bot/blue/rigid_body" as YellowLightBody
 import "../../assets/models/ball/"
 import "../../assets/models/circle/ball/"
 
@@ -194,14 +188,14 @@ Node {
         delegate: Node {
             property int botIndex: index
             BlueBody.Rione {
-                visible: !isLightweightMode
+                visible: !observer.lightWeightMode
                 eulerRotation: Qt.vector3d(-90, 0, 0)
-                position: Qt.vector3d(0, 5, 0)
+                position: Qt.vector3d(0, 0, 0)
             }
-            LightBlueBody.Frame {
-                visible: isLightweightMode
+            BlueLightBody.Frame {
+                visible: observer.lightWeightMode
                 eulerRotation: Qt.vector3d(-90, 0, 0)
-                position: Qt.vector3d(0, 5, 0)
+                position: Qt.vector3d(0, 0, 0)
             }
 
             PerspectiveCamera {
@@ -224,8 +218,8 @@ Node {
             }
             Model {
                 source: "#Cylinder"
-                scale: Qt.vector3d(0.5, 0.1, 0.5)
-                position: Qt.vector3d(0, 122, 0)
+                scale: Qt.vector3d(0.5, 0.14, 0.5)
+                position: Qt.vector3d(0, 128, 0)
                 materials: [
                     DefaultMaterial {
                         diffuseColor: "blue"
@@ -237,7 +231,7 @@ Node {
                 model: 4
                 delegate: Model {
                     source: "#Cylinder"
-                    scale: Qt.vector3d(0.4, 0.1, 0.4)
+                    scale: Qt.vector3d(0.4, 0.14, 0.4)
                     position: {
                         var offsets = [
                             Qt.vector3d(65*Math.cos(Math.PI-radianOffset-bBotRadians[index]), 0, 65*Math.sin(Math.PI-radianOffset-bBotRadians[index])),  // Left Up
@@ -247,7 +241,7 @@ Node {
                         ];
                         return Qt.vector3d(
                             offsets[index].x,
-                            122,
+                            128,
                             offsets[index].z
                         );
                     }
@@ -270,8 +264,14 @@ Node {
         delegate: Node {
             property int botIndex: index
             YellowBody.Rione {
+                visible: !observer.lightWeightMode
                 eulerRotation: Qt.vector3d(-90, 0, 0)
-                position: Qt.vector3d(0, 5, 0)
+                position: Qt.vector3d(0, 0, 0)
+            }
+            YellowLightBody.Frame {
+                visible: observer.lightWeightMode
+                eulerRotation: Qt.vector3d(-90, 0, 0)
+                position: Qt.vector3d(0, 0, 0)
             }
             Model {
                 source: "#Cylinder"
@@ -282,8 +282,8 @@ Node {
             }
             Model {
                 source: "#Cylinder"
-                scale: Qt.vector3d(0.5, 0.1, 0.5)
-                position: Qt.vector3d(0, 122, 0)
+                scale: Qt.vector3d(0.5, 0.14, 0.5)
+                position: Qt.vector3d(0, 128, 0)
                 materials: [
                     DefaultMaterial {
                         diffuseColor: "yellow"
@@ -295,7 +295,7 @@ Node {
                 model: 4
                 delegate: Model {
                     source: "#Cylinder"
-                    scale: Qt.vector3d(0.4, 0.1, 0.4)
+                    scale: Qt.vector3d(0.4, 0.14, 0.4)
                     position: {
                         var offsets = [
                             Qt.vector3d(65*Math.cos(Math.PI-radianOffset-yBotRadians[index]), 0, 65*Math.sin(Math.PI-radianOffset-yBotRadians[index])), // Left Up
@@ -305,7 +305,7 @@ Node {
                         ];
                         return Qt.vector3d(
                             offsets[index].x,
-                            122,
+                            128,
                             offsets[index].z
                         );
                     }
