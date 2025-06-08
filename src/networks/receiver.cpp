@@ -58,7 +58,7 @@ void ControlBlueReceiver::startListening(quint16 port) {
     
     if (udpSocket->bind(QHostAddress("127.0.0.1"), port)) {
         currentPort = port;
-        connect(udpSocket, &QUdpSocket::readyRead, this, &ControlBlueReceiver::receive, Qt::UniqueConnection);
+        connect(udpSocket, &QUdpSocket::readyRead, this, &ControlBlueReceiver::receive);
         std::cout << "Listening on port " << port << std::endl;
     } else {
         std::cerr << "Failed to bind UDP socket to port " << port << std::endl;

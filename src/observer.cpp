@@ -2,7 +2,7 @@
 
 Observer::Observer(QObject *parent)
     : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlBlueReceiver(new ControlBlueReceiver(nullptr)), controlYellowReceiver(new ControlYellowReceiver(nullptr)), config("../config/config.ini", QSettings::IniFormat) {
-    visionMulticastAddress = config.value("Network/visionMulticastAddress", "224.5.23.2").toString();
+    visionMulticastAddress = config.value("Network/visionMulticastAddress", "127.0.0.1").toString();
     visionMulticastPort = config.value("Network/visionMulticastPort", 10020).toInt();
     commandListenPort = config.value("Network/commandListenPort", 20011).toInt();
     blueTeamControlPort = config.value("Network/blueTeamControlPort", 10301).toInt();

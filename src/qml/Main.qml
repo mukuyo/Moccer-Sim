@@ -31,14 +31,18 @@ Window {
         focus: true
 
         PhysicsWorld {
+            id: physicsWorld
             scene: viewport.scene
             maximumTimestep: 16.667
             enableCCD: true
             gravity: Qt.vector3d(0, -9810, 0)
-            typicalLength: 1000
-            typicalSpeed: 10000
+            typicalLength: 100
+            typicalSpeed: 1000
             defaultDensity: 1.0
             forceDebugDraw: observer.forceDebugDrawMode
+            // onFrameDone: {
+            //     game_objects.updateGameObjects()
+            // }
         }
 
         Keys.onPressed: (event) => {

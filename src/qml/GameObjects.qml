@@ -85,6 +85,7 @@ Node {
     Connections {
         target: observer
         function onBlueRobotsChanged() {
+            console.log("Blue robots changed");
             for (var i = 0; i < bBotNum; i++) {
                 let bot = bBotsRepeater.children[i];
                 // bBotVelNormals[i] = lerp(bBotVelNormals[i], observer.blue_robots[i].velnormal, 0.5);
@@ -121,8 +122,8 @@ Node {
         model: bBotNum
         DynamicRigidBody {
             linearAxisLock: DynamicRigidBody.LockY
-            physicsMaterial: robotMaterial
-            position: Qt.vector3d(bBotsPos[index].x, 25, bBotsPos[index].z)
+            // physicsMaterial: robotMaterial
+            position: Qt.vector3d(bBotsPos[index].x, 0, bBotsPos[index].z)
             sendContactReports: true
             collisionShapes: [
                 ConvexMeshShape {
@@ -155,7 +156,7 @@ Node {
         DynamicRigidBody {
             linearAxisLock: DynamicRigidBody.LockY
             physicsMaterial: robotMaterial
-            position: Qt.vector3d(yBotsPos[index].x, 25, yBotsPos[index].z)
+            position: Qt.vector3d(yBotsPos[index].x, 0, yBotsPos[index].z)
             sendContactReports: true
             collisionShapes: [
                 ConvexMeshShape {
@@ -364,7 +365,7 @@ Node {
             }
         }
         if (objName == "b") {
-            bBotsFrame.children[botCursorID].reset(scenePosition, Qt.vector3d(0, -210, 0));
+            bBotsFrame.children[botCursorID].reset(scenePosition, Qt.vector3d(0, -90, 0));
         } else if (objName == "y") {
             yBotsFrame.children[botCursorID].reset(scenePosition, Qt.vector3d(0, 90, 0));
         }
@@ -442,11 +443,11 @@ Node {
         running: true
         repeat: true
         onTriggered: {
+    // function updateGameObjects() {
             let blueBotData = botMovement(false);
             let yellowBotData = botMovement(true);
 
             let ballPosition = Qt.vector3d(ball.position.x, -ball.position.z, ball.position.y);
-            // observer.updateObjects(blueBotData.positions, yellowBotData.positions, blueBotData.ballContacts, yellowBotData.ballContacts, blueBotData.pixels, yellowBotData.pixels, ballPosition);
             observer.updateObjects(blueBotData.positions, yellowBotData.positions, blueBotData.ballContacts, yellowBotData.ballContacts, ballPosition);
             if (teleopVelocity.x != 0 || teleopVelocity.y != 0 || teleopVelocity.z != 0){
                 if (!kick_flag) {
@@ -457,7 +458,6 @@ Node {
                     teleopVelocity = Qt.vector3d(0, 0, 0);
                 }
             }
-            // canvas.requestPaint();
         }
     }
     Component.onCompleted: {
