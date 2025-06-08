@@ -16,8 +16,8 @@ import "../../assets/models/circle/ball/"
 
 Node {
     id: robotNode
-    property real bBotNum: 11
-    property real yBotNum: 11
+    property real bBotNum: 1
+    property real yBotNum: 1
 
     property real wheelRadius: 8.15
     property real angle0: 0
@@ -438,12 +438,12 @@ Node {
     Camera {
         id: camera
     }
-    Timer {
-        interval: 16
-        running: true
-        repeat: true
-        onTriggered: {
-    // function updateGameObjects() {
+    // Timer {
+    //     interval: 16
+    //     running: true
+    //     repeat: true
+    //     onTriggered: {
+    function updateGameObjects() {
             let blueBotData = botMovement(false);
             let yellowBotData = botMovement(true);
 
@@ -459,7 +459,7 @@ Node {
                 }
             }
         }
-    }
+    // }
     Component.onCompleted: {
         for (let i = 0; i < bBotNum; i++) {
             let frame = bBotsFrame.children[i];

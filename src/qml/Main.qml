@@ -40,9 +40,9 @@ Window {
             typicalSpeed: 1000
             defaultDensity: 1.0
             forceDebugDraw: observer.forceDebugDrawMode
-            // onFrameDone: {
-            //     game_objects.updateGameObjects()
-            // }
+            onFrameDone: {
+                game_objects.updateGameObjects()
+            }
         }
 
         Keys.onPressed: (event) => {
