@@ -40,8 +40,8 @@ Window {
             typicalSpeed: 1000
             defaultDensity: 1.0
             forceDebugDraw: observer.forceDebugDrawMode
-            onFrameDone: {
-                game_objects.updateGameObjects()
+            onFrameDone: (timestep) => {
+                game_objects.updateGameObjects(timestep)
             }
         }
 
@@ -86,11 +86,33 @@ Window {
                     horizontalAlignment: Text.AlignRight
                     // text: "(" + bBotPixelBalls[0].x + "," + bBotPixelBalls[0].y + ")"
                 }
-
+                Item {
+                    id: bBotIDTexts
+                    Repeater {
+                        model: observer.blueRobotCount
+                        Text {
+                            x: 100
+                            font.pixelSize: 15
+                            color: "white"
+                            text: index
+                        }
+                    }
+                }
+                Item {
+                    id: yBotIDTexts
+                    Repeater {
+                        model: observer.yellowRobotCount
+                        Text {
+                            font.pixelSize: 15
+                            color: "blue"
+                            text: index
+                        }
+                    }
+                }
                 Node {
                     id: originNode
                     PerspectiveCamera {
-                        id: camera
+                        id: worldCamera
                         clipFar: 20000
                         clipNear: 1
                         fieldOfView: 60
@@ -157,23 +179,23 @@ Window {
                             let ry = -dy * dt * linearSpeed * 8;
                             let rz = dy * dt * linearSpeed * 8;
 
-                            let forward = camera.forward
-                            let right = camera.right
-                            let distance = camera.position.length()
+                            let forward = worldCamera.forward
+                            let right = worldCamera.right
+                            let distance = worldCamera.position.length()
 
-                            camera.position.x += rx * right.x + rz * forward.x
-                            camera.position.y += ry;
-                            camera.position.z += rx * right.z + rz * forward.z
+                            worldCamera.position.x += rx * right.x + rz * forward.x
+                            worldCamera.position.y += ry;
+                            worldCamera.position.z += rx * right.z + rz * forward.z
                         } else if (mouseArea.pressedButtons & Qt.LeftButton) {
                             let pan = -dx * dt * lookSpeed;
                             let tilt = dy * dt * lookSpeed;
-                            camera.eulerRotation.y += pan;
-                            camera.eulerRotation.x += tilt;
+                            worldCamera.eulerRotation.y += pan;
+                            worldCamera.eulerRotation.x += tilt;
                         } else if (mouseArea.pressedButtons & Qt.MiddleButton) {
                             let rz = dy * dt * linearSpeed;
-                            let distance = camera.position.length();
+                            let distance = worldCamera.position.length();
                             if (rz > 0 && distance < zoomLimit) return;
-                            camera.position.z += rz;
+                            worldCamera.position.z += rz;
                         }
                         lastPos = Qt.point(event.x, event.y);
                     }
@@ -182,14 +204,14 @@ Window {
                         let rz = wheel.angleDelta.y * dt * linearSpeed
                         let rx = -wheel.angleDelta.x * dt * linearSpeed
 
-                        let forward = camera.forward
-                        let right = camera.right
-                        let distance = camera.position.length()
+                        let forward = worldCamera.forward
+                        let right = worldCamera.right
+                        let distance = worldCamera.position.length()
 
                         if (rz > 0 && distance < zoomLimit) return
 
-                        camera.position.x += rx * right.x + rz * forward.x
-                        camera.position.z += rx * right.z + rz * forward.z
+                        worldCamera.position.x += rx * right.x + rz * forward.x
+                        worldCamera.position.z += rx * right.z + rz * forward.z
                     }
                     Setting {
                         id: setting
@@ -207,11 +229,14 @@ Window {
                     GameObjects {
                         id: game_objects
                         property var window: window
+                        property var worldCamera: worldCamera
                         property vector3d teleopVelocity: Qt.vector3d(0, 0, 0)
                         property real acceleration: 100.0
                         property var field_cursor : Qt.vector3d(0, 0, 0)
                         property var view3D: viewport
                         property var ballText: ballText
+                        property var bBotIDTexts: bBotIDTexts
+                        property var yBotIDTexts: yBotIDTexts
                     }
                     
                 }

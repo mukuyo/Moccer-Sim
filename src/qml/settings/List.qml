@@ -46,8 +46,8 @@ Item {
     ListModel {
         id: robotItems
         ListElement { name: "LightWeight Mode"; detail: "This property enables lightweight mode for robots"; slider: false; toggle: true; InitValue: 0; MaxValue: -1 }
-        ListElement { name: "Blue Robot Counts"; detail: ""; slider: true; toggle: false; InitValue: 9; MaxValue: 16 }
-        ListElement { name: "Yellow Robot Counts"; detail: ""; slider: true; toggle: false; InitValue: 9; MaxValue: 16 }
+        ListElement { name: "Blue Robot Count"; detail: ""; slider: true; toggle: false; InitValue: 9; MaxValue: 16 }
+        ListElement { name: "Yellow Robot Count"; detail: ""; slider: true; toggle: false; InitValue: 9; MaxValue: 16 }
     }
     ListModel {
         id: cameraItems
@@ -332,12 +332,29 @@ Item {
                             onValueChanged: {
                                 if (textField.text !== Math.round(value).toString()) {
                                     if (model.name === "Width") {
-                                        setting.tempWindowWidth = value;
+                                        tempWindowWidth = value;
                                     } else if (model.name === "Height") {
                                         tempWindowHeight = value;
-                                    }          
+                                    } else if (model.name === "Blue Robot Count") {
+                                        tempBlueRobotCount = value;
+                                    } else if (model.name === "Yellow Robot Count") {
+                                        tempYellowRobotCount = value;
+                                    }
                                     model.value = value
                                     textField.text = Math.round(value).toString()
+                                }
+                            }
+                            Component.onCompleted: {
+                                if (model.name === "Width") {
+                                    value = setting.tempWindowWidth;
+                                } else if (model.name === "Height") {
+                                    value = tempWindowHeight;
+                                } else if (model.name === "Blue Robot Count") {
+                                    value = tempBlueRobotCount;
+                                } else if (model.name === "Yellow Robot Count") {
+                                    value = tempYellowRobotCount;
+                                } else {
+                                    value = model.InitValue;
                                 }
                             }
                         }

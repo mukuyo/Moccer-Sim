@@ -12,7 +12,7 @@ void VisionReceiver::startListening(quint16 port) {
         udpSocket->close();
     }
 
-    if (udpSocket->bind(QHostAddress("127.0.0.1"), port)) {
+    if (udpSocket->bind(QHostAddress::AnyIPv4, port)) {
         currentPort = port;
         connect(udpSocket, &QUdpSocket::readyRead, this, &VisionReceiver::receive, Qt::UniqueConnection);
         std::cout << "Listening on port " << port << std::endl;
@@ -56,7 +56,7 @@ void ControlBlueReceiver::startListening(quint16 port) {
     }
     cout << "Starting to listen on port: " << port << std::endl;
     
-    if (udpSocket->bind(QHostAddress("127.0.0.1"), port)) {
+    if (udpSocket->bind(QHostAddress::AnyIPv4, port)) {
         currentPort = port;
         connect(udpSocket, &QUdpSocket::readyRead, this, &ControlBlueReceiver::receive);
         std::cout << "Listening on port " << port << std::endl;
@@ -117,7 +117,7 @@ void ControlYellowReceiver::startListening(quint16 port) {
         udpSocket->close();
     }
 
-    if (udpSocket->bind(QHostAddress("127.0.0.1"), port)) {
+    if (udpSocket->bind(QHostAddress::AnyIPv4, port)) {
         currentPort = port;
         connect(udpSocket, &QUdpSocket::readyRead, this, &ControlYellowReceiver::receive, Qt::UniqueConnection);
         std::cout << "Listening on port " << port << std::endl;

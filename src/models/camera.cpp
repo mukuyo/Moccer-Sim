@@ -21,8 +21,6 @@ QVector2D Camera::getBallPosition(QVector3D objectPos, QVector3D cameraPos, QVec
 
     float radius = 20.0f;
     QVector<QVector3D> offsets = generateOffsets(radius);
-    // QVector<QVector3D> offsets;
-    // offsets.append(QVector3D(0, 0, 0)); // 中心点を追加
     QVector2D screenSum(0, 0);
     int count = 0;
 
@@ -64,7 +62,6 @@ QVector2D Camera::getBallPosition(QVector3D objectPos, QVector3D cameraPos, QVec
 QVector<QVector3D> Camera::generateOffsets(float radius) {
     QVector<QVector3D> offsets;
     const int steps = 5;
-
     for (int x = -steps; x <= steps; ++x) {
         for (int y = -steps; y <= steps; ++y) {
             for (int z = -steps; z <= steps; ++z) {
@@ -75,6 +72,41 @@ QVector<QVector3D> Camera::generateOffsets(float radius) {
             }
         }
     }
-
     return offsets;
+}
+
+QVector2D Camera::projectToScreen(
+    const QVector3D& worldPos,
+    const QVector3D& cameraPos,
+    const QVector3D& cameraForward,
+    const QVector3D& cameraUp,
+    int screenWidth,
+    int screenHeight,
+    float fovDegrees,
+    float nearPlane = 1.0f,
+    float farPlane = 20000.0f
+) {
+    QVector3D center = cameraPos + cameraForward.normalized();
+    QMatrix4x4 view = createViewMatrix(cameraPos, center, cameraUp);
+    QMatrix4x4 proj = createProjectionMatrix(fovDegrees, float(screenWidth) / screenHeight, nearPlane, farPlane);
+
+    QVector4D clipSpace = proj * view * QVector4D(worldPos, 1.0f);
+
+    if (clipSpace.w() == 0.0f)
+        return QVector2D(-1, -1);  // 透視変換不能
+
+    QVector4D ndc = clipSpace / clipSpace.w();
+
+    // クリップ空間外ならスクリーンに存在しないと判定（必要に応じて）
+    if (ndc.x() < -1.0f || ndc.x() > 1.0f ||
+        ndc.y() < -1.0f || ndc.y() > 1.0f ||
+        ndc.z() < -1.0f || ndc.z() > 1.0f) {
+        return QVector2D(-1, -1);
+    }
+
+    // NDC -> スクリーン座標変換
+    float pixelX = (ndc.x() * 0.5f + 0.5f) * screenWidth;
+    float pixelY = (1.0f - (ndc.y() * 0.5f + 0.5f)) * screenHeight;
+
+    return QVector2D(pixelX, pixelY);
 }

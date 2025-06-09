@@ -17,6 +17,8 @@ Item {
     property int tempYellowTeamControlPort: observer.yellowTeamControlPort
     property bool tempForceDebugDrawMode: observer.forceDebugDrawMode
     property bool tempLightWeightMode: observer.lightWeightMode
+    property int tempBlueRobotCount : observer.blueRobotCount
+    property int tempYellowRobotCount : observer.yellowRobotCount
 
     ListModel {
         id: menuModel
@@ -111,6 +113,8 @@ Item {
                     observer.yellowTeamControlPort = tempYellowTeamControlPort;
                     observer.forceDebugDrawMode = tempForceDebugDrawMode;
                     observer.lightWeightMode = tempLightWeightMode;
+                    observer.blueRobotCount = tempBlueRobotCount;
+                    observer.yellowRobotCount = tempYellowRobotCount;
                 }
             }
         }

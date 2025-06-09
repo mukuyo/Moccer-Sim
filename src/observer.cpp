@@ -8,8 +8,8 @@ Observer::Observer(QObject *parent)
     blueTeamControlPort = config.value("Network/blueTeamControlPort", 10301).toInt();
     yellowTeamControlPort = config.value("Network/yellowTeamControlPort", 10302).toInt();
 
-    forceDebugDrawMode = config.value("Display/ForceDebugMode", false).toBool();
-    lightWeightMode = config.value("Robot/LightWeightMode", false).toBool();
+    forceDebugDrawMode = config.value("Display/ForceDebugDrawMode", false).toBool();
+    lightWeightMode = config.value("Display/LightWeightMode", false).toBool();
 
     sender = new Sender(visionMulticastAddress.toStdString(), visionMulticastPort, this);
     visionReceiver->startListening(commandListenPort);
@@ -29,6 +29,9 @@ Observer::Observer(QObject *parent)
 
     windowWidth = config.value("Display/width", 1100).toInt();
     windowHeight = config.value("Display/height", 720).toInt();
+
+    blueRobotCount = config.value("Robot/blueRobotCount", 11).toInt();
+    yellowRobotCount = config.value("Robot/yellowRobotCount", 11).toInt();
 
 }
 
@@ -116,12 +119,12 @@ bool Observer::getLightWeightMode() const {
 
 void Observer::setWindowWidth(int width) { 
     windowWidth = width; 
-    config.setValue("window/width", width);
+    config.setValue("Display/width", width);
     emit settingChanged(); 
 }
 void Observer::setWindowHeight(int height) { 
     windowHeight = height; 
-    config.setValue("window/height", height);
+    config.setValue("Display/height", height);
     emit settingChanged(); 
 }
 void Observer::setVisionMulticastPort(int port) { 
@@ -161,7 +164,17 @@ void Observer::setForceDebugDrawMode(bool mode) {
 }
 void Observer::setLightWeightMode(bool mode) {
     lightWeightMode = mode;
-    config.setValue("Robot/LightWeightMode", mode);
+    config.setValue("Display/LightWeightDrawMode", mode);
+    emit settingChanged();
+}
+void Observer::setBlueRobotCount(int count) {
+    blueRobotCount = count;
+    config.setValue("Robot/blueRobotCount", count);
+    emit settingChanged();
+}
+void Observer::setYellowRobotCount(int count) {
+    yellowRobotCount = count;
+    config.setValue("Robot/yellowRobotCount", count);
     emit settingChanged();
 }
 

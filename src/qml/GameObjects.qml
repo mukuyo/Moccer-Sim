@@ -16,14 +16,18 @@ import "../../assets/models/circle/ball/"
 
 Node {
     id: robotNode
-    property real bBotNum: 1
-    property real yBotNum: 1
+    property real bBotNum: observer.blueRobotCount
+    property real yBotNum: observer.yellowRobotCount
 
     property real wheelRadius: 8.15
     property real angle0: 0
     property real angle1: 0
     property real angle2: 0
     property real angle3: 0
+
+    property real pre_x: 0
+    property real pre_y: 0
+    property real pre_theta: 0
 
     property var bBotsPos: [
         Qt.vector3d(-500, 0, 0),
@@ -85,11 +89,8 @@ Node {
     Connections {
         target: observer
         function onBlueRobotsChanged() {
-            console.log("Blue robots changed");
             for (var i = 0; i < bBotNum; i++) {
                 let bot = bBotsRepeater.children[i];
-                // bBotVelNormals[i] = lerp(bBotVelNormals[i], observer.blue_robots[i].velnormal, 0.5);
-                // bBotVelTangents[i] = lerp(bBotVelTangents[i], -observer.blue_robots[i].veltangent, 0.5);
                 bBotVelNormals[i] = observer.blue_robots[i].velnormal;
                 bBotVelTangents[i] = -observer.blue_robots[i].veltangent;
                 bBotVelAngulars[i] = observer.blue_robots[i].velangular;
@@ -102,8 +103,6 @@ Node {
                 let bot = yBotsRepeater.children[i];
                 yBotVelNormals[i] = observer.yellow_robots[i].velnormal;
                 yBotVelTangents[i] = -observer.yellow_robots[i].veltangent;
-                // yBotVelNormals[i] = lerp(yBotVelNormals[i], observer.yellow_robots[i].velnormal, 0.5);
-                // yBotVelTangents[i] = lerp(yBotVelTangents[i], -observer.yellow_robots[i].veltangent, 0.5);
                 yBotVelAngulars[i] = observer.yellow_robots[i].velangular;
                 yBotKickspeeds[i] = Qt.vector3d(observer.yellow_robots[i].kickspeedx, observer.yellow_robots[i].kickspeedz, observer.yellow_robots[i].kickspeedx);
                 yBotSpinners[i] = observer.yellow_robots[i].spinner;
@@ -122,7 +121,7 @@ Node {
         model: bBotNum
         DynamicRigidBody {
             linearAxisLock: DynamicRigidBody.LockY
-            // physicsMaterial: robotMaterial
+            physicsMaterial: robotMaterial
             position: Qt.vector3d(bBotsPos[index].x, 0, bBotsPos[index].z)
             sendContactReports: true
             collisionShapes: [
@@ -198,7 +197,6 @@ Node {
                 eulerRotation: Qt.vector3d(-90, 0, 0)
                 position: Qt.vector3d(0, 0, 0)
             }
-
             PerspectiveCamera {
                 id: pCamera
                 position: Qt.vector3d(0, 90, -70)
@@ -322,11 +320,12 @@ Node {
             }
         }
     }
+    
 
     PhysicsMaterial {
         id: ballMaterial
-        staticFriction: 0.3
-        dynamicFriction: 0.3
+        staticFriction: 0.15
+        dynamicFriction: 0.15
         restitution: 0
     }
     DynamicRigidBody {
@@ -341,11 +340,7 @@ Node {
         ]
         Ball {}
     }
-    // Circle {
-    //     eulerRotation: Qt.vector3d(90, 0, 0)
-    //     position: Qt.vector3d(0, 5, 0)
-    //     scale: Qt.vector3d(2, 2, 2)
-    // }
+
     function resetBallPosition(result) {
         teleopVelocity = Qt.vector3d(0, 0, 0);
         ball.reset(result.scenePosition, Qt.vector3d(0, 0, 0));
@@ -380,6 +375,30 @@ Node {
         return radian;
     }
 
+    function worldToScreen(worldPosition) {
+        // 4次元ベクトルを作る
+        let pos = Qt.vector4d(worldPosition.x, worldPosition.y, worldPosition.z, 1.0);
+
+        // カメラのView行列とProjection行列
+        let viewMatrix = camera.viewMatrix;
+        let projectionMatrix = camera.projectionMatrix;
+
+        // ViewProjection変換
+        let clipSpacePos = projectionMatrix.times(viewMatrix.times(pos));
+
+        // Clip Space → NDC (Normalized Device Coordinates)
+        let ndc = Qt.vector3d(
+            clipSpacePos.x / clipSpacePos.w,
+            clipSpacePos.y / clipSpacePos.w,
+            clipSpacePos.z / clipSpacePos.w
+        );
+
+        // NDC → スクリーン座標（ピクセル）
+        let screenX = (ndc.x * 0.5 + 0.5) * viewport.width;
+        let screenY = (1.0 - (ndc.y * 0.5 + 0.5)) * viewport.height; // Y軸は反転
+
+        return Qt.point(screenX, screenY);
+    }
     function botMovement(isYellow) {
         let botPositions = []
         let botBallContacts = []
@@ -394,6 +413,7 @@ Node {
         let botKickspeeds = isYellow ? yBotKickspeeds : bBotKickspeeds;
         let botSpinners = isYellow ? yBotSpinners : bBotSpinners;
         let botPixelBalls = isYellow ? window.yBotPixelBalls : window.bBotPixelBalls;
+        let botIDTexts = isYellow ? bBotIDTexts : bBotIDTexts;
 
         for (let i = 0; i < botNum; i++) {
             let frame = botFrame.children[i];
@@ -428,38 +448,54 @@ Node {
                 botBallContacts.push(false);
                 ball.simulationEnabled = true;
             }
-            if (!isYellow) {
-                let cameraPosition = Qt.vector3d(-70*Math.sin(radian)+frame.position.x, bBotsCamera[i].position.y + frame.position.y, -70*Math.cos(radian)+frame.position.z);
-                botPixelBalls[i] = camera.getBallPosition(ball.position, cameraPosition, bBotsCamera[i].forward, bBotsCamera[i].up, 640, 480, 60);
-            }
+            let frame2D = camera.projectToScreen(
+                Qt.vector3d(frame.position.x, frame.position.y, frame.position.z),
+                worldCamera.position,
+                worldCamera.forward,
+                worldCamera.up,
+                windowWidth,
+                windowHeight,
+                worldCamera.fieldOfView,
+                1.0,
+                20000
+            );
+            botIDTexts.children[i].x = frame2D.x;
+            botIDTexts.children[i].y = frame2D.y - 30 * (4500 / worldCamera.position.y)
+            console.log(worldCamera.position.y / 4500)
+            // botIDTexts.children[i].y = frame2D.y - botIDTexts.children[i].height - 10
+            // let Text = worldToScreen(Qt.vector3d(frame.position.x, frame.position.y + 100, frame.position.z), bBotsCamera[i], viewport);
+            // botIDTexts.children[i].x = frame.position.x;
+            // botIDTexts.children[i].text = "(" + frame.position.x.toFixed(2) + ", " + frame.position.z.toFixed(2) + ", " + frame.eulerRotation.y.toFixed(2) + ")";
+
+            // if (!isYellow) {
+            //     let cameraPosition = Qt.vector3d(-70*Math.sin(radian)+frame.position.x, bBotsCamera[i].position.y + frame.position.y, -70*Math.cos(radian)+frame.position.z);
+            //     botPixelBalls[i] = camera.getBallPosition(ball.position, cameraPosition, bBotsCamera[i].forward, bBotsCamera[i].up, 640, 480, 60);
+            // }
         }
         return { positions: botPositions, ballContacts: botBallContacts, pixels: botPixelBalls };
     }
     Camera {
         id: camera
     }
-    // Timer {
-    //     interval: 16
-    //     running: true
-    //     repeat: true
-    //     onTriggered: {
-    function updateGameObjects() {
-            let blueBotData = botMovement(false);
-            let yellowBotData = botMovement(true);
 
-            let ballPosition = Qt.vector3d(ball.position.x, -ball.position.z, ball.position.y);
-            observer.updateObjects(blueBotData.positions, yellowBotData.positions, blueBotData.ballContacts, yellowBotData.ballContacts, ballPosition);
-            if (teleopVelocity.x != 0 || teleopVelocity.y != 0 || teleopVelocity.z != 0){
-                if (!kick_flag) {
-                    ball.setLinearVelocity(Qt.vector3d(teleopVelocity.x, teleopVelocity.y, teleopVelocity.z));
-                    let ballFriction = 0.99;
-                    teleopVelocity = Qt.vector3d(teleopVelocity.x * ballFriction, teleopVelocity.y * ballFriction, teleopVelocity.z * ballFriction);
-                } else {
-                    teleopVelocity = Qt.vector3d(0, 0, 0);
-                }
+    function updateGameObjects(timestep) 
+    {
+        let blueBotData = botMovement(false);
+        let yellowBotData = botMovement(true);
+
+        let ballPosition = Qt.vector3d(ball.position.x, -ball.position.z, ball.position.y);
+        observer.updateObjects(blueBotData.positions, yellowBotData.positions, blueBotData.ballContacts, yellowBotData.ballContacts, ballPosition);
+        if (teleopVelocity.x != 0 || teleopVelocity.y != 0 || teleopVelocity.z != 0){
+            if (!kick_flag) {
+                ball.setLinearVelocity(Qt.vector3d(teleopVelocity.x, teleopVelocity.y, teleopVelocity.z));
+                let ballFriction = 0.99;
+                teleopVelocity = Qt.vector3d(teleopVelocity.x * ballFriction, teleopVelocity.y * ballFriction, teleopVelocity.z * ballFriction);
+            } else {
+                teleopVelocity = Qt.vector3d(0, 0, 0);
             }
         }
-    // }
+    }
+        
     Component.onCompleted: {
         for (let i = 0; i < bBotNum; i++) {
             let frame = bBotsFrame.children[i];

@@ -28,6 +28,8 @@ class Observer : public QObject {
     Q_PROPERTY(int yellowTeamControlPort READ getYellowTeamControlPort WRITE setYellowTeamControlPort NOTIFY settingChanged)
     Q_PROPERTY(bool forceDebugDrawMode READ getForceDebugDrawMode WRITE setForceDebugDrawMode NOTIFY settingChanged)
     Q_PROPERTY(bool lightWeightMode READ getLightWeightMode WRITE setLightWeightMode NOTIFY settingChanged)
+    Q_PROPERTY(int blueRobotCount READ getBlueRobotCount WRITE setBlueRobotCount NOTIFY settingChanged)
+    Q_PROPERTY(int yellowRobotCount READ getYellowRobotCount WRITE setYellowRobotCount NOTIFY settingChanged)
 
 public:
     explicit Observer(QObject *parent = nullptr);
@@ -52,6 +54,8 @@ public:
     int getYellowTeamControlPort() const;
     bool getForceDebugDrawMode() const;
     bool getLightWeightMode() const;
+    int getBlueRobotCount() const { return blueRobotCount; }
+    int getYellowRobotCount() const { return yellowRobotCount; }
     
     void setWindowWidth(int width);
     void setWindowHeight(int height);
@@ -62,6 +66,8 @@ public:
     void setYellowTeamControlPort(int port);
     void setForceDebugDrawMode(bool mode);
     void setLightWeightMode(bool mode);
+    void setBlueRobotCount(int count);
+    void setYellowRobotCount(int count);
     
 signals:
     void blueRobotsChanged();
@@ -92,6 +98,9 @@ private:
 
     bool forceDebugDrawMode;
     bool lightWeightMode;
+
+    int blueRobotCount;
+    int yellowRobotCount;
 
     RobotControlResponse robotControlResponse;
 };

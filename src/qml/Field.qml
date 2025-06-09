@@ -11,6 +11,7 @@ Node {
     Stadium {
         id: stadium
         scale: Qt.vector3d(10, 10, 10)
+        visible: !observer.lightWeightMode
     }
     PhysicsMaterial {
         id: fieldMaterial
