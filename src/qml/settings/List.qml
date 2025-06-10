@@ -17,52 +17,62 @@ Item {
 
     ListModel {
         id: displayItems
-        ListElement { name: "Width"; detail: ""; slider: true; toggle: false; InitValue: 1100; MaxValue: 2560 }
-        ListElement { name: "Height"; detail: ""; slider: true; toggle: false; InitValue: 720; MaxValue: 1240 }
-        ListElement { name: "Force Debug Draw"; detail: "This property enables drawing \nof all active shapes in the physics world"; slider: false; toggle: true; InitValue: 0 }
+        ListElement { name: "Width"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 1100; MaxValue: 2560 }
+        ListElement { name: "Height"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 720; MaxValue: 1240 }
+        ListElement { name: "Force Debug Draw"; detail: "This property enables drawing \nof all active shapes in the physics world"; slider: false; toggle: true; combo: false; InitValue: 0 }
     }
     ListModel {
         id: physicsItems
-        ListElement { name: "Desired FPS"; detail: ""; slider: true; toggle: false; InitValue: 60; MaxValue: 120 }
-        ListElement { name: "Gravity"; detail: ""; slider: true; toggle: false; InitValue: 9.81; MaxValue: 100 }
-        ListElement { name: "CCD"; detail: "Continuous Collision Detection"; slider: false; toggle: true; InitValue: 1 }
-        ListElement { name: "Ball Radius"; detail: ""; slider: true; toggle: false; InitValue: 0.1; MaxValue: 0.5 }
-        ListElement { name: "Ball Mass"; detail: ""; slider: true; toggle: false; InitValue: 0.043; MaxValue: 10 }
-        ListElement { name: "Ball Static Friction"; detail: ""; slider: true; toggle: false; InitValue: 0.3; MaxValue: 1 }
-        ListElement { name: "Ball Dynamic Friction"; detail: ""; slider: true; toggle: false; InitValue: 0.2; MaxValue: 1 }
-        ListElement { name: "Ball Restitution"; detail: ""; slider: true; toggle: false; InitValue: 0.0; MaxValue: 1 }
+        ListElement { name: "Desired FPS"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 60; MaxValue: 120 }
+        ListElement { name: "Gravity"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 9.81; MaxValue: 100 }
+        ListElement { name: "CCD"; detail: "Continuous Collision Detection"; slider: false; toggle: true; combo: false; InitValue: 1 }
+        ListElement { name: "Ball Radius"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.1; MaxValue: 0.5 }
+        ListElement { name: "Ball Mass"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.043; MaxValue: 10 }
+        ListElement { name: "Ball Static Friction"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.3; MaxValue: 1 }
+        ListElement { name: "Ball Dynamic Friction"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.2; MaxValue: 1 }
+        ListElement { name: "Ball Restitution"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.0; MaxValue: 1 }
     }
     ListModel {
         id: geometryItems
-        ListElement {name: "Line Thickness"; detail: ""; slider: true; toggle: false; InitValue: 0.5; MaxValue: 2 }
-        ListElement { name: "Field Width"; detail: ""; slider: true; toggle: false; InitValue: 68; MaxValue: 100 }
-        ListElement { name: "Field Height"; detail: ""; slider: true; toggle: false; InitValue: 105; MaxValue: 150 }
-        ListElement { name: "Goal Width"; detail: ""; slider: true; toggle: false; InitValue: 7.32; MaxValue: 10 }
-        ListElement { name: "Goal Depth"; detail: ""; slider: true; toggle: false; InitValue: 2.44; MaxValue: 5 }
-        ListElement { name: "Goal Height"; detail: ""; slider: true; toggle: false; InitValue: 2.44; MaxValue: 5 }
-        ListElement { name: "Penalty Area Width"; detail: ""; slider: true; toggle: false; InitValue: 16.5; MaxValue: 20 }
-        ListElement { name: "Penalty Area Depth"; detail: ""; slider: true; toggle: false; InitValue: 40.3; MaxValue: 50 }
+        ListElement { name: "Line Thickness"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.5; MaxValue: 2 }
+        ListElement { name: "Field Width"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 68; MaxValue: 100 }
+        ListElement { name: "Field Height"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 105; MaxValue: 150 }
+        ListElement { name: "Goal Width"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 7.32; MaxValue: 10 }
+        ListElement { name: "Goal Depth"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 2.44; MaxValue: 5 }
+        ListElement { name: "Goal Height"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 2.44; MaxValue: 5 }
+        ListElement { name: "Penalty Area Width"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 16.5; MaxValue: 20 }
+        ListElement { name: "Penalty Area Depth"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 40.3; MaxValue: 50 }
     }
     ListModel {
         id: robotItems
-        ListElement { name: "LightWeight Mode"; detail: "This property enables lightweight mode for robots"; slider: false; toggle: true; InitValue: 0; MaxValue: -1 }
-        ListElement { name: "Blue Robot Count"; detail: ""; slider: true; toggle: false; InitValue: 9; MaxValue: 16 }
-        ListElement { name: "Yellow Robot Count"; detail: ""; slider: true; toggle: false; InitValue: 9; MaxValue: 16 }
+        ListElement { name: "Blue Robot Count"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 9; MaxValue: 16 }
+        ListElement { name: "Yellow Robot Count"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 9; MaxValue: 16 }
     }
     ListModel {
         id: cameraItems
-        ListElement { name: "Camera Distance"; detail: ""; slider: true; toggle: false; InitValue: 10; MaxValue: 20 }
-        ListElement { name: "Camera Height"; detail: ""; slider: true; toggle: false; InitValue: 5; MaxValue: 10 }
-        ListElement { name: "Camera Angle"; detail: ""; slider: true; toggle: false; InitValue: 30; MaxValue: 60 }
+        ListElement { name: "Main Camera"; detail: "Switch to one of the cameras"; slider: false; toggle: true; combo: false; InitValue: 0; MaxValue: -1 }
+        ListElement { name: "World Camera Position"; detail: ""; slider: false; toggle: false; combo: false; InitValue: 0; MaxValue: -1; InitString: "0, 10, 20" }
+        ListElement { name: "World Camera Distance"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 10; MaxValue: 20 }
+        ListElement { name: "World Camera Height"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 5; MaxValue: 10 }
+        ListElement { name: "World Camera Angle"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 30; MaxValue: 60 }
+    }
+    ListModel {
+        id: lightItems
+        ListElement { name: "Blue Robot"; detail: "Light mode for blue team robots"; slider: false; toggle: true; combo: false; InitValue: 0; MaxValue: -1 }
+        ListElement { name: "Yellow Robot"; detail: "Light mode for yellow team robots"; slider: false; toggle: true; combo: false; InitValue: 0; MaxValue: -1 }
+        ListElement { name: "Stadium"; detail: "Light mode for stadium"; slider: false; toggle: true; combo: false; InitValue: 0; MaxValue: -1 }
+        ListElement { name: "Field"; detail: "Light mode for field"; slider: false; toggle: true; combo: false; InitValue: 0; MaxValue: -1 }
     }
     ListModel {
         id: communicationItems
-        ListElement { name: "Vision Multicast Address"; detail: "Address for vision data multicast"; slider: false; toggle: false; InitValue: -1; MaxValue: -1; InitString: "-1" }
-        ListElement { name: "Vision Multicast Port"; detail: "Port for vision data multicast"; slider: false; toggle: false; InitValue: 10020; MaxValue: -1 }
-        ListElement { name: "Command Listen Port"; detail: "Port for command listening"; slider: false; toggle: false; InitValue: 20011; MaxValue: -1 }
-        ListElement { name: "Blue Control Port"; detail: "Port for blue team control"; slider: false; toggle: false; InitValue: 30011; MaxValue: -1 }
-        ListElement { name: "Yellow Control Port"; detail: "Port for yellow team control"; slider: false; toggle: false; InitValue: 30012; MaxValue: -1 }
+        ListElement { name: "Vision Multicast Address"; detail: "Address for vision data multicast"; slider: false; toggle: false; combo: false; InitValue: -1; MaxValue: -1; InitString: "-1" }
+        ListElement { name: "Vision Multicast Port"; detail: "Port for vision data multicast"; slider: false; toggle: false; combo: false; InitValue: 10020; MaxValue: -1 }
+        ListElement { name: "Command Listen Port"; detail: "Port for command listening"; slider: false; toggle: false; combo: false; InitValue: 20011; MaxValue: -1 }
+        ListElement { name: "Blue Control Port"; detail: "Port for blue team control"; slider: false; toggle: false; combo: false; InitValue: 30011; MaxValue: -1 }
+        ListElement { name: "Yellow Control Port"; detail: "Port for yellow team control"; slider: false; toggle: false; combo: false; InitValue: 30012; MaxValue: -1 }
     }
+
+    
     ListModel {
         id: itemModel
     }
@@ -92,6 +102,11 @@ Item {
             for (var i = 0; i < cameraItems.count; i++) {
                 itemModel.append(cameraItems.get(i));
             }
+        } else if (label == "Light Mode") {
+            itemModel.clear();
+            for (var i = 0; i < lightItems.count; i++) {
+                itemModel.append(lightItems.get(i));
+            }
         } else if (label == "Communication") {
             itemModel.clear();
             for (var i = 0; i < communicationItems.count; i++) {
@@ -108,7 +123,6 @@ Item {
         color: "white"
     }
 
-    // 三角形ボタン
     Item {
         id: triangleVisual
         width: 300
@@ -175,7 +189,6 @@ Item {
         }
     }
 
-    // ライン描画
     Shape {
         ShapePath {
             strokeColor: "white"
@@ -186,7 +199,6 @@ Item {
         }
     }
 
-    // メニュー（スライダー付き）
     Item {
         id: menuWrapper
         width: 340
@@ -306,13 +318,26 @@ Item {
                             x: 270
                             y: 0
                             visible: model.toggle
-                            // switchState: model.value === 1
-                            // onSwitchStateChanged: {
-                            //     model.value = switchState ? 1 : 0;
-                            //     if (model.name === "CCD") {
-                            //         observer.enableCCD = switchState;
-                            //     }
-                            // }
+                        }
+                    }
+                    Item {
+                        y: 25
+                        visible: model.combo
+                        Text {
+                            text: model.detail
+                            x: 18
+                            height: 30
+                            color: "white"
+                            opacity: 0.7
+                            font.pixelSize: 14
+                            // visible: model.detail !== ""
+                        }
+                        
+                        ComboBox {
+                            x: 270
+                            y: 0
+                            // visible: model.toggle
+                            model: ["Option 1", "Option 2", "Option 3"]
                         }
                     }
                     Item {

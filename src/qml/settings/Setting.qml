@@ -16,7 +16,10 @@ Item {
     property int tempBlueTeamControlPort: observer.blueTeamControlPort
     property int tempYellowTeamControlPort: observer.yellowTeamControlPort
     property bool tempForceDebugDrawMode: observer.forceDebugDrawMode
-    property bool tempLightWeightMode: observer.lightWeightMode
+    property bool tempLightBlueRobotMode: observer.lightBlueRobotMode
+    property bool tempLightYellowRobotMode: observer.lightYellowRobotMode
+    property bool tempLightStadiumMode: observer.lightStadiumMode
+    property bool tempLightFieldMode: observer.lightFieldMode
     property int tempBlueRobotCount : observer.blueRobotCount
     property int tempYellowRobotCount : observer.yellowRobotCount
 
@@ -27,6 +30,7 @@ Item {
         ListElement { label: "Geometry"; expandValue: 85; heightValue: 190 }
         ListElement { label: "Robots"; expandValue: 60; heightValue: 190 }
         ListElement { label: "Camera"; expandValue: 65; heightValue: 190 }
+        ListElement { label: "Light Mode"; expandValue: 65; heightValue: 220 }
         ListElement { label: "Communication"; expandValue: 135; heightValue: 280; }
     }
 
@@ -112,7 +116,10 @@ Item {
                     observer.blueTeamControlPort = tempBlueTeamControlPort;
                     observer.yellowTeamControlPort = tempYellowTeamControlPort;
                     observer.forceDebugDrawMode = tempForceDebugDrawMode;
-                    observer.lightWeightMode = tempLightWeightMode;
+                    observer.lightBlueRobotMode = tempLightBlueRobotMode;
+                    observer.lightYellowRobotMode = tempLightYellowRobotMode;
+                    observer.lightStadiumMode = tempLightStadiumMode;
+                    observer.lightFieldMode = tempLightFieldMode;
                     observer.blueRobotCount = tempBlueRobotCount;
                     observer.yellowRobotCount = tempYellowRobotCount;
                 }

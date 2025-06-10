@@ -27,7 +27,10 @@ class Observer : public QObject {
     Q_PROPERTY(int blueTeamControlPort READ getBlueTeamControlPort WRITE setBlueTeamControlPort NOTIFY settingChanged)
     Q_PROPERTY(int yellowTeamControlPort READ getYellowTeamControlPort WRITE setYellowTeamControlPort NOTIFY settingChanged)
     Q_PROPERTY(bool forceDebugDrawMode READ getForceDebugDrawMode WRITE setForceDebugDrawMode NOTIFY settingChanged)
-    Q_PROPERTY(bool lightWeightMode READ getLightWeightMode WRITE setLightWeightMode NOTIFY settingChanged)
+    Q_PROPERTY(bool lightBlueRobotMode READ getLightBlueRobotMode WRITE setLightBlueRobotMode NOTIFY settingChanged)
+    Q_PROPERTY(bool lightYellowRobotMode READ getLightYellowRobotMode WRITE setLightYellowRobotMode NOTIFY settingChanged)
+    Q_PROPERTY(bool lightStadiumMode READ getLightStadiumMode WRITE setLightStadiumMode NOTIFY settingChanged)
+    Q_PROPERTY(bool lightFieldMode READ getLightFieldMode WRITE setLightFieldMode NOTIFY settingChanged)
     Q_PROPERTY(int blueRobotCount READ getBlueRobotCount WRITE setBlueRobotCount NOTIFY settingChanged)
     Q_PROPERTY(int yellowRobotCount READ getYellowRobotCount WRITE setYellowRobotCount NOTIFY settingChanged)
 
@@ -43,17 +46,32 @@ public:
     void visionReceive(mocSim_Packet packet);
     void controlReceive(RobotControl packet, bool isYellow);
 
-    QList<QObject*> getBlueRobots() const;
-    QList<QObject*> getYellowRobots() const;
-    int getWindowWidth() const;
-    int getWindowHeight() const;
-    QString getVisionMulticastAddress() const;
-    int getVisionMulticastPort() const;
-    int getCommandListenPort() const;
-    int getBlueTeamControlPort() const;
-    int getYellowTeamControlPort() const;
-    bool getForceDebugDrawMode() const;
-    bool getLightWeightMode() const;
+    QList<QObject*> getBlueRobots() const {
+        QList<QObject*> blueList;
+        for (int i = 0; i < blueRobotCount; ++i) {
+            blueList.append(blue_robots[i]);
+        }
+        return blueList;
+    }
+    QList<QObject*> getYellowRobots() const {
+        QList<QObject*> yellowList;
+        for (int i = 0; i < yellowRobotCount; ++i) {
+            yellowList.append(yellow_robots[i]);
+        }
+        return yellowList;
+    }
+    int getWindowWidth() const { return windowWidth; }
+    int getWindowHeight() const { return windowHeight; }
+    QString getVisionMulticastAddress() const { return visionMulticastAddress; }
+    int getVisionMulticastPort() const { return visionMulticastPort; }
+    int getCommandListenPort() const { return commandListenPort; }
+    int getBlueTeamControlPort() const { return blueTeamControlPort; }
+    int getYellowTeamControlPort() const { return yellowTeamControlPort; }
+    bool getForceDebugDrawMode() const { return forceDebugDrawMode; }
+    bool getLightBlueRobotMode() const { return lightBlueRobotMode; }
+    bool getLightYellowRobotMode() const { return lightYellowRobotMode; }
+    bool getLightStadiumMode() const { return lightStadiumMode; }
+    bool getLightFieldMode() const { return lightFieldMode; }
     int getBlueRobotCount() const { return blueRobotCount; }
     int getYellowRobotCount() const { return yellowRobotCount; }
     
@@ -65,7 +83,10 @@ public:
     void setBlueTeamControlPort(int port);
     void setYellowTeamControlPort(int port);
     void setForceDebugDrawMode(bool mode);
-    void setLightWeightMode(bool mode);
+    void setLightBlueRobotMode(bool mode);
+    void setLightYellowRobotMode(bool mode);
+    void setLightStadiumMode(bool mode);
+    void setLightFieldMode(bool mode);
     void setBlueRobotCount(int count);
     void setYellowRobotCount(int count);
     
@@ -97,7 +118,10 @@ private:
     int yellowTeamControlPort;
 
     bool forceDebugDrawMode;
-    bool lightWeightMode;
+    bool lightBlueRobotMode;
+    bool lightYellowRobotMode;
+    bool lightStadiumMode;
+    bool lightFieldMode;
 
     int blueRobotCount;
     int yellowRobotCount;

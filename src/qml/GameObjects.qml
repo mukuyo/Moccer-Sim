@@ -8,8 +8,8 @@ import MOC
 
 import "../../assets/models/bot/blue/viz/Rione" as BlueBody
 import "../../assets/models/bot/blue/rigid_body" as BlueLightBody
-import "../../assets/models/bot/blue/viz/Rione" as YellowBody
-import "../../assets/models/bot/blue/rigid_body" as YellowLightBody
+import "../../assets/models/bot/yellow/viz/Rione" as YellowBody
+import "../../assets/models/bot/yellow/rigid_body" as YellowLightBody
 import "../../assets/models/ball/"
 import "../../assets/models/circle/ball/"
 
@@ -20,14 +20,6 @@ Node {
     property real yBotNum: observer.yellowRobotCount
 
     property real wheelRadius: 8.15
-    property real angle0: 0
-    property real angle1: 0
-    property real angle2: 0
-    property real angle3: 0
-
-    property real pre_x: 0
-    property real pre_y: 0
-    property real pre_theta: 0
 
     property var bBotsPos: [
         Qt.vector3d(-500, 0, 0),
@@ -188,24 +180,24 @@ Node {
         delegate: Node {
             property int botIndex: index
             BlueBody.Rione {
-                visible: !observer.lightWeightMode
+                visible: !observer.lightBlueRobotMode
                 eulerRotation: Qt.vector3d(-90, 0, 0)
                 position: Qt.vector3d(0, 0, 0)
             }
             BlueLightBody.Frame {
-                visible: observer.lightWeightMode
+                visible: observer.lightBlueRobotMode
                 eulerRotation: Qt.vector3d(-90, 0, 0)
                 position: Qt.vector3d(0, 0, 0)
             }
             PerspectiveCamera {
-                id: pCamera
+                id: bRobotCamera
                 position: Qt.vector3d(0, 90, -70)
                 clipFar: 20000
                 clipNear: 1
                 fieldOfView: 60
                 eulerRotation: Qt.vector3d(-35, 0, 0)
                 Component.onCompleted: {
-                    bBotsCamera.push(pCamera);
+                    bBotsCamera.push(bRobotCamera);
                 }
             }
             Model {
@@ -256,6 +248,9 @@ Node {
             }
         }
     }
+    onBBotNumChanged: {
+        bBotsCamera = [];
+    }
 
     Repeater3D {
         id: yBotsRepeater
@@ -263,14 +258,25 @@ Node {
         delegate: Node {
             property int botIndex: index
             YellowBody.Rione {
-                visible: !observer.lightWeightMode
+                visible: !observer.lightYellowRobotMode
                 eulerRotation: Qt.vector3d(-90, 0, 0)
                 position: Qt.vector3d(0, 0, 0)
             }
             YellowLightBody.Frame {
-                visible: observer.lightWeightMode
+                visible: observer.lightYellowRobotMode
                 eulerRotation: Qt.vector3d(-90, 0, 0)
                 position: Qt.vector3d(0, 0, 0)
+            }
+            PerspectiveCamera {
+                id: yRobotCamera
+                position: Qt.vector3d(0, 90, -70)
+                clipFar: 20000
+                clipNear: 1
+                fieldOfView: 60
+                eulerRotation: Qt.vector3d(-35, 0, 0)
+                Component.onCompleted: {
+                    yBotsCamera.push(yRobotCamera);
+                }
             }
             Model {
                 source: "#Cylinder"
@@ -320,7 +326,9 @@ Node {
             }
         }
     }
-    
+    onYBotNumChanged: {
+        yBotsCamera = [];
+    }
 
     PhysicsMaterial {
         id: ballMaterial
@@ -375,30 +383,6 @@ Node {
         return radian;
     }
 
-    function worldToScreen(worldPosition) {
-        // 4次元ベクトルを作る
-        let pos = Qt.vector4d(worldPosition.x, worldPosition.y, worldPosition.z, 1.0);
-
-        // カメラのView行列とProjection行列
-        let viewMatrix = camera.viewMatrix;
-        let projectionMatrix = camera.projectionMatrix;
-
-        // ViewProjection変換
-        let clipSpacePos = projectionMatrix.times(viewMatrix.times(pos));
-
-        // Clip Space → NDC (Normalized Device Coordinates)
-        let ndc = Qt.vector3d(
-            clipSpacePos.x / clipSpacePos.w,
-            clipSpacePos.y / clipSpacePos.w,
-            clipSpacePos.z / clipSpacePos.w
-        );
-
-        // NDC → スクリーン座標（ピクセル）
-        let screenX = (ndc.x * 0.5 + 0.5) * viewport.width;
-        let screenY = (1.0 - (ndc.y * 0.5 + 0.5)) * viewport.height; // Y軸は反転
-
-        return Qt.point(screenX, screenY);
-    }
     function botMovement(isYellow) {
         let botPositions = []
         let botBallContacts = []
@@ -414,7 +398,8 @@ Node {
         let botSpinners = isYellow ? yBotSpinners : bBotSpinners;
         let botPixelBalls = isYellow ? window.yBotPixelBalls : window.bBotPixelBalls;
         let botIDTexts = isYellow ? yBotIDTexts : bBotIDTexts;
-
+        let botCamera = isYellow ? yBotsCamera : bBotsCamera;
+        
         for (let i = 0; i < botNum; i++) {
             let frame = botFrame.children[i];
             let bot = botRepeater.children[i];
@@ -449,15 +434,7 @@ Node {
                 ball.simulationEnabled = true;
             }
             let frame2D = camera.projectToScreen(
-                Qt.vector3d(frame.position.x-15, frame.position.y + 128, frame.position.z-86.5),
-                worldCamera.position,
-                worldCamera.forward,
-                worldCamera.up,
-                windowWidth,
-                windowHeight,
-                worldCamera.fieldOfView,
-                1.0,
-                20000
+                Qt.vector3d(frame.position.x-15, frame.position.y + 128, frame.position.z-86.5), worldCamera.position, worldCamera.forward, worldCamera.up, windowWidth, windowHeight, worldCamera.fieldOfView, 1.0, 20000
             );
             if (i >= 10) {
                 botIDTexts.children[i].x = frame2D.x - 5;
@@ -465,11 +442,10 @@ Node {
                 botIDTexts.children[i].x = frame2D.x - 2;
             }
             botIDTexts.children[i].y = frame2D.y - 14;
+
+            let cameraPosition = Qt.vector3d(-70*Math.sin(radian)+frame.position.x, botCamera[i].position.y + frame.position.y, -70*Math.cos(radian)+frame.position.z);
+            botPixelBalls[i] = camera.getBallPosition(ball.position, cameraPosition, botCamera[i].forward, botCamera[i].up, 640, 480, 60);
             
-            // if (!isYellow) {
-            //     let cameraPosition = Qt.vector3d(-70*Math.sin(radian)+frame.position.x, bBotsCamera[i].position.y + frame.position.y, -70*Math.cos(radian)+frame.position.z);
-            //     botPixelBalls[i] = camera.getBallPosition(ball.position, cameraPosition, bBotsCamera[i].forward, bBotsCamera[i].up, 640, 480, 60);
-            // }
         }
         return { positions: botPositions, ballContacts: botBallContacts, pixels: botPixelBalls };
     }

@@ -7,9 +7,12 @@ Observer::Observer(QObject *parent)
     commandListenPort = config.value("Network/commandListenPort", 20011).toInt();
     blueTeamControlPort = config.value("Network/blueTeamControlPort", 10301).toInt();
     yellowTeamControlPort = config.value("Network/yellowTeamControlPort", 10302).toInt();
-
+    
     forceDebugDrawMode = config.value("Display/ForceDebugDrawMode", false).toBool();
-    lightWeightMode = config.value("Display/LightWeightMode", false).toBool();
+    lightBlueRobotMode = config.value("LightMode/BlueRobot", true).toBool();
+    lightYellowRobotMode = config.value("LightMode/YellowRobot", true).toBool();
+    lightStadiumMode = config.value("LightMode/Stadium", true).toBool();
+    lightFieldMode = config.value("LightMode/Field", true).toBool();
 
     sender = new Sender(visionMulticastAddress.toStdString(), visionMulticastPort, this);
     visionReceiver->startListening(commandListenPort);
@@ -73,50 +76,6 @@ void Observer::controlReceive(const RobotControl packet, bool isYellow) {
     else emit blueRobotsChanged();
 }
 
-QList<QObject*> Observer::getBlueRobots() const {
-    QList<QObject*> list;
-    for (int i = 0; i < 16; ++i) {
-        list.append(blue_robots[i]);
-    }
-    return list;
-}
-
-QList<QObject*> Observer::getYellowRobots() const {
-    QList<QObject*> list;
-    for (int i = 0; i < 16; ++i) {
-        list.append(yellow_robots[i]);
-    }
-    return list;
-}
-
-int Observer::getWindowWidth() const {
-    return windowWidth;
-}
-int Observer::getWindowHeight() const {
-    return windowHeight;
-}
-int Observer::getVisionMulticastPort() const {
-    return visionMulticastPort;
-}
-QString Observer::getVisionMulticastAddress() const {
-    return visionMulticastAddress;
-}
-int Observer::getCommandListenPort() const {
-    return commandListenPort;
-}
-int Observer::getBlueTeamControlPort() const {
-    return blueTeamControlPort;
-}
-int Observer::getYellowTeamControlPort() const {
-    return yellowTeamControlPort;
-}
-bool Observer::getForceDebugDrawMode() const {
-    return forceDebugDrawMode;
-}
-bool Observer::getLightWeightMode() const {
-    return lightWeightMode;
-}
-
 void Observer::setWindowWidth(int width) { 
     windowWidth = width; 
     config.setValue("Display/width", width);
@@ -159,12 +118,27 @@ void Observer::setYellowTeamControlPort(int port) {
 }
 void Observer::setForceDebugDrawMode(bool mode) {
     forceDebugDrawMode = mode;
-    config.setValue("Display/ForceDebugMode", mode);
+    config.setValue("Display/ForceDebugDrawMode", mode);
     emit settingChanged();
 }
-void Observer::setLightWeightMode(bool mode) {
-    lightWeightMode = mode;
-    config.setValue("Display/LightWeightDrawMode", mode);
+void Observer::setLightBlueRobotMode(bool mode) {
+    lightBlueRobotMode = mode;
+    config.setValue("LightMode/BlueRobot", mode);
+    emit settingChanged();
+}
+void Observer::setLightYellowRobotMode(bool mode) {
+    lightYellowRobotMode = mode;
+    config.setValue("LightMode/YellowRobot", mode);
+    emit settingChanged();
+}
+void Observer::setLightStadiumMode(bool mode) {
+    lightStadiumMode = mode;
+    config.setValue("LightMode/Stadium", mode);
+    emit settingChanged();
+}
+void Observer::setLightFieldMode(bool mode) {
+    lightFieldMode = mode;
+    config.setValue("LightMode/Field", mode);
     emit settingChanged();
 }
 void Observer::setBlueRobotCount(int count) {

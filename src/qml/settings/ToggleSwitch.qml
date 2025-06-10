@@ -35,16 +35,28 @@ Item {
                 switchState = !switchState;
                 if (model.name === "Force Debug Draw") {
                     tempForceDebugDrawMode = !tempForceDebugDrawMode
-                } else if (model.name === "LightWeight Mode") {
-                    tempLightWeightMode = !tempLightWeightMode
+                } else if (model.name === "Blue Robot") {
+                    tempLightBlueRobotMode = !tempLightBlueRobotMode
+                } else if (model.name === "Yellow Robot") {
+                    tempLightYellowRobotMode = !tempLightYellowRobotMode
+                } else if (model.name === "Stadium") {
+                    tempLightStadiumMode = !tempLightStadiumMode
+                } else if (model.name === "Field") {
+                    tempLightFieldMode = !tempLightFieldMode
                 }
             }
         }
         Component.onCompleted: {
             if (model.name === "Force Debug Draw") {
                 switchState = tempForceDebugDrawMode;
-            } else if (model.name === "LightWeight Mode") {
-                switchState = tempLightWeightMode;
+            } else if (model.name === "Blue Robot") {
+                switchState = tempLightBlueRobotMode
+            } else if (model.name === "Yellow Robot") {
+                switchState = tempLightYellowRobotMode
+            } else if (model.name === "Stadium") {
+                switchState = tempLightStadiumMode
+            } else if (model.name === "Field") {
+                switchState = tempLightFieldMode
             }
         }
     }
