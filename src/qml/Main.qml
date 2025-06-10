@@ -91,9 +91,9 @@ Window {
                     Repeater {
                         model: observer.blueRobotCount
                         Text {
-                            x: 100
-                            font.pixelSize: 15
-                            color: "white"
+                            horizontalAlignment: Text.AlignLeft
+                            font.pixelSize: 11
+                            color: "#59baf5"
                             text: index
                         }
                     }
@@ -103,8 +103,8 @@ Window {
                     Repeater {
                         model: observer.yellowRobotCount
                         Text {
-                            font.pixelSize: 15
-                            color: "blue"
+                            font.pixelSize: 11
+                            color: "yellow"
                             text: index
                         }
                     }

@@ -413,7 +413,7 @@ Node {
         let botKickspeeds = isYellow ? yBotKickspeeds : bBotKickspeeds;
         let botSpinners = isYellow ? yBotSpinners : bBotSpinners;
         let botPixelBalls = isYellow ? window.yBotPixelBalls : window.bBotPixelBalls;
-        let botIDTexts = isYellow ? bBotIDTexts : bBotIDTexts;
+        let botIDTexts = isYellow ? yBotIDTexts : bBotIDTexts;
 
         for (let i = 0; i < botNum; i++) {
             let frame = botFrame.children[i];
@@ -449,7 +449,7 @@ Node {
                 ball.simulationEnabled = true;
             }
             let frame2D = camera.projectToScreen(
-                Qt.vector3d(frame.position.x, frame.position.y, frame.position.z),
+                Qt.vector3d(frame.position.x-15, frame.position.y + 128, frame.position.z-86.5),
                 worldCamera.position,
                 worldCamera.forward,
                 worldCamera.up,
@@ -459,14 +459,13 @@ Node {
                 1.0,
                 20000
             );
-            botIDTexts.children[i].x = frame2D.x;
-            botIDTexts.children[i].y = frame2D.y - 30 * (4500 / worldCamera.position.y)
-            console.log(worldCamera.position.y / 4500)
-            // botIDTexts.children[i].y = frame2D.y - botIDTexts.children[i].height - 10
-            // let Text = worldToScreen(Qt.vector3d(frame.position.x, frame.position.y + 100, frame.position.z), bBotsCamera[i], viewport);
-            // botIDTexts.children[i].x = frame.position.x;
-            // botIDTexts.children[i].text = "(" + frame.position.x.toFixed(2) + ", " + frame.position.z.toFixed(2) + ", " + frame.eulerRotation.y.toFixed(2) + ")";
-
+            if (i >= 10) {
+                botIDTexts.children[i].x = frame2D.x - 5;
+            } else {
+                botIDTexts.children[i].x = frame2D.x - 2;
+            }
+            botIDTexts.children[i].y = frame2D.y - 14;
+            
             // if (!isYellow) {
             //     let cameraPosition = Qt.vector3d(-70*Math.sin(radian)+frame.position.x, bBotsCamera[i].position.y + frame.position.y, -70*Math.cos(radian)+frame.position.z);
             //     botPixelBalls[i] = camera.getBallPosition(ball.position, cameraPosition, bBotsCamera[i].forward, bBotsCamera[i].up, 640, 480, 60);
