@@ -11,15 +11,20 @@ import QtQuick3D.Physics
 import Qt3D.Render
 import MOC
 
+import "settings/"
+
 Window {
     id: window
     title: "Moccer-Sim"
-    width: 1280
-    height: 720
-    // width: Screen.width
-    // height: Screen.height
+    width: windowWidth
+    height: windowHeight
     visible: true
     flags: Qt.ExpandedClientAreaHint | Qt.NoTitleBarBackgroundHint
+    property int windowWidth: observer.windowWidth
+    property int windowHeight: observer.windowHeight
+    property var bBotPixelBalls: new Array(16).fill(Qt.vector2d(-1, -1))
+    property var yBotPixelBalls: new Array(16).fill(Qt.vector2d(-1, -1))
+    property var selectedCamera: "Overview Camera"
 
     Item {
         width: parent.width
@@ -27,14 +32,18 @@ Window {
         focus: true
 
         PhysicsWorld {
+            id: physicsWorld
             scene: viewport.scene
             maximumTimestep: 16.667
             enableCCD: true
             gravity: Qt.vector3d(0, -9810, 0)
-            typicalLength: 1000
-            typicalSpeed: 10000
+            typicalLength: 100
+            typicalSpeed: 1000
             defaultDensity: 1.0
-            // forceDebugDraw: true
+            forceDebugDraw: observer.forceDebugDrawMode
+            onFrameDone: (timestep) => {
+                game_objects.updateGameObjects(timestep)
+            }
         }
 
         Keys.onPressed: (event) => {
@@ -63,19 +72,52 @@ Window {
                 id: viewport
                 anchors.fill: parent
                 renderMode: View3D.Offscreen
-
+                property var cameraList: []
                 FrameAnimation {
                     id: frameUpdater
                     running: true
                 }
+                Text {
+                    id: ballText
+                    width: 90
+                    x: 1100 - 95
+                    y: 5
+                    font.pixelSize: 15
+                    color: "white"
+                    horizontalAlignment: Text.AlignRight
+                    // text: "(" + bBotPixelBalls[0].x + "," + bBotPixelBalls[0].y + ")"
+                }
+                Item {
+                    id: bBotIDTexts
+                    Repeater {
+                        model: observer.blueRobotCount
+                        Text {
+                            horizontalAlignment: Text.AlignLeft
+                            font.pixelSize: 11
+                            color: "#59baf5"
+                            text: index
+                        }
+                    }
+                }
+                Item {
+                    id: yBotIDTexts
+                    Repeater {
+                        model: observer.yellowRobotCount
+                        Text {
+                            font.pixelSize: 11
+                            color: "yellow"
+                            text: index
+                        }
+                    }
+                }
                 Node {
                     id: originNode
                     PerspectiveCamera {
-                        id: camera
+                        id: overviewCamera
                         clipFar: 20000
                         clipNear: 1
                         fieldOfView: 60
-                        position: Qt.vector3d(0, 5000, 7000)
+                        position: Qt.vector3d(0, 4500, 6140)
                         eulerRotation: Qt.vector3d(-47, 0, 0)
                     }
                 }
@@ -138,23 +180,23 @@ Window {
                             let ry = -dy * dt * linearSpeed * 8;
                             let rz = dy * dt * linearSpeed * 8;
 
-                            let forward = camera.forward
-                            let right = camera.right
-                            let distance = camera.position.length()
+                            let forward = overviewCamera.forward
+                            let right = overviewCamera.right
+                            let distance = overviewCamera.position.length()
 
-                            camera.position.x += rx * right.x + rz * forward.x
-                            camera.position.y += ry;
-                            camera.position.z += rx * right.z + rz * forward.z
+                            overviewCamera.position.x += rx * right.x + rz * forward.x
+                            overviewCamera.position.y += ry;
+                            overviewCamera.position.z += rx * right.z + rz * forward.z
                         } else if (mouseArea.pressedButtons & Qt.LeftButton) {
                             let pan = -dx * dt * lookSpeed;
                             let tilt = dy * dt * lookSpeed;
-                            camera.eulerRotation.y += pan;
-                            camera.eulerRotation.x += tilt;
+                            overviewCamera.eulerRotation.y += pan;
+                            overviewCamera.eulerRotation.x += tilt;
                         } else if (mouseArea.pressedButtons & Qt.MiddleButton) {
                             let rz = dy * dt * linearSpeed;
-                            let distance = camera.position.length();
+                            let distance = overviewCamera.position.length();
                             if (rz > 0 && distance < zoomLimit) return;
-                            camera.position.z += rz;
+                            overviewCamera.position.z += rz;
                         }
                         lastPos = Qt.point(event.x, event.y);
                     }
@@ -163,27 +205,61 @@ Window {
                         let rz = wheel.angleDelta.y * dt * linearSpeed
                         let rx = -wheel.angleDelta.x * dt * linearSpeed
 
-                        let forward = camera.forward
-                        let right = camera.right
-                        let distance = camera.position.length()
+                        let forward = overviewCamera.forward
+                        let right = overviewCamera.right
+                        let distance = overviewCamera.position.length()
 
                         if (rz > 0 && distance < zoomLimit) return
 
-                        camera.position.x += rx * right.x + rz * forward.x
-                        camera.position.z += rx * right.z + rz * forward.z
+                        overviewCamera.position.x += rx * right.x + rz * forward.x
+                        overviewCamera.position.z += rx * right.z + rz * forward.z
+                    }
+                    Setting {
+                        id: setting
+                        property var windowWidth : window.width
+                        property var windowHeight : window.height
+                        property var visionMulticastPort: observer.visionMulticastPort
                     }
                 }
                 Node {
                     id: node
+
                     Lighting {}
                     Field {}
+
                     GameObjects {
                         id: game_objects
+                        property var window: window
+                        property var overviewCamera: overviewCamera
                         property vector3d teleopVelocity: Qt.vector3d(0, 0, 0)
                         property real acceleration: 100.0
                         property var field_cursor : Qt.vector3d(0, 0, 0)
+                        property var view3D: viewport
+                        property var ballText: ballText
+                        property var bBotIDTexts: bBotIDTexts
+                        property var yBotIDTexts: yBotIDTexts
                     }
+                    
                 }
+            }
+        }
+    }
+    Connections {
+        target: observer
+        function onSettingChanged() {
+            window.width = observer.windowWidth
+            window.height = observer.windowHeight
+
+        }
+    }
+    onSelectedCameraChanged: {
+        if (selectedCamera === "Overview Camera") {
+            viewport.camera = overviewCamera;
+        } else if (selectedCamera == "Selected Robot") {
+            if (game_objects.selectedRobotColor === "blue") {
+                viewport.camera = game_objects.bBotsCamera[game_objects.botCursorID];
+            } else if (game_objects.selectedRobotColor === "yellow") {
+                viewport.camera = game_objects.yBotsCamera[game_objects.botCursorID];
             }
         }
     }

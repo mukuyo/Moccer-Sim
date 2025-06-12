@@ -10,8 +10,19 @@ message RobotFeedback {
     required uint32 id = 1;
     // Has the dribbler contact to the ball right now
     optional bool dribbler_ball_contact = 2;
+    // Camera Detect Information
+    optional CameraDetect camera = 3;
     // Custom robot feedback for specific simulators (the protobuf files are managed by the simulators)
-    optional google.protobuf.Any custom = 3;
+    optional google.protobuf.Any custom = 4;
+}
+
+message CameraDetect {
+    // ball exist info
+    required bool is_ball_exist = 1;
+    // ball x pixel coordinate
+    required double x = 2;
+    // ball y pixel coordinate
+    required double y = 3;
 }
 
 // Response to RobotControl from the simulator to the connected client

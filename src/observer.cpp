@@ -1,10 +1,23 @@
 #include "observer.h"
 
 Observer::Observer(QObject *parent)
-    : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlBlueReceiver(new ControlBlueReceiver(nullptr)), controlYellowReceiver(new ControlYellowReceiver(nullptr)), sender(new Sender(10694)) {
-    visionReceiver->startListening(20694);
-    controlBlueReceiver->startListening(10301);
-    controlYellowReceiver->startListening(10302);
+    : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlBlueReceiver(new ControlBlueReceiver(nullptr)), controlYellowReceiver(new ControlYellowReceiver(nullptr)), config("../config/config.ini", QSettings::IniFormat) {
+    visionMulticastAddress = config.value("Network/visionMulticastAddress", "127.0.0.1").toString();
+    visionMulticastPort = config.value("Network/visionMulticastPort", 10020).toInt();
+    commandListenPort = config.value("Network/commandListenPort", 20011).toInt();
+    blueTeamControlPort = config.value("Network/blueTeamControlPort", 10301).toInt();
+    yellowTeamControlPort = config.value("Network/yellowTeamControlPort", 10302).toInt();
+    
+    forceDebugDrawMode = config.value("Display/ForceDebugDrawMode", false).toBool();
+    lightBlueRobotMode = config.value("LightMode/BlueRobot", true).toBool();
+    lightYellowRobotMode = config.value("LightMode/YellowRobot", true).toBool();
+    lightStadiumMode = config.value("LightMode/Stadium", true).toBool();
+    lightFieldMode = config.value("LightMode/Field", true).toBool();
+
+    sender = new Sender(visionMulticastAddress.toStdString(), visionMulticastPort, this);
+    visionReceiver->startListening(commandListenPort);
+    controlBlueReceiver->startListening(blueTeamControlPort);
+    controlYellowReceiver->startListening(yellowTeamControlPort);
 
     connect(visionReceiver, &VisionReceiver::receivedPacket, this, &Observer::visionReceive);
     connect(controlBlueReceiver, &ControlBlueReceiver::receivedPacket, this, &Observer::controlReceive);
@@ -15,7 +28,14 @@ Observer::Observer(QObject *parent)
     for (int i = 0; i < 16; ++i) {
         blue_robots[i] = new Robot();
         yellow_robots[i] = new Robot();
-    } 
+    }
+
+    windowWidth = config.value("Display/width", 1100).toInt();
+    windowHeight = config.value("Display/height", 720).toInt();
+
+    blueRobotCount = config.value("Robot/blueRobotCount", 11).toInt();
+    yellowRobotCount = config.value("Robot/yellowRobotCount", 11).toInt();
+
 }
 
 Observer::~Observer() {
@@ -56,23 +76,93 @@ void Observer::controlReceive(const RobotControl packet, bool isYellow) {
     else emit blueRobotsChanged();
 }
 
-QList<QObject*> Observer::getBlueRobots() const {
-    QList<QObject*> list;
-    for (int i = 0; i < 16; ++i) {
-        list.append(blue_robots[i]);
-    }
-    return list;
+void Observer::setWindowWidth(int width) { 
+    windowWidth = width; 
+    config.setValue("Display/width", width);
+    emit settingChanged(); 
+}
+void Observer::setWindowHeight(int height) { 
+    windowHeight = height; 
+    config.setValue("Display/height", height);
+    emit settingChanged(); 
+}
+void Observer::setVisionMulticastPort(int port) { 
+    visionMulticastPort = port; 
+    config.setValue("Network/visionMulticastPort", port);
+    sender->setPort(visionMulticastAddress.toStdString(), visionMulticastPort);
+    emit settingChanged(); 
+}
+void Observer::setVisionMulticastAddress(const QString &address) {
+    visionMulticastAddress = address;
+    config.setValue("Network/visionMulticastAddress", QString::fromStdString(visionMulticastAddress.toStdString()));
+    sender->setPort(visionMulticastAddress.toStdString() , visionMulticastPort);
+    emit settingChanged();
+}
+void Observer::setCommandListenPort(int port) {
+    commandListenPort = port;
+    config.setValue("Network/commandListenPort", port);
+    visionReceiver->setPort(commandListenPort);
+    emit settingChanged();
+}
+void Observer::setBlueTeamControlPort(int port) {
+    blueTeamControlPort = port;
+    config.setValue("Network/blueTeamControlPort", port);
+    controlBlueReceiver->setPort(blueTeamControlPort);
+    emit settingChanged();
+}
+void Observer::setYellowTeamControlPort(int port) {
+    yellowTeamControlPort = port;
+    config.setValue("Network/yellowTeamControlPort", port);
+    controlYellowReceiver->setPort(yellowTeamControlPort);
+    emit settingChanged();
+}
+void Observer::setForceDebugDrawMode(bool mode) {
+    forceDebugDrawMode = mode;
+    config.setValue("Display/ForceDebugDrawMode", mode);
+    emit settingChanged();
+}
+void Observer::setLightBlueRobotMode(bool mode) {
+    lightBlueRobotMode = mode;
+    config.setValue("LightMode/BlueRobot", mode);
+    emit settingChanged();
+}
+void Observer::setLightYellowRobotMode(bool mode) {
+    lightYellowRobotMode = mode;
+    config.setValue("LightMode/YellowRobot", mode);
+    emit settingChanged();
+}
+void Observer::setLightStadiumMode(bool mode) {
+    lightStadiumMode = mode;
+    config.setValue("LightMode/Stadium", mode);
+    emit settingChanged();
+}
+void Observer::setLightFieldMode(bool mode) {
+    lightFieldMode = mode;
+    config.setValue("LightMode/Field", mode);
+    emit settingChanged();
+}
+void Observer::setBlueRobotCount(int count) {
+    blueRobotCount = count;
+    config.setValue("Robot/blueRobotCount", count);
+    emit settingChanged();
+}
+void Observer::setYellowRobotCount(int count) {
+    yellowRobotCount = count;
+    config.setValue("Robot/yellowRobotCount", count);
+    emit settingChanged();
 }
 
-QList<QObject*> Observer::getYellowRobots() const {
-    QList<QObject*> list;
-    for (int i = 0; i < 16; ++i) {
-        list.append(yellow_robots[i]);
-    }
-    return list;
-}
-
-void Observer::updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QList<bool> bBotBallContacts, QList<bool> yBotBallContacts, QVector3D ball_position) {
+void Observer::updateObjects(
+    QList<QVector3D> blue_positions, 
+    QList<QVector3D> yellow_positions,
+    QList<QVector2D> blueBallPixels,
+    QList<QVector2D> yellowBallPixels,
+    QList<bool> blueBallCameraExists,
+    QList<bool> yellowBallCameraExists,
+    QList<bool> bBotBallContacts, 
+    QList<bool> yBotBallContacts,
+    QVector3D ball_position
+) {
     sender->send(1, ball_position, blue_positions, yellow_positions);
-    emit sendBotBallContacts(bBotBallContacts, yBotBallContacts);
+    emit sendBotBallContacts(bBotBallContacts, yBotBallContacts, blueBallCameraExists, yellowBallCameraExists, blueBallPixels, yellowBallPixels);
 }

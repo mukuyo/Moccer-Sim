@@ -3,12 +3,13 @@
 #include <QDebug>
 
 #include "src/observer.h"
+#include "src/models/camera.h"
 
 class Moccer {
 public:
     Moccer(QQmlApplicationEngine &engine) {
         qmlRegisterType<Observer>("MOC", 1, 0, "Observe");
-
+        qmlRegisterType<Camera>("MOC", 1, 0, "Camera");
         engine.load(QUrl(QStringLiteral("../src/qml/Main.qml")));
     }
 };

@@ -3,6 +3,7 @@ import QtQuick3D
 import QtQuick3D.Physics
 
 import "../../assets/models/stadium/"
+import "../../assets/models/circle/line/"
 
 Node {
     id: rootEntity
@@ -10,6 +11,7 @@ Node {
     Stadium {
         id: stadium
         scale: Qt.vector3d(10, 10, 10)
+        visible: !observer.lightStadiumMode
     }
     PhysicsMaterial {
         id: fieldMaterial
@@ -27,7 +29,29 @@ Node {
             source: "#Rectangle"
             objectName: "field"
             pickable: true
-            scale: Qt.vector3d(154, 124, 0.1)
+            x: -3850
+            y: 3100
+            scale: Qt.vector3d(77, 62, 0.1)
+            visible: !observer.lightFieldMode
+            materials: [ 
+                DefaultMaterial {
+                    diffuseMap: Texture {
+                        source: "../../assets/textures/field_texture.jpg"
+                        generateMipmaps: false
+                        minFilter: Texture.Nearest
+                        magFilter: Texture.Nearest
+                    }
+                }
+            ]
+        }
+        Model {
+            source: "#Rectangle"
+            objectName: "field"
+            pickable: true
+            x: 3850
+            y: 3100
+            scale: Qt.vector3d(77, 62, 0.1)
+            visible: !observer.lightFieldMode
             materials: [ 
                 DefaultMaterial {
                     diffuseMap: Texture {
@@ -36,6 +60,39 @@ Node {
                 }
             ]
         }
+        Model {
+            source: "#Rectangle"
+            objectName: "field"
+            pickable: true
+            x: -3850
+            y: -3100
+            scale: Qt.vector3d(77, 62, 0.1)
+            visible: !observer.lightFieldMode
+            materials: [ 
+                DefaultMaterial {
+                    diffuseMap: Texture {
+                        source: "../../assets/textures/field_texture.jpg"
+                    }
+                }
+            ]
+        }
+        Model {
+            source: "#Rectangle"
+            objectName: "field"
+            pickable: true
+            x: 3850
+            y: -3100
+            scale: Qt.vector3d(77, 62, 0.1)
+            visible: !observer.lightFieldMode
+            materials: [ 
+                DefaultMaterial {
+                    diffuseMap: Texture {
+                        source: "../../assets/textures/field_texture.jpg"
+                    }
+                }
+            ]
+        }
+        
     }
 
     Model {
@@ -381,7 +438,10 @@ Node {
             }
         ]
     }
-
+    LineCircle {
+        position: Qt.vector3d(0, 4, 0)
+        eulerRotation: Qt.vector3d(90, 0, 0)
+    }
     // Model {
     //     id: centerWhiteCircle
     //     source: "#Cylinder"
