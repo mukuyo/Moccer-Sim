@@ -6,6 +6,8 @@
 #include <QUdpSocket>
 #include <QHostAddress>
 #include <QNetworkDatagram>
+#include <QVector2D>
+#include <QVector3D>
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -56,12 +58,23 @@ public slots:
     void startListening(quint16 port);
     void setPort(quint16 newPort);
     void receive();
-    void updateBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts);
+    void updateBallContacts(
+        const QList<bool> &bBotBallContacts, 
+        const QList<bool> &yBotBallContacts,
+        const QList<bool> &bBallCameraExists,
+        const QList<bool> &yBallCameraExists,
+        const QList<QVector2D> &bBallCameraPositions,
+        const QList<QVector2D> &yBallCameraPositions
+    );
     void stopListening();
 
 private:
     QUdpSocket *udpSocket;
-    QList<bool> bBotBallContacts;
+    QList<bool> botBallContacts;
+
+    QList<bool> ballCameraExists;
+    QList<QVector2D> ballCameraPositions;
+
     int currentPort;
 };
 
@@ -81,11 +94,22 @@ public slots:
     void setPort(quint16 newPort);
     void receive();
     void stopListening();
-    void updateBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts);
+    void updateBallContacts(
+        const QList<bool> &bBotBallContacts, 
+        const QList<bool> &yBotBallContacts,
+        const QList<bool> &bBallCameraExists,
+        const QList<bool> &yBallCameraExists,
+        const QList<QVector2D> &bBallCameraPositions,
+        const QList<QVector2D> &yBallCameraPositions
+    );
 
 private:
     QUdpSocket *udpSocket;
-    QList<bool> yBotBallContacts;
+    QList<bool> botBallContacts;
+
+    QList<bool> ballCameraExists;
+    QList<QVector2D> ballCameraPositions;
+    
     int currentPort;
 };
 

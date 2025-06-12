@@ -54,7 +54,6 @@ void ControlBlueReceiver::startListening(quint16 port) {
     if (udpSocket->state() != QAbstractSocket::BoundState) {
         udpSocket->close();
     }
-    cout << "Starting to listen on port: " << port << std::endl;
     
     if (udpSocket->bind(QHostAddress::AnyIPv4, port)) {
         currentPort = port;
@@ -74,10 +73,15 @@ void ControlBlueReceiver::receive() {
         emit receivedPacket(packet, false);
 
         RobotControlResponse robotControlResponse;
-        for (int i = 0; i < bBotBallContacts.size(); ++i) {
+        for (int i = 0; i < botBallContacts.size(); ++i) {
             auto feedback = robotControlResponse.add_feedback();
             feedback->set_id(i);
-            feedback->set_dribbler_ball_contact(bBotBallContacts[i]);
+            feedback->set_dribbler_ball_contact(botBallContacts[i]);
+            CameraDetect botCamera;
+            botCamera.set_is_ball_exist(ballCameraExists[i]);
+            botCamera.set_x(ballCameraPositions[i].x());
+            botCamera.set_y(ballCameraPositions[i].y());
+            *feedback->mutable_camera() = botCamera;
         }
         std::string serializedData;
         if (!robotControlResponse.SerializeToString(&serializedData)) {
@@ -89,8 +93,17 @@ void ControlBlueReceiver::receive() {
     }
 }
 
-void ControlBlueReceiver::updateBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts) {
-    this->bBotBallContacts = bBotBallContacts;
+void ControlBlueReceiver::updateBallContacts(
+    const QList<bool> &bBotBallContacts, 
+    const QList<bool> &yBotBallContacts,
+    const QList<bool> &bBallCameraExists,
+    const QList<bool> &yBallCameraExists,
+    const QList<QVector2D> &bBallCameraPositions,
+    const QList<QVector2D> &yBallCameraPositions
+) {
+    this->botBallContacts = bBotBallContacts;
+    this->ballCameraExists = bBallCameraExists;
+    this->ballCameraPositions = bBallCameraPositions;
 }
 
 void ControlBlueReceiver::setPort(quint16 newPort) {
@@ -135,10 +148,10 @@ void ControlYellowReceiver::receive() {
         emit receivedPacket(packet, true);
 
         RobotControlResponse robotControlResponse;
-        for (int i = 0; i < yBotBallContacts.size(); ++i) {
+        for (int i = 0; i < botBallContacts.size(); ++i) {
             auto feedback = robotControlResponse.add_feedback();
             feedback->set_id(i);
-            feedback->set_dribbler_ball_contact(yBotBallContacts[i]);
+            feedback->set_dribbler_ball_contact(botBallContacts[i]);
         }
         std::string serializedData;
         if (!robotControlResponse.SerializeToString(&serializedData)) {
@@ -150,8 +163,17 @@ void ControlYellowReceiver::receive() {
     }
 }
 
-void ControlYellowReceiver::updateBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts) {
-    this->yBotBallContacts = yBotBallContacts;
+void ControlYellowReceiver::updateBallContacts(
+    const QList<bool> &bBotBallContacts, 
+    const QList<bool> &yBotBallContacts,
+    const QList<bool> &bBallCameraExists,
+    const QList<bool> &yBallCameraExists,
+    const QList<QVector2D> &bBallCameraPositions,
+    const QList<QVector2D> &yBallCameraPositions
+) {
+    this->botBallContacts = yBotBallContacts;
+    this->ballCameraExists = yBallCameraExists;
+    this->ballCameraPositions = yBallCameraPositions;
 }
 
 void ControlYellowReceiver::stopListening() {

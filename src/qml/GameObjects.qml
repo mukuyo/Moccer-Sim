@@ -57,6 +57,7 @@ Node {
     property var bBotSpinners: new Array(16).fill(0.0)
     property var bBotDistanceBall: new Array(16).fill(0.0)
     property var bBotRadianBall: new Array(16).fill(0.0)
+    property var bBotCameraExists: new Array(16).fill(false)
     property var bBotsCamera: []
 
     property var yBotRadians: new Array(16).fill(0)
@@ -67,10 +68,11 @@ Node {
     property var yBotSpinners: new Array(16).fill(0.0)
     property var yBotDistanceBall: new Array(16).fill(0.0)
     property var yBotRadianBall: new Array(16).fill(0.0)
+    property var yBotCameraExists: new Array(16).fill(false)
     property var yBotsCamera: []
 
     property real radianOffset: -Math.atan(350.0/547.72)
-    property var objName: ""
+    property var selectedRobotColor: "blue"
     property real botCursorID: 0
     property var kick_flag: false
 
@@ -360,16 +362,16 @@ Node {
         }
         for (let i = 0; i < results.length; i++) {
             if (results[i].objectHit.objectName.startsWith("b")) {
-                objName = "b";
+                selectedRobotColor = "blue";
                 botCursorID = parseInt(results[i].objectHit.objectName.slice(1));;
             } else if (results[i].objectHit.objectName.startsWith("y")) {
-                objName = "y";
+                selectedRobotColor = "yellow";
                 botCursorID = parseInt(results[i].objectHit.objectName.slice(1));;
             }
         }
-        if (objName == "b") {
+        if (selectedRobotColor == "blue") {
             bBotsFrame.children[botCursorID].reset(scenePosition, Qt.vector3d(0, -90, 0));
-        } else if (objName == "y") {
+        } else if (selectedRobotColor == "yellow") {
             yBotsFrame.children[botCursorID].reset(scenePosition, Qt.vector3d(0, 90, 0));
         }
     }
@@ -399,7 +401,8 @@ Node {
         let botPixelBalls = isYellow ? window.yBotPixelBalls : window.bBotPixelBalls;
         let botIDTexts = isYellow ? yBotIDTexts : bBotIDTexts;
         let botCamera = isYellow ? yBotsCamera : bBotsCamera;
-        
+        let botCameraExists = isYellow ? yBotCameraExists : bBotCameraExists;
+
         for (let i = 0; i < botNum; i++) {
             let frame = botFrame.children[i];
             let bot = botRepeater.children[i];
@@ -434,7 +437,7 @@ Node {
                 ball.simulationEnabled = true;
             }
             let frame2D = camera.projectToScreen(
-                Qt.vector3d(frame.position.x-15, frame.position.y + 128, frame.position.z-86.5), worldCamera.position, worldCamera.forward, worldCamera.up, windowWidth, windowHeight, worldCamera.fieldOfView, 1.0, 20000
+                Qt.vector3d(frame.position.x-15, frame.position.y + 128, frame.position.z-86.5), overviewCamera.position, overviewCamera.forward, overviewCamera.up, windowWidth, windowHeight, overviewCamera.fieldOfView, 1.0, 20000
             );
             if (i >= 10) {
                 botIDTexts.children[i].x = frame2D.x - 5;
@@ -444,10 +447,15 @@ Node {
             botIDTexts.children[i].y = frame2D.y - 14;
 
             let cameraPosition = Qt.vector3d(-70*Math.sin(radian)+frame.position.x, botCamera[i].position.y + frame.position.y, -70*Math.cos(radian)+frame.position.z);
-            botPixelBalls[i] = camera.getBallPosition(ball.position, cameraPosition, botCamera[i].forward, botCamera[i].up, 640, 480, 60);
-            
+            let tempBallPixel = camera.getBallPosition(ball.position, cameraPosition, botCamera[i].forward, botCamera[i].up, 640, 480, 60);
+            if (tempBallPixel.x !=-1 && tempBallPixel.y != -1) {
+                botPixelBalls[i] = tempBallPixel;
+                botCameraExists[i] = true;
+            } else {
+                botCameraExists[i] = false;
+            }
         }
-        return { positions: botPositions, ballContacts: botBallContacts, pixels: botPixelBalls };
+        return { positions: botPositions, ballContacts: botBallContacts, pixels: botPixelBalls, cameraExists: botCameraExists };
     }
     Camera {
         id: camera
@@ -459,7 +467,17 @@ Node {
         let yellowBotData = botMovement(true);
 
         let ballPosition = Qt.vector3d(ball.position.x, -ball.position.z, ball.position.y);
-        observer.updateObjects(blueBotData.positions, yellowBotData.positions, blueBotData.ballContacts, yellowBotData.ballContacts, ballPosition);
+        observer.updateObjects(
+            blueBotData.positions, 
+            yellowBotData.positions, 
+            blueBotData.pixels,
+            yellowBotData.pixels,
+            blueBotData.cameraExists,
+            yellowBotData.cameraExists, 
+            blueBotData.ballContacts, 
+            yellowBotData.ballContacts,
+            ballPosition
+        );
         if (teleopVelocity.x != 0 || teleopVelocity.y != 0 || teleopVelocity.z != 0){
             if (!kick_flag) {
                 ball.setLinearVelocity(Qt.vector3d(teleopVelocity.x, teleopVelocity.y, teleopVelocity.z));
@@ -486,10 +504,7 @@ Node {
             bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
             bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
         }
-        
-    //    const camObj = bBotsRepeater.itemAt(1).findChild(PerspectiveCamera);
-        // view3D.camera = bBotsCamera[0];
-
     }
+
 }
 

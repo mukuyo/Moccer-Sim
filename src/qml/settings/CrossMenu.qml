@@ -17,10 +17,10 @@ Item {
             ctx.lineCap = "round"; // 丸い端
 
             ctx.beginPath();
-            ctx.moveTo(8, 8);
-            ctx.lineTo(width - 18, height - 18);
-            ctx.moveTo(width - 18, 8);
-            ctx.lineTo(8, height - 18);
+            ctx.moveTo(5, 13);
+            ctx.lineTo(width - 16, height - 9);
+            ctx.moveTo(width - 16, 13);
+            ctx.lineTo(5, height - 9);
             ctx.stroke();
         }
     }

@@ -22,8 +22,9 @@ Window {
     flags: Qt.ExpandedClientAreaHint | Qt.NoTitleBarBackgroundHint
     property int windowWidth: observer.windowWidth
     property int windowHeight: observer.windowHeight
-    property var bBotPixelBalls: new Array(16).fill(Qt.vector3d(0, 0, 0))
-    property var yBotPixelBalls: new Array(16).fill(Qt.vector3d(0, 0, 0))
+    property var bBotPixelBalls: new Array(16).fill(Qt.vector2d(-1, -1))
+    property var yBotPixelBalls: new Array(16).fill(Qt.vector2d(-1, -1))
+    property var selectedCamera: "Overview Camera"
 
     Item {
         width: parent.width
@@ -112,7 +113,7 @@ Window {
                 Node {
                     id: originNode
                     PerspectiveCamera {
-                        id: worldCamera
+                        id: overviewCamera
                         clipFar: 20000
                         clipNear: 1
                         fieldOfView: 60
@@ -179,23 +180,23 @@ Window {
                             let ry = -dy * dt * linearSpeed * 8;
                             let rz = dy * dt * linearSpeed * 8;
 
-                            let forward = worldCamera.forward
-                            let right = worldCamera.right
-                            let distance = worldCamera.position.length()
+                            let forward = overviewCamera.forward
+                            let right = overviewCamera.right
+                            let distance = overviewCamera.position.length()
 
-                            worldCamera.position.x += rx * right.x + rz * forward.x
-                            worldCamera.position.y += ry;
-                            worldCamera.position.z += rx * right.z + rz * forward.z
+                            overviewCamera.position.x += rx * right.x + rz * forward.x
+                            overviewCamera.position.y += ry;
+                            overviewCamera.position.z += rx * right.z + rz * forward.z
                         } else if (mouseArea.pressedButtons & Qt.LeftButton) {
                             let pan = -dx * dt * lookSpeed;
                             let tilt = dy * dt * lookSpeed;
-                            worldCamera.eulerRotation.y += pan;
-                            worldCamera.eulerRotation.x += tilt;
+                            overviewCamera.eulerRotation.y += pan;
+                            overviewCamera.eulerRotation.x += tilt;
                         } else if (mouseArea.pressedButtons & Qt.MiddleButton) {
                             let rz = dy * dt * linearSpeed;
-                            let distance = worldCamera.position.length();
+                            let distance = overviewCamera.position.length();
                             if (rz > 0 && distance < zoomLimit) return;
-                            worldCamera.position.z += rz;
+                            overviewCamera.position.z += rz;
                         }
                         lastPos = Qt.point(event.x, event.y);
                     }
@@ -204,14 +205,14 @@ Window {
                         let rz = wheel.angleDelta.y * dt * linearSpeed
                         let rx = -wheel.angleDelta.x * dt * linearSpeed
 
-                        let forward = worldCamera.forward
-                        let right = worldCamera.right
-                        let distance = worldCamera.position.length()
+                        let forward = overviewCamera.forward
+                        let right = overviewCamera.right
+                        let distance = overviewCamera.position.length()
 
                         if (rz > 0 && distance < zoomLimit) return
 
-                        worldCamera.position.x += rx * right.x + rz * forward.x
-                        worldCamera.position.z += rx * right.z + rz * forward.z
+                        overviewCamera.position.x += rx * right.x + rz * forward.x
+                        overviewCamera.position.z += rx * right.z + rz * forward.z
                     }
                     Setting {
                         id: setting
@@ -229,7 +230,7 @@ Window {
                     GameObjects {
                         id: game_objects
                         property var window: window
-                        property var worldCamera: worldCamera
+                        property var overviewCamera: overviewCamera
                         property vector3d teleopVelocity: Qt.vector3d(0, 0, 0)
                         property real acceleration: 100.0
                         property var field_cursor : Qt.vector3d(0, 0, 0)
@@ -251,9 +252,15 @@ Window {
 
         }
     }
-    // Component.onCompleted: {
-    //     windowWidth = observer.windowWidth;
-    //     windowHeight = observer.windowHeight;
-    //     visionMulticastPort = observer.visionMulticastPort;
-    // }
+    onSelectedCameraChanged: {
+        if (selectedCamera === "Overview Camera") {
+            viewport.camera = overviewCamera;
+        } else if (selectedCamera == "Selected Robot") {
+            if (game_objects.selectedRobotColor === "blue") {
+                viewport.camera = game_objects.bBotsCamera[game_objects.botCursorID];
+            } else if (game_objects.selectedRobotColor === "yellow") {
+                viewport.camera = game_objects.yBotsCamera[game_objects.botCursorID];
+            }
+        }
+    }
 }

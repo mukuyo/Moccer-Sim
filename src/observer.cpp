@@ -152,7 +152,17 @@ void Observer::setYellowRobotCount(int count) {
     emit settingChanged();
 }
 
-void Observer::updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QList<bool> bBotBallContacts, QList<bool> yBotBallContacts, QVector3D ball_position) {
+void Observer::updateObjects(
+    QList<QVector3D> blue_positions, 
+    QList<QVector3D> yellow_positions,
+    QList<QVector2D> blueBallPixels,
+    QList<QVector2D> yellowBallPixels,
+    QList<bool> blueBallCameraExists,
+    QList<bool> yellowBallCameraExists,
+    QList<bool> bBotBallContacts, 
+    QList<bool> yBotBallContacts,
+    QVector3D ball_position
+) {
     sender->send(1, ball_position, blue_positions, yellow_positions);
-    emit sendBotBallContacts(bBotBallContacts, yBotBallContacts);
+    emit sendBotBallContacts(bBotBallContacts, yBotBallContacts, blueBallCameraExists, yellowBallCameraExists, blueBallPixels, yellowBallPixels);
 }

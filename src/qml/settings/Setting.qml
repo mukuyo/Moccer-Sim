@@ -23,6 +23,8 @@ Item {
     property int tempBlueRobotCount : observer.blueRobotCount
     property int tempYellowRobotCount : observer.yellowRobotCount
 
+    property var cameraModel: ["Overview Camera", "Selected Robot"]
+
     ListModel {
         id: menuModel
         ListElement { label: "Display"; expandValue: 62; heightValue: 190 }
@@ -33,6 +35,18 @@ Item {
         ListElement { label: "Light Mode"; expandValue: 65; heightValue: 220 }
         ListElement { label: "Communication"; expandValue: 135; heightValue: 280; }
     }
+
+    // function updateCameraModel() {
+    //     cameraModel = ["Overview Camera"]
+    //     for (var i = 0; i < observer.blueRobotCount; i++) {
+    //         cameraModel.push("Blue Robot ID " + i)
+    //     }
+    //     for (var i = 0; i < observer.yellowRobotCount; i++) {
+    //         cameraModel.push("Yellow Robot ID " + i)
+    //     }
+    // }
+    // onTempBlueRobotCountChanged: updateCameraModel()
+    // onTempYellowRobotCountChanged: updateCameraModel()
 
     HBMenu {}
 

@@ -38,7 +38,17 @@ public:
     explicit Observer(QObject *parent = nullptr);
     ~Observer();
 
-    Q_INVOKABLE void updateObjects(QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions, QList<bool> bBotBallContacts, QList<bool> yBotBallContacts, QVector3D ball_position);
+    Q_INVOKABLE void updateObjects(
+        QList<QVector3D> blue_positions, 
+        QList<QVector3D> yellow_positions, 
+        QList<QVector2D> blueBallPixels, 
+        QList<QVector2D> yellowBallPixels,
+        QList<bool> blueBallCameraExists,
+        QList<bool> yellowBallCameraExists,
+        QList<bool> bBotBallContacts, 
+        QList<bool> yBotBallContacts, 
+        QVector3D ball_position
+    );
 
     void start(quint16 port);
     void stop();
@@ -94,7 +104,14 @@ signals:
     void blueRobotsChanged();
     void yellowRobotsChanged();
     void settingChanged();
-    void sendBotBallContacts(const QList<bool> &bBotBallContacts, const QList<bool> &yBotBallContacts);
+    void sendBotBallContacts(
+        const QList<bool> &bBotBallContacts, 
+        const QList<bool> &yBotBallContacts,
+        const QList<bool> &bBallCameraExists,
+        const QList<bool> &yBallCameraExists,
+        const QList<QVector2D> &bBallCameraPositions,
+        const QList<QVector2D> &yBallCameraPositions
+    );
 
 private:
     QSettings config;

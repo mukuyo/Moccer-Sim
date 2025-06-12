@@ -50,11 +50,11 @@ Item {
     }
     ListModel {
         id: cameraItems
-        ListElement { name: "Main Camera"; detail: "Switch to one of the cameras"; slider: false; toggle: true; combo: false; InitValue: 0; MaxValue: -1 }
-        ListElement { name: "World Camera Position"; detail: ""; slider: false; toggle: false; combo: false; InitValue: 0; MaxValue: -1; InitString: "0, 10, 20" }
-        ListElement { name: "World Camera Distance"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 10; MaxValue: 20 }
-        ListElement { name: "World Camera Height"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 5; MaxValue: 10 }
-        ListElement { name: "World Camera Angle"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 30; MaxValue: 60 }
+        ListElement { name: "Main Camera"; detail: "Switch to one of the cameras"; slider: false; toggle: false; combo: true; InitValue: 0; MaxValue: -1 }
+        ListElement { name: "Overview Camera Position"; detail: ""; slider: false; toggle: false; combo: false; InitValue: 0; MaxValue: -1; InitString: "0, 10, 20" }
+        ListElement { name: "Overview Camera Distance"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 10; MaxValue: 20 }
+        ListElement { name: "Overview Camera Height"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 5; MaxValue: 10 }
+        ListElement { name: "Overview Camera Angle"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 30; MaxValue: 60 }
     }
     ListModel {
         id: lightItems
@@ -114,6 +114,7 @@ Item {
             }
         }
     }
+
     Text {
         x: 15
         y: -9
@@ -257,7 +258,7 @@ Item {
                         }
                     }
                     Item {
-                        visible: !model.slider && !model.toggle && model.InitValue !== -1
+                        visible: !model.slider && !model.toggle && !model.combo && model.InitValue !== -1
 
                         TextField {
                             x: 250
@@ -302,7 +303,7 @@ Item {
                     }
                     Item {
                         y: 25
-                        visible: model.detail !== "" || model.toggle || model.slider
+                        visible: model.detail !== "" || model.toggle || model.slider || model.combo
                         Text {
                             text: model.detail
                             x: 18
@@ -319,25 +320,16 @@ Item {
                             y: 0
                             visible: model.toggle
                         }
-                    }
-                    Item {
-                        y: 25
-                        visible: model.combo
-                        Text {
-                            text: model.detail
-                            x: 18
-                            height: 30
-                            color: "white"
-                            opacity: 0.7
-                            font.pixelSize: 14
-                            // visible: model.detail !== ""
-                        }
-                        
-                        ComboBox {
-                            x: 270
-                            y: 0
-                            // visible: model.toggle
-                            model: ["Option 1", "Option 2", "Option 3"]
+                        Item {
+                            visible: model.combo
+                            x: 165
+                            y: -26
+                            ComboBox {
+                                model: cameraModel
+                                onCurrentIndexChanged: {
+                                    selectedCamera = cameraModel[currentIndex];
+                                }
+                            }
                         }
                     }
                     Item {
