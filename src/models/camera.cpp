@@ -66,7 +66,7 @@ QVector<QVector3D> Camera::generateOffsets(float radius) {
         for (int y = -steps; y <= steps; ++y) {
             for (int z = -steps; z <= steps; ++z) {
                 QVector3D offset(x, y, z);
-                if (offset.lengthSquared() <= steps * steps) { // 球形に近づけるため
+                if (offset.lengthSquared() <= steps * steps) {
                     offsets.append(offset.normalized() * radius);
                 }
             }
@@ -93,20 +93,19 @@ QVector2D Camera::projectToScreen(
     QVector4D clipSpace = proj * view * QVector4D(worldPos, 1.0f);
 
     if (clipSpace.w() == 0.0f)
-        return QVector2D(-1, -1);  // 透視変換不能
+        return QVector2D(-1, -1);
 
     QVector4D ndc = clipSpace / clipSpace.w();
 
-    // クリップ空間外ならスクリーンに存在しないと判定（必要に応じて）
     if (ndc.x() < -1.0f || ndc.x() > 1.0f ||
         ndc.y() < -1.0f || ndc.y() > 1.0f ||
         ndc.z() < -1.0f || ndc.z() > 1.0f) {
         return QVector2D(-1, -1);
     }
 
-    // NDC -> スクリーン座標変換
     float pixelX = (ndc.x() * 0.5f + 0.5f) * screenWidth;
     float pixelY = (1.0f - (ndc.y() * 0.5f + 0.5f)) * screenHeight;
 
     return QVector2D(pixelX, pixelY);
 }
+

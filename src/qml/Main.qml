@@ -24,6 +24,8 @@ Window {
     property int windowHeight: observer.windowHeight
     property var bBotPixelBalls: new Array(16).fill(Qt.vector2d(-1, -1))
     property var yBotPixelBalls: new Array(16).fill(Qt.vector2d(-1, -1))
+    property var cursorPosition: Qt.point(0, 0)
+    property real runTime: 0.0
     property var selectedCamera: "Overview Camera"
 
     Item {
@@ -34,15 +36,17 @@ Window {
         PhysicsWorld {
             id: physicsWorld
             scene: viewport.scene
-            maximumTimestep: 16.667
-            enableCCD: true
-            gravity: Qt.vector3d(0, -9810, 0)
+            maximumTimestep: 1000.0 / observer.desiredFps
+            minimumTimestep: 1000.0 / observer.desiredFps
+            enableCCD: observer.ccdMode
+            gravity: Qt.vector3d(0, -observer.gravity*1000.0, 0)
             typicalLength: 100
             typicalSpeed: 1000
             defaultDensity: 1.0
             forceDebugDraw: observer.forceDebugDrawMode
             onFrameDone: (timestep) => {
-                game_objects.updateGameObjects(timestep)
+                runTime = timestep;
+                game_objects.updateGameObjects(timestep);
             }
         }
 
@@ -57,6 +61,9 @@ Window {
             } else if (event.key === Qt.Key_D) {
                 game_objects.teleopVelocity.x += game_objects.acceleration;
             }
+        }
+        Camera {
+            id: camera
         }
 
         Rectangle {
@@ -78,14 +85,26 @@ Window {
                     running: true
                 }
                 Text {
-                    id: ballText
+                    id: cursorText
                     width: 90
-                    x: 1100 - 95
-                    y: 5
+                    x: windowWidth - 93
+                    y: windowHeight - 23
                     font.pixelSize: 15
                     color: "white"
                     horizontalAlignment: Text.AlignRight
-                    // text: "(" + bBotPixelBalls[0].x + "," + bBotPixelBalls[0].y + ")"
+                    text: "(" + cursorPosition.x + "," + cursorPosition.y + ")"
+                    opacity: 0.7
+                }
+                Text {
+                    id: fpsText
+                    width: 90
+                    x: 5
+                    y: windowHeight - 23
+                    font.pixelSize: 15
+                    color: "white"
+                    horizontalAlignment: Text.AlignLeft
+                    text: "FPS: " +  Math.round(1000 / runTime)
+                    opacity: 0.7
                 }
                 Item {
                     id: bBotIDTexts
@@ -134,6 +153,8 @@ Window {
                     property bool isDraggingWindow: false
                     property bool selectView: false
                     property bool selectBot: false
+                    hoverEnabled: true
+
                     acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
 
                     onPressed: (event) => {
@@ -161,9 +182,13 @@ Window {
                         let dy = event.y - lastPos.y;
                         
                         let results = viewport.pickAll(event.x, event.y);
+                       
                         for (let i = 0; i < results.length; i++) {
                             if (results[i].objectHit.objectName.startsWith("b") || results[i].objectHit.objectName.startsWith("y")) {
                                 selectBot = true;
+                            }
+                            if (results[i].objectHit.objectName === "field") {
+                                cursorText.text = "(" + parseInt(results[i].scenePosition.x) + "," + parseInt(-results[i].scenePosition.z) + ")";
                             }
                         }
                         if (selectBot && !selectView) {
@@ -235,7 +260,6 @@ Window {
                         property real acceleration: 100.0
                         property var field_cursor : Qt.vector3d(0, 0, 0)
                         property var view3D: viewport
-                        property var ballText: ballText
                         property var bBotIDTexts: bBotIDTexts
                         property var yBotIDTexts: yBotIDTexts
                     }
@@ -262,5 +286,14 @@ Window {
                 viewport.camera = game_objects.yBotsCamera[game_objects.botCursorID];
             }
         }
+    }
+    onWidthChanged: {
+        observer.windowWidth = width;
+        windowWidth = width;
+    }
+
+    onHeightChanged: {
+        observer.windowHeight = height;
+        windowHeight = height;
     }
 }

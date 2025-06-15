@@ -13,6 +13,12 @@ Observer::Observer(QObject *parent)
     lightYellowRobotMode = config.value("LightMode/YellowRobot", true).toBool();
     lightStadiumMode = config.value("LightMode/Stadium", true).toBool();
     lightFieldMode = config.value("LightMode/Field", true).toBool();
+    ballStaticFriction = config.value("Physics/BallStaticFriction", 0.5).toFloat();
+    ballDynamicFriction = config.value("Physics/BallDynamicFriction", 0.3).toFloat();
+    ballRestitution = config.value("Physics/BallRestitution", 0.5).toFloat();
+    gravity = config.value("Physics/Gravity", 9.81).toFloat();
+    desiredFps = config.value("Physics/DesiredFps", 60.0).toFloat();
+    ccdMode = config.value("Physics/CCD", true).toBool();
 
     sender = new Sender(visionMulticastAddress.toStdString(), visionMulticastPort, this);
     visionReceiver->startListening(commandListenPort);
@@ -149,6 +155,36 @@ void Observer::setBlueRobotCount(int count) {
 void Observer::setYellowRobotCount(int count) {
     yellowRobotCount = count;
     config.setValue("Robot/yellowRobotCount", count);
+    emit settingChanged();
+}
+void Observer::setBallStaticFriction(float friction) {
+    ballStaticFriction = friction;
+    config.setValue("Physics/BallStaticFriction", friction);
+    emit settingChanged();
+}
+void Observer::setBallDynamicFriction(float friction) {
+    ballDynamicFriction = friction;
+    config.setValue("Physics/BallDynamicFriction", friction);
+    emit settingChanged();
+}
+void Observer::setBallRestitution(float restitution) {
+    ballRestitution = restitution;
+    config.setValue("Physics/BallRestitution", restitution);
+    emit settingChanged();
+}
+void Observer::setGravity(float gravity) {
+    this->gravity = gravity;
+    config.setValue("Physics/Gravity", gravity);
+    emit settingChanged();
+}
+void Observer::setDesiredFps(float fps) {
+    desiredFps = fps;
+    config.setValue("Physics/DesiredFps", fps);
+    emit settingChanged();
+}
+void Observer::setCcdMode(bool mode) {
+    ccdMode = mode;
+    config.setValue("Physics/CCD", mode);
     emit settingChanged();
 }
 

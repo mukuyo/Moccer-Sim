@@ -6,10 +6,10 @@ import QtQuick3D.Physics
 import Qt.labs.folderlistmodel
 import MOC
 
-import "../../assets/models/bot/blue/viz/Rione" as BlueBody
-import "../../assets/models/bot/blue/rigid_body" as BlueLightBody
-import "../../assets/models/bot/yellow/viz/Rione" as YellowBody
-import "../../assets/models/bot/yellow/rigid_body" as YellowLightBody
+import "../../assets/models/bot/Rione/viz" as BlueBody
+import "../../assets/models/bot/Rione/rigid_body" as BlueLightBody
+import "../../assets/models/bot/Rione/viz" as YellowBody
+import "../../assets/models/bot/Rione/rigid_body" as YellowLightBody
 import "../../assets/models/ball/"
 import "../../assets/models/circle/ball/"
 
@@ -18,8 +18,14 @@ Node {
     id: robotNode
     property real bBotNum: observer.blueRobotCount
     property real yBotNum: observer.yellowRobotCount
+    property bool lightBlueRobotMode: observer.lightBlueRobotMode
+    property bool lightYellowRobotMode: observer.lightYellowRobotMode
+    property real ballStaticFriction: observer.ballStaticFriction
+    property real ballDynamicFriction: observer.ballDynamicFriction
+    property real ballRestitution: observer.ballRestitution
 
     property real wheelRadius: 8.15
+    property real colorHeight: 0.15
 
     property var bBotsPos: [
         Qt.vector3d(-500, 0, 0),
@@ -80,6 +86,13 @@ Node {
         return start * (1 - alpha) + end * alpha;
     }
 
+    onLightBlueRobotModeChanged: {
+        if (observer.lightBlueRobotMode) {
+            colorHeight = 0.3;
+        } else {
+            colorHeight = 0.15;
+        }
+    }
     Connections {
         target: observer
         function onBlueRobotsChanged() {
@@ -120,23 +133,23 @@ Node {
             sendContactReports: true
             collisionShapes: [
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/body.cooked.cvx"
+                    source: "../../assets/models/bot/Rione/rigid_body/meshes/body.cooked.cvx"
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/centerLeft.cooked.cvx" 
+                    source: "../../assets/models/bot/Rione/rigid_body/meshes/centerLeft.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/centerRight.cooked.cvx" 
+                    source: "../../assets/models/bot/Rione/rigid_body/meshes/centerRight.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/dribbler.cooked.cvx" 
+                    source: "../../assets/models/bot/Rione/rigid_body/meshes/dribbler.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/chip.cooked.cvx" 
+                    source: "../../assets/models/bot/Rione/rigid_body/meshes/chip.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 }
             ]
@@ -153,23 +166,23 @@ Node {
             sendContactReports: true
             collisionShapes: [
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/body.cooked.cvx"
+                    source: "../../assets/models/bot/Rione/rigid_body/meshes/body.cooked.cvx"
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/centerLeft.cooked.cvx" 
+                    source: "../../assets/models/bot/Rione/rigid_body/meshes/centerLeft.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/centerRight.cooked.cvx" 
+                    source: "../../assets/models/bot/Rione/rigid_body/meshes/centerRight.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/dribbler.cooked.cvx" 
+                    source: "../../assets/models/bot/Rione/rigid_body/meshes/dribbler.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/blue/rigid_body/meshes/chip.cooked.cvx" 
+                    source: "../../assets/models/bot/Rione/rigid_body/meshes/chip.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 }
             ]
@@ -181,7 +194,7 @@ Node {
         model: bBotNum
         delegate: Node {
             property int botIndex: index
-            BlueBody.Rione {
+            BlueBody.Visualize {
                 visible: !observer.lightBlueRobotMode
                 eulerRotation: Qt.vector3d(-90, 0, 0)
                 position: Qt.vector3d(0, 0, 0)
@@ -211,8 +224,8 @@ Node {
             }
             Model {
                 source: "#Cylinder"
-                scale: Qt.vector3d(0.5, 0.14, 0.5)
-                position: Qt.vector3d(0, 128, 0)
+                scale: Qt.vector3d(0.5, colorHeight, 0.5)
+                position: Qt.vector3d(0, 122, 0)
                 materials: [
                     DefaultMaterial {
                         diffuseColor: "blue"
@@ -224,7 +237,7 @@ Node {
                 model: 4
                 delegate: Model {
                     source: "#Cylinder"
-                    scale: Qt.vector3d(0.4, 0.14, 0.4)
+                    scale: Qt.vector3d(0.4, colorHeight, 0.4)
                     position: {
                         var offsets = [
                             Qt.vector3d(65*Math.cos(Math.PI-radianOffset-bBotRadians[index]), 0, 65*Math.sin(Math.PI-radianOffset-bBotRadians[index])),  // Left Up
@@ -234,7 +247,7 @@ Node {
                         ];
                         return Qt.vector3d(
                             offsets[index].x,
-                            128,
+                            122,
                             offsets[index].z
                         );
                     }
@@ -259,7 +272,7 @@ Node {
         model: yBotNum
         delegate: Node {
             property int botIndex: index
-            YellowBody.Rione {
+            YellowBody.Visualize {
                 visible: !observer.lightYellowRobotMode
                 eulerRotation: Qt.vector3d(-90, 0, 0)
                 position: Qt.vector3d(0, 0, 0)
@@ -289,8 +302,8 @@ Node {
             }
             Model {
                 source: "#Cylinder"
-                scale: Qt.vector3d(0.5, 0.14, 0.5)
-                position: Qt.vector3d(0, 128, 0)
+                scale: Qt.vector3d(0.5, colorHeight, 0.5)
+                position: Qt.vector3d(0, 122, 0)
                 materials: [
                     DefaultMaterial {
                         diffuseColor: "yellow"
@@ -302,7 +315,7 @@ Node {
                 model: 4
                 delegate: Model {
                     source: "#Cylinder"
-                    scale: Qt.vector3d(0.4, 0.14, 0.4)
+                    scale: Qt.vector3d(0.4, colorHeight, 0.4)
                     position: {
                         var offsets = [
                             Qt.vector3d(65*Math.cos(Math.PI-radianOffset-yBotRadians[index]), 0, 65*Math.sin(Math.PI-radianOffset-yBotRadians[index])), // Left Up
@@ -312,7 +325,7 @@ Node {
                         ];
                         return Qt.vector3d(
                             offsets[index].x,
-                            128,
+                            122,
                             offsets[index].z
                         );
                     }
@@ -334,10 +347,11 @@ Node {
 
     PhysicsMaterial {
         id: ballMaterial
-        staticFriction: 0.15
-        dynamicFriction: 0.15
-        restitution: 0
+        staticFriction: ballStaticFriction
+        dynamicFriction: ballDynamicFriction
+        restitution: ballRestitution
     }
+
     DynamicRigidBody {
         id: ball
         position: Qt.vector3d(0, 500, 0)
@@ -457,9 +471,9 @@ Node {
         }
         return { positions: botPositions, ballContacts: botBallContacts, pixels: botPixelBalls, cameraExists: botCameraExists };
     }
-    Camera {
-        id: camera
-    }
+    // Camera {
+    //     id: camera
+    // }
 
     function updateGameObjects(timestep) 
     {

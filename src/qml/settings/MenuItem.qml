@@ -62,11 +62,6 @@ Item {
                 ctx.lineTo(8, height - 8);
                 ctx.stroke();
             }
-
-            // MouseArea {
-            //     anchors.fill: parent
-            //     onClicked: console.log("× clicked");
-            // }
         }
     }
 

@@ -22,6 +22,21 @@ Item {
     property bool tempLightFieldMode: observer.lightFieldMode
     property int tempBlueRobotCount : observer.blueRobotCount
     property int tempYellowRobotCount : observer.yellowRobotCount
+    property real tempDesiredFps: observer.desiredFps
+    property bool tempCCDMode: observer.ccdMode
+    property real tempGravity: observer.gravity
+    property real tempBallStaticFriction: observer.ballStaticFriction
+    property real tempBallDynamicFriction: observer.ballDynamicFriction
+    property real tempBallRestitution: observer.ballRestitution
+    // property real tempFieldWidth: observer.fieldWidth
+    // property real tempFieldHeight: observer.fieldHeight
+    // property real tempLineThickness: observer.lineThickness
+    // property real tempGoalWidth: observer.goalWidth
+    // property real tempGoalHeight: observer.goalHeight
+    // property real tempGoalDepth: observer.goalDepth
+    // property real tempPenaltyAreaWidth: observer.penaltyAreaWidth
+    // property real tempPenaltyAreaDepth: observer.penaltyAreaDepth
+
 
     property var cameraModel: ["Overview Camera", "Selected Robot"]
 
@@ -35,18 +50,6 @@ Item {
         ListElement { label: "Light Mode"; expandValue: 65; heightValue: 220 }
         ListElement { label: "Communication"; expandValue: 135; heightValue: 280; }
     }
-
-    // function updateCameraModel() {
-    //     cameraModel = ["Overview Camera"]
-    //     for (var i = 0; i < observer.blueRobotCount; i++) {
-    //         cameraModel.push("Blue Robot ID " + i)
-    //     }
-    //     for (var i = 0; i < observer.yellowRobotCount; i++) {
-    //         cameraModel.push("Yellow Robot ID " + i)
-    //     }
-    // }
-    // onTempBlueRobotCountChanged: updateCameraModel()
-    // onTempYellowRobotCountChanged: updateCameraModel()
 
     HBMenu {}
 
@@ -136,6 +139,18 @@ Item {
                     observer.lightFieldMode = tempLightFieldMode;
                     observer.blueRobotCount = tempBlueRobotCount;
                     observer.yellowRobotCount = tempYellowRobotCount;
+                    observer.desiredFps = tempDesiredFps;
+                    observer.ccdMode = tempCCDMode;
+                    observer.gravity = tempGravity;
+                    observer.ballStaticFriction = tempBallStaticFriction;
+                    observer.ballDynamicFriction = tempBallDynamicFriction;
+                    observer.ballRestitution = tempBallRestitution;
+                    // observer.lineThickness = tempLineThickness;
+                    // observer.goalWidth = tempGoalWidth;
+                    // observer.goalHeight = tempGoalHeight;
+                    // observer.goalDepth = tempGoalDepth;
+                    // observer.penaltyAreaWidth = tempPenaltyAreaWidth;
+                    // observer.penaltyAreaDepth = tempPenaltyAreaDepth;
                 }
             }
         }

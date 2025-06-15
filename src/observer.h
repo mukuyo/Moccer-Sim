@@ -33,6 +33,12 @@ class Observer : public QObject {
     Q_PROPERTY(bool lightFieldMode READ getLightFieldMode WRITE setLightFieldMode NOTIFY settingChanged)
     Q_PROPERTY(int blueRobotCount READ getBlueRobotCount WRITE setBlueRobotCount NOTIFY settingChanged)
     Q_PROPERTY(int yellowRobotCount READ getYellowRobotCount WRITE setYellowRobotCount NOTIFY settingChanged)
+    Q_PROPERTY(float ballStaticFriction READ getBallStaticFriction WRITE setBallStaticFriction NOTIFY settingChanged)
+    Q_PROPERTY(float ballDynamicFriction READ getBallDynamicFriction WRITE setBallDynamicFriction NOTIFY settingChanged)
+    Q_PROPERTY(float ballRestitution READ getBallRestitution WRITE setBallRestitution NOTIFY settingChanged)
+    Q_PROPERTY(float gravity READ getGravity WRITE setGravity NOTIFY settingChanged)
+    Q_PROPERTY(float desiredFps READ getDesiredFps WRITE setDesiredFps NOTIFY settingChanged)
+    Q_PROPERTY(bool ccdMode READ getCcdMode WRITE setCcdMode NOTIFY settingChanged)
 
 public:
     explicit Observer(QObject *parent = nullptr);
@@ -84,6 +90,12 @@ public:
     bool getLightFieldMode() const { return lightFieldMode; }
     int getBlueRobotCount() const { return blueRobotCount; }
     int getYellowRobotCount() const { return yellowRobotCount; }
+    float getBallStaticFriction() const { return ballStaticFriction; }
+    float getBallDynamicFriction() const { return ballDynamicFriction; }
+    float getBallRestitution() const { return ballRestitution; }
+    float getGravity() const { return gravity; }
+    float getDesiredFps() const { return desiredFps; }
+    bool getCcdMode() const { return ccdMode; }
     
     void setWindowWidth(int width);
     void setWindowHeight(int height);
@@ -99,6 +111,12 @@ public:
     void setLightFieldMode(bool mode);
     void setBlueRobotCount(int count);
     void setYellowRobotCount(int count);
+    void setBallStaticFriction(float friction);
+    void setBallDynamicFriction(float friction);
+    void setBallRestitution(float restitution);
+    void setGravity(float gravity);
+    void setDesiredFps(float fps);
+    void setCcdMode(bool mode);
     
 signals:
     void blueRobotsChanged();
@@ -142,6 +160,14 @@ private:
 
     int blueRobotCount;
     int yellowRobotCount;
+
+    float ballStaticFriction;
+    float ballDynamicFriction;
+    float ballRestitution;
+    float gravity;
+    float desiredFps;
+    bool ccdMode;
+
 
     RobotControlResponse robotControlResponse;
 };
