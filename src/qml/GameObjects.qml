@@ -59,6 +59,8 @@ Node {
     property var bBotVelNormals: new Array(16).fill(0.0)
     property var bBotVelTangents: new Array(16).fill(0.0)
     property var bBotVelAngulars: new Array(16).fill(0.0)
+    property var bBotsPrePos: new Array(16).fill(Qt.vector3d(0, 0, 0))
+    property var bBotVelocity: new Array(16).fill(Qt.vector3d(0, 0, 0))
     property var bBotKickspeeds: new Array(16).fill(Qt.vector3d(0, 0, 0))
     property var bBotSpinners: new Array(16).fill(0.0)
     property var bBotDistanceBall: new Array(16).fill(0.0)
@@ -70,6 +72,8 @@ Node {
     property var yBotVelNormals: new Array(16).fill(0.0)
     property var yBotVelTangents: new Array(16).fill(0.0)
     property var yBotVelAngulars: new Array(16).fill(0.0)
+    property var yBotsPrePos: new Array(16).fill(Qt.vector3d(0, 0, 0))
+    property var yBotVelocity: new Array(16).fill(Qt.vector3d(0, 0, 0))
     property var yBotKickspeeds: new Array(16).fill(Qt.vector3d(0, 0, 0))
     property var yBotSpinners: new Array(16).fill(0.0)
     property var yBotDistanceBall: new Array(16).fill(0.0)
@@ -82,8 +86,8 @@ Node {
     property real botCursorID: 0
     property var kick_flag: false
 
-    function lerp(start, end, alpha) {
-        return start * (1 - alpha) + end * alpha;
+    MotionControl {
+        id: motionControl
     }
 
     onLightBlueRobotModeChanged: {
@@ -399,7 +403,7 @@ Node {
         return radian;
     }
 
-    function botMovement(isYellow) {
+    function botMovement(isYellow, timestep) {
         let botPositions = []
         let botBallContacts = []
         let ballPixels = []
@@ -410,6 +414,8 @@ Node {
         let botVelNormals = isYellow ? yBotVelNormals : bBotVelNormals;
         let botVelTangents = isYellow ? yBotVelTangents : bBotVelTangents;
         let botVelAngulars = isYellow ? yBotVelAngulars : bBotVelAngulars;
+        let botPrePositions = isYellow ? yBotsPrePos : bBotsPrePos;
+        let botVelocity = isYellow ? yBotVelocity : bBotVelocity;
         let botKickspeeds = isYellow ? yBotKickspeeds : bBotKickspeeds;
         let botSpinners = isYellow ? yBotSpinners : bBotSpinners;
         let botPixelBalls = isYellow ? window.yBotPixelBalls : window.bBotPixelBalls;
@@ -423,9 +429,17 @@ Node {
             let radian = bot.eulerRotation.y * Math.PI / 180.0;
             let botDistanceBall = Math.sqrt(Math.pow(bot.position.x - ball.position.x, 2) + Math.pow(bot.position.y - ball.position.y, 2) + Math.pow(bot.position.z - ball.position.z, 2));
             let botRadianBall = -normalizeRadian(Math.atan2(bot.position.z-ball.position.z, bot.position.x-ball.position.x)-Math.PI/2);
-
-            frame.setLinearVelocity(Qt.vector3d(-botVelNormals[i]*Math.cos(radian) + botVelTangents[i]*Math.sin(radian), 0,  botVelNormals[i]*Math.sin(radian) +  botVelTangents[i]*Math.cos(radian)));
+            botVelocity = Qt.vector3d(
+                (frame.position.x - botPrePositions[i].x) / timestep,
+                (frame.position.y - botPrePositions[i].y) / timestep,
+                (frame.position.z - botPrePositions[i].z) / timestep
+            );
+            let newVelocity = motionControl.calcSpeed(Qt.vector3d(botVelNormals[i], botVelTangents[i], botVelAngulars[i]), botVelocity, runTime, radian);
+            // frame.setLinearVelocity(Qt.vector3d(-botVelNormals[i]*Math.cos(radian) + botVelTangents[i]*Math.sin(radian), 0,  botVelNormals[i]*Math.sin(radian) +  botVelTangents[i]*Math.cos(radian)));
             frame.setAngularVelocity(Qt.vector3d(0, botVelAngulars[i], 0));
+            frame.setLinearVelocity(Qt.vector3d(-newVelocity.x*Math.cos(radian) + newVelocity.y*Math.sin(radian), 0, newVelocity.x*Math.sin(radian) + newVelocity.y*Math.cos(radian)));
+            // frame.setLinearVelocity(Qt.vector3d(newVelocity.x, 0, newVelocity.y));
+            // frame.setAngularVelocity(Qt.vector3d(0, newVelocity.z, 0));
             if (frame.eulerRotation.x > 0 || frame.eulerRotation.z > 0)
                 frame.eulerRotation = Qt.vector3d(0, frame.eulerRotation.y, 0);
             bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
@@ -468,17 +482,15 @@ Node {
             } else {
                 botCameraExists[i] = false;
             }
+            botPrePositions[i] = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
         }
         return { positions: botPositions, ballContacts: botBallContacts, pixels: botPixelBalls, cameraExists: botCameraExists };
     }
-    // Camera {
-    //     id: camera
-    // }
 
     function updateGameObjects(timestep) 
     {
-        let blueBotData = botMovement(false);
-        let yellowBotData = botMovement(true);
+        let blueBotData = botMovement(false, timestep);
+        let yellowBotData = botMovement(true, timestep);
 
         let ballPosition = Qt.vector3d(ball.position.x, -ball.position.z, ball.position.y);
         observer.updateObjects(

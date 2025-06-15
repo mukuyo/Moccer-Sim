@@ -25,7 +25,7 @@ Window {
     property var bBotPixelBalls: new Array(16).fill(Qt.vector2d(-1, -1))
     property var yBotPixelBalls: new Array(16).fill(Qt.vector2d(-1, -1))
     property var cursorPosition: Qt.point(0, 0)
-    property real runTime: 0.0
+    property real runTime: 16.667
     property var selectedCamera: "Overview Camera"
 
     Item {
@@ -45,7 +45,7 @@ Window {
             defaultDensity: 1.0
             forceDebugDraw: observer.forceDebugDrawMode
             onFrameDone: (timestep) => {
-                runTime = timestep;
+                runTime = timestep / 1000.0;
                 game_objects.updateGameObjects(timestep);
             }
         }
@@ -103,7 +103,7 @@ Window {
                     font.pixelSize: 15
                     color: "white"
                     horizontalAlignment: Text.AlignLeft
-                    text: "FPS: " +  Math.round(1000 / runTime)
+                    text: "FPS: " +  Math.round(1.0 / runTime)
                     opacity: 0.7
                 }
                 Item {
@@ -153,7 +153,7 @@ Window {
                     property bool isDraggingWindow: false
                     property bool selectView: false
                     property bool selectBot: false
-                    hoverEnabled: true
+                    // hoverEnabled: true
 
                     acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
 
