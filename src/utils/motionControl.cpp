@@ -11,6 +11,9 @@ MotionControl::MotionControl(QObject *parent)
 }
 
 QVector3D MotionControl::calcSpeed(QVector3D velocity, QVector3D botVelocity, float deltaTime, float botAngle) {
+    if (velocity.x() == 0 && velocity.y() == 0 && velocity.z() == 0) {
+        return QVector3D(0, 0, 0);
+    }
     float vx = velocity.x();
     float vy = velocity.y();
     float vw = velocity.z();
@@ -24,13 +27,13 @@ QVector3D MotionControl::calcSpeed(QVector3D velocity, QVector3D botVelocity, fl
         vy *= VelAbsoluteMax / v;
         v = VelAbsoluteMax;
     }
+
     if (abs(vw) > VelAngularMax) {
         vw = copysign(VelAngularMax, vw);
     }
     float bv = sqrt(bx * bx + by * by);
     float a = (v - bv) / deltaTime / 2.0;
     float aLimit = a > 0 ? AccSpeedupAbsoluteMax : AccBrakeAbsoluteMax;
-    cout << "a: " << a << ", aLimit: " << aLimit << endl;
     if (abs(a) > aLimit) {
         a = copysign(aLimit, a);
         float newV = bv + a * deltaTime * 2.0;
@@ -41,6 +44,8 @@ QVector3D MotionControl::calcSpeed(QVector3D velocity, QVector3D botVelocity, fl
             float angle = botAngle;
             float botVx = bx*cos(angle) + by*sin(angle);
             float botVy = by*cos(angle) - bx*sin(angle);
+            // float botVx = -bx*cos(angle) + by*sin(angle);
+            // float botVy = by*cos(angle) + bx*sin(angle);
             vx = botVx * (newV / bv);
             vy = botVy * (newV / bv);
         }
@@ -52,6 +57,9 @@ QVector3D MotionControl::calcSpeed(QVector3D velocity, QVector3D botVelocity, fl
         vw = bw + aw * deltaTime * 2.0;
     }
     cout << "Velocity: " << vx << ", " << vy << ", " << vw << endl;
+    cout << "Bot Velocity: " << bx << ", " << by << ", " << bw << endl;
+    cout << "Acceleration: " << a << ", " << aw << endl;
 
+    
     return QVector3D(vx, vy, vw);
 }

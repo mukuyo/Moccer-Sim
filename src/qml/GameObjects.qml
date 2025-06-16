@@ -430,9 +430,9 @@ Node {
             let botDistanceBall = Math.sqrt(Math.pow(bot.position.x - ball.position.x, 2) + Math.pow(bot.position.y - ball.position.y, 2) + Math.pow(bot.position.z - ball.position.z, 2));
             let botRadianBall = -normalizeRadian(Math.atan2(bot.position.z-ball.position.z, bot.position.x-ball.position.x)-Math.PI/2);
             botVelocity = Qt.vector3d(
-                (frame.position.x - botPrePositions[i].x) / timestep,
-                (frame.position.y - botPrePositions[i].y) / timestep,
-                (frame.position.z - botPrePositions[i].z) / timestep
+                (frame.position.x - botPrePositions[i].x) / runTime,
+                (radian - botPrePositions[i].y) / runTime,
+                (frame.position.z - botPrePositions[i].z) / runTime
             );
             let newVelocity = motionControl.calcSpeed(Qt.vector3d(botVelNormals[i], botVelTangents[i], botVelAngulars[i]), botVelocity, runTime, radian);
             // frame.setLinearVelocity(Qt.vector3d(-botVelNormals[i]*Math.cos(radian) + botVelTangents[i]*Math.sin(radian), 0,  botVelNormals[i]*Math.sin(radian) +  botVelTangents[i]*Math.cos(radian)));
@@ -482,7 +482,7 @@ Node {
             } else {
                 botCameraExists[i] = false;
             }
-            botPrePositions[i] = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
+            botPrePositions[i] = Qt.vector3d(frame.position.x, radian, frame.position.z);
         }
         return { positions: botPositions, ballContacts: botBallContacts, pixels: botPixelBalls, cameraExists: botCameraExists };
     }
