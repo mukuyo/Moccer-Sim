@@ -422,7 +422,6 @@ Node {
         let botIDTexts = isYellow ? yBotIDTexts : bBotIDTexts;
         let botCamera = isYellow ? yBotsCamera : bBotsCamera;
         let botCameraExists = isYellow ? yBotCameraExists : bBotCameraExists;
-
         for (let i = 0; i < botNum; i++) {
             let frame = botFrame.children[i];
             let bot = botRepeater.children[i];
@@ -430,16 +429,19 @@ Node {
             let botDistanceBall = Math.sqrt(Math.pow(bot.position.x - ball.position.x, 2) + Math.pow(bot.position.y - ball.position.y, 2) + Math.pow(bot.position.z - ball.position.z, 2));
             let botRadianBall = -normalizeRadian(Math.atan2(bot.position.z-ball.position.z, bot.position.x-ball.position.x)-Math.PI/2);
             botVelocity = Qt.vector3d(
-                (frame.position.x - botPrePositions[i].x) / runTime,
-                (radian - botPrePositions[i].y) / runTime,
-                (frame.position.z - botPrePositions[i].z) / runTime
+                (frame.position.x - botPrePositions[i].x) / timestep,
+                normalizeRadian(radian - botPrePositions[i].y) / timestep,
+                (frame.position.z - botPrePositions[i].z) / timestep
             );
-            let newVelocity = motionControl.calcSpeed(Qt.vector3d(botVelNormals[i], botVelTangents[i], botVelAngulars[i]), botVelocity, runTime, radian);
+
+            // console.log(isYellow + ": Bot " + i + " Position: " + frame.position.x + ", " + frame.position.y + ", " + frame.position.z);
+            let newVelocity = motionControl.calcSpeed(Qt.vector3d(botVelNormals[i], botVelTangents[i], botVelAngulars[i]), botVelocity, timestep, radian);
             // frame.setLinearVelocity(Qt.vector3d(-botVelNormals[i]*Math.cos(radian) + botVelTangents[i]*Math.sin(radian), 0,  botVelNormals[i]*Math.sin(radian) +  botVelTangents[i]*Math.cos(radian)));
-            frame.setAngularVelocity(Qt.vector3d(0, botVelAngulars[i], 0));
+            // frame.setAngularVelocity(Qt.vector3d(0, botVelAngulars[i], 0));
             frame.setLinearVelocity(Qt.vector3d(-newVelocity.x*Math.cos(radian) + newVelocity.y*Math.sin(radian), 0, newVelocity.x*Math.sin(radian) + newVelocity.y*Math.cos(radian)));
             // frame.setLinearVelocity(Qt.vector3d(newVelocity.x, 0, newVelocity.y));
-            // frame.setAngularVelocity(Qt.vector3d(0, newVelocity.z, 0));
+            frame.setAngularVelocity(Qt.vector3d(0, newVelocity.z, 0));
+
             if (frame.eulerRotation.x > 0 || frame.eulerRotation.z > 0)
                 frame.eulerRotation = Qt.vector3d(0, frame.eulerRotation.y, 0);
             bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);

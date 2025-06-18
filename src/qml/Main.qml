@@ -27,6 +27,7 @@ Window {
     property var cursorPosition: Qt.point(0, 0)
     property real runTime: 16.667
     property var selectedCamera: "Overview Camera"
+    property real lastTime: 0
 
     Item {
         width: parent.width
@@ -45,8 +46,10 @@ Window {
             defaultDensity: 1.0
             forceDebugDraw: observer.forceDebugDrawMode
             onFrameDone: (timestep) => {
-                runTime = timestep / 1000.0;
-                game_objects.updateGameObjects(timestep);
+                var now = Date.now();
+                runTime = (now - lastTime);
+                lastTime = now;
+                game_objects.updateGameObjects(runTime);
             }
         }
 
@@ -103,7 +106,7 @@ Window {
                     font.pixelSize: 15
                     color: "white"
                     horizontalAlignment: Text.AlignLeft
-                    text: "FPS: " +  Math.round(1.0 / runTime)
+                    text: "FPS: " +  Math.round(1000.0 / runTime)
                     opacity: 0.7
                 }
                 Item {
