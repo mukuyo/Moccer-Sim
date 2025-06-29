@@ -14,7 +14,7 @@ class MotionControl : public QObject {
 public:
     explicit MotionControl(QObject *parent = nullptr);
 
-    Q_INVOKABLE QVector3D calcSpeed(QVector3D velocity, QVector3D botVelocity, float deltaTime, float botAngle);
+    Q_INVOKABLE QVector3D calcSpeed(QVector3D velocity, QVector3D botVelocity, QVector3D botPreVelocity, float deltaTime, float botAngle);
 
 private:
     QSettings config;

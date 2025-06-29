@@ -28,6 +28,7 @@ Window {
     property real runTime: 16.667
     property var selectedCamera: "Overview Camera"
     property real lastTime: 0
+    property int key: 0
 
     Item {
         width: parent.width
@@ -48,11 +49,27 @@ Window {
             onFrameDone: (timestep) => {
                 var now = Date.now();
                 runTime = (now - lastTime);
+                
+                game_objects.updateGameObjects(0.01667);
                 lastTime = now;
-                game_objects.updateGameObjects(runTime);
             }
         }
+        // Timer {
+        //     id: myTimer
+        //     interval: 16   // 16ms → 約60FPS
+        //     repeat: true   // 繰り返す
+        //     running: true  // 開始する
 
+        //     onTriggered: {
+        //         // // 毎回ここが呼ばれる
+        //         // console.log("Timer tick!")
+        //         var now = Date.now();
+        //         runTime = (now - lastTime);
+        //         lastTime = now;
+        //         game_objects.updateGameObjects(runTime / 1000.0);
+         
+        //     }
+        // }
         Keys.onPressed: (event) => {
             event.accepted = true;
             if (event.key === Qt.Key_W) {
@@ -64,6 +81,7 @@ Window {
             } else if (event.key === Qt.Key_D) {
                 game_objects.teleopVelocity.x += game_objects.acceleration;
             }
+            key = event.key;
         }
         Camera {
             id: camera
@@ -164,8 +182,10 @@ Window {
                         lastPos = Qt.point(event.x, event.y)
                         clickPos = Qt.point(event.x, event.y);
                         isDraggingWindow = (event.y < 25);
-                        if (event.button === Qt.RightButton) {
-                            game_objects.resetBallPosition(viewport.pick(event.x, event.y));
+                        if (event.button === Qt.LeftButton && key === Qt.Key_R) {
+                            game_objects.resetPosition("bot", viewport.pick(event.x, event.y));
+                        } else if (event.button === Qt.RightButton) {
+                            game_objects.resetPosition("ball", viewport.pick(event.x, event.y));
                         }
                     }
                     onReleased: (event) => {
