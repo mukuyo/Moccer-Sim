@@ -257,6 +257,9 @@ Window {
                         property var windowHeight : window.height
                         property var visionMulticastPort: observer.visionMulticastPort
                     }
+                    Paint {
+                        id: paint
+                    }
                 }
                 Node {
                     id: node
