@@ -54,22 +54,6 @@ Window {
                 lastTime = now;
             }
         }
-        // Timer {
-        //     id: myTimer
-        //     interval: 16   // 16ms → 約60FPS
-        //     repeat: true   // 繰り返す
-        //     running: true  // 開始する
-
-        //     onTriggered: {
-        //         // // 毎回ここが呼ばれる
-        //         // console.log("Timer tick!")
-        //         var now = Date.now();
-        //         runTime = (now - lastTime);
-        //         lastTime = now;
-        //         game_objects.updateGameObjects(runTime / 1000.0);
-         
-        //     }
-        // }
         Keys.onPressed: (event) => {
             event.accepted = true;
             if (event.key === Qt.Key_W) {
@@ -82,6 +66,11 @@ Window {
                 game_objects.teleopVelocity.x += game_objects.acceleration;
             }
             key = event.key;
+        }
+        Keys.onReleased: (event) => {
+            if (event.key === Qt.Key_R) {
+                key = 0;
+            }
         }
         Camera {
             id: camera
@@ -314,7 +303,6 @@ Window {
         observer.windowWidth = width;
         windowWidth = width;
     }
-
     onHeightChanged: {
         observer.windowHeight = height;
         windowHeight = height;
