@@ -6,12 +6,12 @@ import QtQuick3D.Physics
 import Qt.labs.folderlistmodel
 import MOC
 
-import "../../assets/models/bot/Rione/viz" as BlueBody
-import "../../assets/models/bot/Rione/rigid_body" as BlueLightBody
-import "../../assets/models/bot/Rione/viz" as YellowBody
-import "../../assets/models/bot/Rione/rigid_body" as YellowLightBody
-import "../../assets/models/ball/"
-import "../../assets/models/circle/ball/"
+import "../../../assets/models/bot/Rione/viz" as BlueBody
+import "../../../assets/models/bot/Rione/rigid_body" as BlueLightBody
+import "../../../assets/models/bot/Rione/viz" as YellowBody
+import "../../../assets/models/bot/Rione/rigid_body" as YellowLightBody
+import "../../../assets/models/ball/"
+import "../../../assets/models/circle/ball/"
 
 
 Node {
@@ -139,23 +139,23 @@ Node {
             sendContactReports: true
             collisionShapes: [
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/Rione/rigid_body/meshes/body.cooked.cvx"
+                    source: "../../../assets/models/bot/Rione/rigid_body/meshes/body.cooked.cvx"
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/Rione/rigid_body/meshes/centerLeft.cooked.cvx" 
+                    source: "../../../assets/models/bot/Rione/rigid_body/meshes/centerLeft.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/Rione/rigid_body/meshes/centerRight.cooked.cvx" 
+                    source: "../../../assets/models/bot/Rione/rigid_body/meshes/centerRight.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/Rione/rigid_body/meshes/dribbler.cooked.cvx" 
+                    source: "../../../assets/models/bot/Rione/rigid_body/meshes/dribbler.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/Rione/rigid_body/meshes/chip.cooked.cvx" 
+                    source: "../../../assets/models/bot/Rione/rigid_body/meshes/chip.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 }
             ]
@@ -172,23 +172,23 @@ Node {
             sendContactReports: true
             collisionShapes: [
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/Rione/rigid_body/meshes/body.cooked.cvx"
+                    source: "../../../assets/models/bot/Rione/rigid_body/meshes/body.cooked.cvx"
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/Rione/rigid_body/meshes/centerLeft.cooked.cvx" 
+                    source: "../../../assets/models/bot/Rione/rigid_body/meshes/centerLeft.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/Rione/rigid_body/meshes/centerRight.cooked.cvx" 
+                    source: "../../../assets/models/bot/Rione/rigid_body/meshes/centerRight.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape { 
-                    source: "../../assets/models/bot/Rione/rigid_body/meshes/dribbler.cooked.cvx" 
+                    source: "../../../assets/models/bot/Rione/rigid_body/meshes/dribbler.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 },
                 ConvexMeshShape {
-                    source: "../../assets/models/bot/Rione/rigid_body/meshes/chip.cooked.cvx" 
+                    source: "../../../assets/models/bot/Rione/rigid_body/meshes/chip.cooked.cvx" 
                     eulerRotation: Qt.vector3d(-90, 0, 0)
                 }
             ]
@@ -365,7 +365,7 @@ Node {
         collisionShapes: [
             ConvexMeshShape {
                 id: ballShape
-                source: "../../assets/models/ball/meshes/ball.cooked.cvx"
+                source: "../../../assets/models/ball/meshes/ball.cooked.cvx"
             }
         ]
         Ball {}
@@ -434,6 +434,7 @@ Node {
         let botIDTexts = isYellow ? yBotIDTexts : bBotIDTexts;
         let botCamera = isYellow ? yBotsCamera : bBotsCamera;
         let botCameraExists = isYellow ? yBotCameraExists : bBotCameraExists;
+        let bot2DPositions = isYellow ? yBot2DPositions : bBot2DPositions;
         for (let i = 0; i < botNum; i++) {
             let frame = botFrame.children[i];
             let bot = botRepeater.children[i];
@@ -502,7 +503,12 @@ Node {
             } else {
                 botCameraExists[i] = false;
             }
-            
+            bot2DPositions[i] = Qt.vector2d(bot.position.x, bot.position.z);
+            if (!isYellow) {
+                bBot2DPositions = bBot2DPositions
+            } else {
+                yBot2DPositions = yBot2DPositions
+            }
         }
         return { positions: botPositions, ballContacts: botBallContacts, pixels: botPixelBalls, cameraExists: botCameraExists };
     }
@@ -524,6 +530,7 @@ Node {
             yellowBotData.ballContacts,
             ballPosition
         );
+        ball2DPosition = Qt.vector2d(ball.position.x, ball.position.z);
         if (teleopVelocity.x != 0 || teleopVelocity.y != 0 || teleopVelocity.z != 0){
             if (!kick_flag) {
                 ball.setLinearVelocity(Qt.vector3d(teleopVelocity.x, teleopVelocity.y, teleopVelocity.z));

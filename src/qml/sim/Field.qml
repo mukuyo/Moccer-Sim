@@ -2,8 +2,8 @@ import QtQuick
 import QtQuick3D
 import QtQuick3D.Physics
 
-import "../../assets/models/stadium/"
-import "../../assets/models/circle/line/"
+import "../../../assets/models/stadium/"
+import "../../../assets/models/circle/line/"
 
 Node {
     id: rootEntity
@@ -36,7 +36,7 @@ Node {
             materials: [ 
                 DefaultMaterial {
                     diffuseMap: Texture {
-                        source: "../../assets/textures/field_texture.jpg"
+                        source: "../../../assets/textures/field_texture.jpg"
                         generateMipmaps: false
                         minFilter: Texture.Nearest
                         magFilter: Texture.Nearest
@@ -55,7 +55,7 @@ Node {
             materials: [ 
                 DefaultMaterial {
                     diffuseMap: Texture {
-                        source: "../../assets/textures/field_texture.jpg"
+                        source: "../../../assets/textures/field_texture.jpg"
                     }
                 }
             ]
@@ -71,7 +71,7 @@ Node {
             materials: [ 
                 DefaultMaterial {
                     diffuseMap: Texture {
-                        source: "../../assets/textures/field_texture.jpg"
+                        source: "../../../assets/textures/field_texture.jpg"
                     }
                 }
             ]
@@ -87,7 +87,7 @@ Node {
             materials: [ 
                 DefaultMaterial {
                     diffuseMap: Texture {
-                        source: "../../assets/textures/field_texture.jpg"
+                        source: "../../../assets/textures/field_texture.jpg"
                     }
                 }
             ]
@@ -462,7 +462,7 @@ Node {
     //     materials: [ 
     //         DefaultMaterial {
     //             diffuseMap: Texture {
-    //                 source: "../../assets/textures/field_texture.jpg"
+    //                 source: "../../../assets/textures/field_texture.jpg"
     //             }
     //         }
     //     ]
