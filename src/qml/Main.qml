@@ -12,6 +12,8 @@ import Qt3D.Render
 import MOC
 
 import "settings/"
+import "sim/"
+import "viz/"
 
 Window {
     id: window
@@ -24,7 +26,12 @@ Window {
     property int windowHeight: observer.windowHeight
     property var bBotPixelBalls: new Array(16).fill(Qt.vector2d(-1, -1))
     property var yBotPixelBalls: new Array(16).fill(Qt.vector2d(-1, -1))
+    property var ball2DPosition: Qt.vector2d(0, 0)
+    property var bBot2DPositions: new Array(16).fill(Qt.vector2d(-1, -1))
+    property var yBot2DPositions: new Array(16).fill(Qt.vector2d(-1, -1))
     property var cursorPosition: Qt.point(0, 0)
+    property int bBotCount: observer.blueRobotCount
+    property int yBotCount: observer.yellowRobotCount
     property real runTime: 16.667
     property var selectedCamera: "Overview Camera"
     property real lastTime: 0
@@ -170,7 +177,7 @@ Window {
                     onPressed: (event) => {
                         lastPos = Qt.point(event.x, event.y)
                         clickPos = Qt.point(event.x, event.y);
-                        isDraggingWindow = (event.y < 25);
+                        isDraggingWindow = (event.y < 35);
                         if (event.button === Qt.LeftButton && key === Qt.Key_R) {
                             game_objects.resetPosition("bot", viewport.pick(event.x, event.y));
                         } else if (event.button === Qt.RightButton) {
@@ -257,8 +264,8 @@ Window {
                         property var windowHeight : window.height
                         property var visionMulticastPort: observer.visionMulticastPort
                     }
-                    Paint {
-                        id: paint
+                    View {
+                        id: view
                     }
                 }
                 Node {
