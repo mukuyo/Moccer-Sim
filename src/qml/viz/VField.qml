@@ -23,7 +23,7 @@ Item {
         y: dispY + dispHeight / 2 - pointRadius / 2
         width: pointRadius
         height: pointRadius
-        color: "white"
+        color: "#C8D3D6"
         radius: width / 2
         opacity: opacityValue
     }
@@ -34,7 +34,7 @@ Item {
         width: circleRadius
         height: circleRadius
         color: "transparent"
-        border.color: "white"
+        border.color: "#C8D3D6"
         radius: width / 2
         opacity: opacityValue
     }
@@ -45,7 +45,7 @@ Item {
         width: fieldWidth
         height: fieldHeight
         color: "transparent"
-        border.color: "white"
+        border.color: "#C8D3D6"
         opacity: opacityValue
     }
     Rectangle {
@@ -55,7 +55,7 @@ Item {
         width: 1
         height: fieldHeight
         color: "transparent"
-        border.color: "white"
+        border.color: "#C8D3D6"
         opacity: opacityValue
     }
     Rectangle {
@@ -65,7 +65,7 @@ Item {
         width: fieldWidth
         height: 1
         color: "transparent"
-        border.color: "white"
+        border.color: "#C8D3D6"
         opacity: opacityValue
     }
     Rectangle {
@@ -75,7 +75,7 @@ Item {
         width: fieldHeight / 5
         height: leftPenalty.width * 2
         color: "transparent"
-        border.color: "white"
+        border.color: "#C8D3D6"
         opacity: opacityValue
     }
     Rectangle {
@@ -85,7 +85,7 @@ Item {
         width: fieldHeight / 5
         height: rightPenalty.width * 2
         color: "transparent"
-        border.color: "white"
+        border.color: "#C8D3D6"
         opacity: opacityValue
     }
     Rectangle {

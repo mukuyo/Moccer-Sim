@@ -3,7 +3,7 @@
 ## Introduction
 Welcome to Moccer-Sim, a simulation tool designed for the [RoboCup Soccer Small Size League (SSL)](https://ssl.robocup.org/).
 
-![Moccer Simulation Image](docs/images/readme_v2.png)
+![Moccer Simulation Image](docs/images/readme.png)
 
 ## System Requirements
 Before diving into the exciting world of RoboCup Soccer SSL with `Moccer-Sim`, ensure your system meets the following requirements:
