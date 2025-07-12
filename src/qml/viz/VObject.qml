@@ -81,7 +81,4 @@ Item {
         radius: width / 2
         opacity: opacityValue
     }
-    Component.onCompleted: {
-        console.log(ratio)
-    }
 }
