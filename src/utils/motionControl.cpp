@@ -33,11 +33,6 @@ QVector3D MotionControl::calcSpeed(QVector3D velocity, QVector3D botVelocity, QV
     float v = std::sqrt(vx * vx + vy * vy);
     float bv = std::sqrt(bx * bx + by * by);
 
-    // --- 加速度制限 ---
-    const float VelAbsoluteMax = 5000.0f;           // 最大速度
-    const float AccSpeedupAbsoluteMax = 4000.0f;   // 最大加速
-    const float AccBrakeAbsoluteMax = 4000.0f;     // 最大減速
-
     // 最大速度制限
     if (v > VelAbsoluteMax) {
         vx *= VelAbsoluteMax / v;
@@ -46,7 +41,7 @@ QVector3D MotionControl::calcSpeed(QVector3D velocity, QVector3D botVelocity, QV
     }
 
     // 加速度計算 (半分に割るのは慣性補正的な処理)
-    float a = (v - bv) / (deltaTime * 2.0f);
+    float a = (v - bv) / (deltaTime / 2.0f);
     float aLimit = (a > 0) ? AccSpeedupAbsoluteMax : AccBrakeAbsoluteMax;
 
     if (fabs(a) > aLimit) {
@@ -59,7 +54,7 @@ QVector3D MotionControl::calcSpeed(QVector3D velocity, QVector3D botVelocity, QV
     }
 
     // --- 速度ジャンプ制限 ---
-    const float maxVelocityDelta = 200.0f;
+    const float maxVelocityDelta = 80.0f;
     float deltaVx = vx - pbx;
     float deltaVy = vy - pby;
     if (fabs(deltaVx) > maxVelocityDelta) {
