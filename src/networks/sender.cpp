@@ -26,8 +26,8 @@ void Sender::setPort(string address, quint16 newPort) {
 }
 
 void Sender::send(int camera_num, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions) {
-    // t_capture = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - start_time)/1000.0;
-    t_capture += 1/60.0;
+    t_capture = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - start_time)/1000.0;
+    // t_capture += 1/60.0;
     for (int i = 0; i < 1; i++) {
         SSL_WrapperPacket packet;
 
