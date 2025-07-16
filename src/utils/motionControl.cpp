@@ -54,7 +54,7 @@ QVector3D MotionControl::calcSpeed(QVector3D velocity, QVector3D botVelocity, QV
     }
 
     // --- 速度ジャンプ制限 ---
-    const float maxVelocityDelta = 80.0f;
+    const float maxVelocityDelta = 120.0f;
     float deltaVx = vx - pbx;
     float deltaVy = vy - pby;
     if (fabs(deltaVx) > maxVelocityDelta) {

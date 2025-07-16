@@ -24,24 +24,24 @@ Item {
     ListModel {
         id: physicsItems
         ListElement { name: "Desired FPS"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 60.0; MaxValue: 60.0 }
-        ListElement { name: "Gravity"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 9.81; MaxValue: 100 }
+        ListElement { name: "Gravity"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 9.812; MaxValue: 100 }
         ListElement { name: "Continuous Collision Detection"; detail: "※ Restart after changing this mode"; slider: false; toggle: true; combo: false; InitValue: 1 }
         // ListElement { name: "Ball Radius"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.1; MaxValue: 0.5 }
         // ListElement { name: "Ball Mass"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.043; MaxValue: 10 }
-        ListElement { name: "Ball Static Friction"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.5; MaxValue: 10 }
-        ListElement { name: "Ball Dynamic Friction"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.5; MaxValue: 10 }
-        ListElement { name: "Ball Restitution"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.5; MaxValue: 10 }
+        ListElement { name: "Ball Static Friction"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.11; MaxValue: 10 }
+        ListElement { name: "Ball Dynamic Friction"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.11; MaxValue: 10 }
+        ListElement { name: "Ball Restitution"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 1.0; MaxValue: 10 }
     }
     ListModel {
         id: geometryItems
-        ListElement { name: "Line Thickness"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.5; MaxValue: 2 }
-        ListElement { name: "Field Width"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 68; MaxValue: 100 }
-        ListElement { name: "Field Height"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 105; MaxValue: 150 }
-        ListElement { name: "Goal Width"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 7.32; MaxValue: 10 }
-        ListElement { name: "Goal Depth"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 2.44; MaxValue: 5 }
-        ListElement { name: "Goal Height"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 2.44; MaxValue: 5 }
-        ListElement { name: "Penalty Area Width"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 16.5; MaxValue: 20 }
-        ListElement { name: "Penalty Area Depth"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 40.3; MaxValue: 50 }
+        // ListElement { name: "Line Thickness"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 0.5; MaxValue: 2 }
+        // ListElement { name: "Field Width"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 68; MaxValue: 100 }
+        // ListElement { name: "Field Height"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 105; MaxValue: 150 }
+        // ListElement { name: "Goal Width"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 7.32; MaxValue: 10 }
+        // ListElement { name: "Goal Depth"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 2.44; MaxValue: 5 }
+        // ListElement { name: "Goal Height"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 2.44; MaxValue: 5 }
+        // ListElement { name: "Penalty Area Width"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 16.5; MaxValue: 20 }
+        // ListElement { name: "Penalty Area Depth"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 40.3; MaxValue: 50 }
     }
     ListModel {
         id: robotItems
@@ -51,10 +51,10 @@ Item {
     ListModel {
         id: cameraItems
         ListElement { name: "Main Camera"; detail: "Switch to one of the cameras"; slider: false; toggle: false; combo: true; InitValue: 0; MaxValue: -1 }
-        ListElement { name: "Overview Camera Position"; detail: ""; slider: false; toggle: false; combo: false; InitValue: 0; MaxValue: -1; InitString: "0, 10, 20" }
-        ListElement { name: "Overview Camera Distance"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 10; MaxValue: 20 }
-        ListElement { name: "Overview Camera Height"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 5; MaxValue: 10 }
-        ListElement { name: "Overview Camera Angle"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 30; MaxValue: 60 }
+        // ListElement { name: "Overview Camera Position"; detail: ""; slider: false; toggle: false; combo: false; InitValue: 0; MaxValue: -1; InitString: "0, 10, 20" }
+        // ListElement { name: "Overview Camera Distance"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 10; MaxValue: 20 }
+        // ListElement { name: "Overview Camera Height"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 5; MaxValue: 10 }
+        // ListElement { name: "Overview Camera Angle"; detail: ""; slider: true; toggle: false; combo: false; InitValue: 30; MaxValue: 60 }
     }
     ListModel {
         id: lightItems
@@ -344,48 +344,65 @@ Item {
                             from: 0.0
                             to: model.MaxValue
                             stepSize: 0.01
-                            value: model.InitValue
+                            value: model.InitValue.toFixed(2)
 
                             onValueChanged: {
                                 if (textField.text !== value.toString()) {
                                     if (model.name === "Width") {
                                         tempWindowWidth = value;
+                                        model.value = tempWindowWidth;
                                     } else if (model.name === "Height") {
                                         tempWindowHeight = value;
+                                        model.value = tempWindowHeight;
                                     } else if (model.name === "Blue Robot Count") {
                                         tempBlueRobotCount = value;
+                                        model.value = tempBlueRobotCount;
                                     } else if (model.name === "Yellow Robot Count") {
                                         tempYellowRobotCount = value;
+                                        model.value = tempYellowRobotCount;
                                     } else if (model.name === "Desired FPS") {
                                         tempDesiredFps = value;
+                                        model.value = tempDesiredFps;
                                     } else if (model.name === "Gravity") {
-                                        tempGravity = value;
+                                        tempGravity = value.toFixed(2);
+                                        model.value = tempGravity;
                                     } else if (model.name === "Ball Static Friction") {
-                                        tempBallStaticFriction = value;
+                                        tempBallStaticFriction = value.toFixed(2);
+                                        model.value = tempBallStaticFriction;
                                     } else if (model.name === "Ball Dynamic Friction") {
-                                        tempBallDynamicFriction = value;
+                                        tempBallDynamicFriction = value.toFixed(2);
+                                        model.value = tempBallDynamicFriction;
                                     } else if (model.name === "Ball Restitution") {
-                                        tempBallRestitution = value;
+                                        tempBallRestitution = value.toFixed(2);
+                                        model.value = tempBallRestitution;
+                                    } else if (model.name === "Line Thickness") {
+                                        tempLineThickness = value;
+                                        model.value = tempLineThickness;
+                                    } else if (model.name === "Field Width") {
+                                        tempFieldWidth = value;
+                                        model.value = tempFieldWidth;
+                                    } else if (model.name === "Field Height") {
+                                        tempFieldHeight = value;
+                                        model.value = tempFieldHeight;
+                                    } else if (model.name === "Goal Width") {
+                                        tempGoalWidth = value;
+                                        model.value = tempGoalWidth;
+                                    } else if (model.name === "Goal Depth") {
+                                        tempGoalDepth = value;
+                                        model.value = tempGoalDepth;
+                                    } else if (model.name === "Goal Height") {
+                                        tempGoalHeight = value;
+                                        model.value = tempGoalHeight;
+                                    } else if (model.name === "Penalty Area Width") {
+                                        tempPenaltyAreaWidth = value;
+                                        model.value = tempPenaltyAreaWidth;
+                                    } else if (model.name === "Penalty Area Depth") {
+                                        tempPenaltyAreaDepth = value;
+                                        model.value = tempPenaltyAreaDepth;
                                     }
-                                    // } else if (model.name === "Line Thickness") {
-                                    //     tempLineThickness = value;
-                                    // } else if (model.name === "Field Width") {
-                                    //     tempFieldWidth = value;
-                                    // } else if (model.name === "Field Height") {
-                                    //     tempFieldHeight = value;
-                                    // } else if (model.name === "Goal Width") {
-                                    //     tempGoalWidth = value;
-                                    // } else if (model.name === "Goal Depth") {
-                                    //     tempGoalDepth = value;
-                                    // } else if (model.name === "Goal Height") {
-                                    //     tempGoalHeight = value;
-                                    // } else if (model.name === "Penalty Area Width") {
-                                    //     tempPenaltyAreaWidth = value;
-                                    // } else if (model.name === "Penalty Area Depth") {
-                                    //     tempPenaltyAreaDepth = value;
-                                    // }
-                                    model.value = value
-                                    textField.text = value.toString()
+                                    if (model.value !== undefined) {
+                                        textField.text = model.value.toString();
+                                    }
                                 }
                             }
                             Component.onCompleted: {
@@ -400,31 +417,31 @@ Item {
                                 } else if (model.name === "Desired FPS") {
                                     value = tempDesiredFps;
                                 } else if (model.name === "Gravity") {
-                                    value = tempGravity;
+                                    value = tempGravity.toFixed(2);
                                 } else if (model.name === "Ball Static Friction") {
-                                    value = tempBallStaticFriction;
+                                    value = tempBallStaticFriction.toFixed(2);
                                 } else if (model.name === "Ball Dynamic Friction") {
-                                    value = tempBallDynamicFriction;
+                                    value = tempBallDynamicFriction.toFixed(2);
                                 } else if (model.name === "Ball Restitution") {
-                                    value = tempBallRestitution;
-                                }
-                                // } else if (model.name === "Line Thickness") {
-                                //     value = tempLineThickness;
-                                // } else if (model.name === "Field Width") {
-                                //     value = tempFieldWidth;
-                                // } else if (model.name === "Field Height") {
-                                //     value = tempFieldHeight;
-                                // } else if (model.name === "Goal Width") {
-                                //     value = tempGoalWidth;
-                                // } else if (model.name === "Goal Depth") {
-                                //     value = tempGoalDepth;
-                                // } else if (model.name === "Goal Height") {
-                                //     value = tempGoalHeight;
-                                // } else if (model.name === "Penalty Area Width") {
-                                //     value = tempPenaltyAreaWidth;
-                                // } else if (model.name === "Penalty Area Depth") {
-                                //     value = tempPenaltyAreaDepth;
+                                    value = tempBallRestitution.toFixed(2);
                                 // }
+                                } else if (model.name === "Line Thickness") {
+                                    value = tempLineThickness;
+                                } else if (model.name === "Field Width") {
+                                    value = tempFieldWidth;
+                                } else if (model.name === "Field Height") {
+                                    value = tempFieldHeight;
+                                } else if (model.name === "Goal Width") {
+                                    value = tempGoalWidth;
+                                } else if (model.name === "Goal Depth") {
+                                    value = tempGoalDepth;
+                                } else if (model.name === "Goal Height") {
+                                    value = tempGoalHeight;
+                                } else if (model.name === "Penalty Area Width") {
+                                    value = tempPenaltyAreaWidth;
+                                } else if (model.name === "Penalty Area Depth") {
+                                    value = tempPenaltyAreaDepth;
+                                }
                             }
                         }
 
@@ -434,12 +451,11 @@ Item {
                             y: 25
                             width: 40
                             // height: 24
-                            text: model.InitValue.toString()
+                            text: model.InitValue.toFixed(2)
                             
                             font.pixelSize: 14
                             color: "white"
                             horizontalAlignment: Text.AlignRight
-
                             onEditingFinished: {
                                 let newValue = parseFloat(text)
                                 if (!isNaN(newValue) && newValue >= slider.from && newValue <= slider.to) {
@@ -456,13 +472,13 @@ Item {
                                     } else if (model.name === "Desired FPS") {
                                         tempDesiredFps = parseInt(newValue);
                                     } else if (model.name === "Gravity") {
-                                        tempGravity = newValue;
+                                        tempGravity = newValue.toFixed(2);
                                     } else if (model.name === "Ball Static Friction") {
-                                        tempBallStaticFriction = newValue;
+                                        tempBallStaticFriction = newValue.toFixed(2);
                                     } else if (model.name === "Ball Dynamic Friction") {
-                                        tempBallDynamicFriction = newValue;
+                                        tempBallDynamicFriction = newValue.toFixed(2);
                                     } else if (model.name === "Ball Restitution") {
-                                        tempBallRestitution = newValue;
+                                        tempBallRestitution = newValue.toFixed(2);
                                     }
                                 } else {
                                     text = slider.value.toString()

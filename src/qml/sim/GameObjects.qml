@@ -468,10 +468,9 @@ Node {
             botPositions.push(Qt.vector3d(frame.position.x, -frame.position.z, frame.eulerRotation.y+90));
             let ballRadian = normalizeRadian(Math.atan2(bot.position.z-ball.position.z, bot.position.x-ball.position.x)+ Math.PI);
 
-            if (botDistanceBall < 110 * Math.cos(Math.abs(botRadianBall - radian)) && Math.abs(normalizeRadian(botRadianBall - radian)) < Math.PI/15.0) {
+            if (botDistanceBall < 115 * Math.cos(Math.abs(botRadianBall - radian)) && Math.abs(normalizeRadian(botRadianBall - radian)) < Math.PI/15.0) {
                 botBallContacts.push(true);
                 if (botSpinners[i] > 0 && (botKickspeeds[i].x == 0 && botKickspeeds[i].y == 0)) {
-                    
                     ball.setLinearVelocity(Qt.vector3d(-3000*Math.cos(ballRadian), 0, -3000*Math.sin(ballRadian)));
                 }
                 if (botKickspeeds[i].x != 0 || botKickspeeds[i].y != 0) {

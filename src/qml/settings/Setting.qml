@@ -28,6 +28,14 @@ Item {
     property real tempBallStaticFriction: observer.ballStaticFriction
     property real tempBallDynamicFriction: observer.ballDynamicFriction
     property real tempBallRestitution: observer.ballRestitution
+    property real tempFieldWidth: 0
+    property real tempFieldHeight: 0
+    property real tempLineThickness: 0
+    property real tempGoalWidth: 0
+    property real tempGoalHeight: 0
+    property real tempGoalDepth: 0
+    property real tempPenaltyAreaWidth: 0
+    property real tempPenaltyAreaDepth: 0
     // property real tempFieldWidth: observer.fieldWidth
     // property real tempFieldHeight: observer.fieldHeight
     // property real tempLineThickness: observer.lineThickness

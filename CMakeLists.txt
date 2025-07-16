@@ -113,3 +113,14 @@ add_custom_target(run
     DEPENDS Moccer-Sim
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
+
+# インストール対象: 実行ファイル
+install(TARGETS Moccer-Sim
+    RUNTIME DESTINATION bin
+)
+
+# インストール対象: ヘッダーファイル（必要に応じて）
+install(DIRECTORY ${SRC_DIR}/
+    DESTINATION include/moccer-sim
+    FILES_MATCHING PATTERN "*.h"
+)
