@@ -73,4 +73,4 @@ Enhance your RoboCup Soccer SSL experience with these related tools:
 We welcome contributions from the community! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to get involved.
 
 ## License
-This project is licensed under the MIT License. See the [LICENSE.md](LICENSE) file for details.
+This project is licensed under the GNU General Public License version 3 (GPL v3). See the [LICENSE](LICENSE) file for details.
