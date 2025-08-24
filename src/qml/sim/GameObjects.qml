@@ -458,6 +458,7 @@ Node {
 
             botPrePositions[i] = Qt.vector3d(frame.position.x, radian, frame.position.z);
             botPreVelocity[i] = Qt.vector3d(newVelocity.x, newVelocity.y, newVelocity.z);
+            
             frame.setLinearVelocity(Qt.vector3d(newVelocity.x*Math.cos(radian) - newVelocity.y*Math.sin(radian), 0, -newVelocity.x*Math.sin(radian) - newVelocity.y*Math.cos(radian)));
             frame.setAngularVelocity(Qt.vector3d(0, newVelocity.z, 0));
 

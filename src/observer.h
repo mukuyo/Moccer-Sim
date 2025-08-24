@@ -6,6 +6,7 @@
 #include <QUdpSocket>
 #include <QHostAddress>
 #include <QSettings>
+#include <QTimer>
 #include <iostream>
 #include "networks/receiver.h"
 #include "networks/sender.h"
@@ -61,6 +62,7 @@ public:
 
     void visionReceive(mocSim_Packet packet);
     void controlReceive(RobotControl packet, bool isYellow);
+    void updateSender();
 
     QList<QObject*> getBlueRobots() const {
         QList<QObject*> blueList;
@@ -133,6 +135,7 @@ signals:
 
 private:
     QSettings config;
+    QTimer *timer;
 
     VisionReceiver *visionReceiver;
     ControlBlueReceiver *controlBlueReceiver;
@@ -168,8 +171,15 @@ private:
     float desiredFps;
     bool ccdMode;
 
+    QList<QVector3D> bluePositions;
+    QList<QVector3D> yellowPositions;
+    QVector3D ballPosition;
 
     RobotControlResponse robotControlResponse;
+
+    QElapsedTimer elapsedTimer;
+    QTimer *loopTimer;
+    float frameInterval;
 };
 
 #endif // OBSERVER_H

@@ -1,7 +1,6 @@
 #include "observer.h"
 
-Observer::Observer(QObject *parent)
-    : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlBlueReceiver(new ControlBlueReceiver(nullptr)), controlYellowReceiver(new ControlYellowReceiver(nullptr)), config("../config/config.ini", QSettings::IniFormat) {
+Observer::Observer(QObject *parent) : QObject(parent), visionReceiver(new VisionReceiver(nullptr)), controlBlueReceiver(new ControlBlueReceiver(nullptr)), controlYellowReceiver(new ControlYellowReceiver(nullptr)), config("../config/config.ini", QSettings::IniFormat) {
     visionMulticastAddress = config.value("Network/visionMulticastAddress", "127.0.0.1").toString();
     visionMulticastPort = config.value("Network/visionMulticastPort", 10020).toInt();
     commandListenPort = config.value("Network/commandListenPort", 20011).toInt();
@@ -41,7 +40,13 @@ Observer::Observer(QObject *parent)
 
     blueRobotCount = config.value("Robot/blueRobotCount", 11).toInt();
     yellowRobotCount = config.value("Robot/yellowRobotCount", 11).toInt();
+    
+    frameInterval = 1000.0 / desiredFps;
 
+    loopTimer = new QTimer(this);
+    connect(loopTimer, &QTimer::timeout, this, &Observer::updateSender);
+    loopTimer->start(1); // 1msごとに監視
+    elapsedTimer.start();
 }
 
 Observer::~Observer() {
@@ -199,6 +204,26 @@ void Observer::updateObjects(
     QList<bool> yBotBallContacts,
     QVector3D ball_position
 ) {
-    sender->send(1, ball_position, blue_positions, yellow_positions);
+    bluePositions.clear();
+    yellowPositions.clear();
+    for (int i = 0; i < blue_positions.size() && i < blueRobotCount; ++i) {
+        bluePositions.append(blue_positions[i]);
+    }
+    for (int i = 0; i < yellow_positions.size() && i < yellowRobotCount; ++i) {
+        yellowPositions.append(yellow_positions[i]);
+    }
+    this->ballPosition = ball_position;
     emit sendBotBallContacts(bBotBallContacts, yBotBallContacts, blueBallCameraExists, yellowBallCameraExists, blueBallPixels, yellowBallPixels);
+}
+
+// void Observer::updateSender() {
+//     sender->send(1, ballPosition, bluePositions, yellowPositions);
+//     // sender->send(1, ballPosition, bluePositions, yellowPositions);
+// }
+void Observer::updateSender() {
+    qint64 elapsed = elapsedTimer.elapsed();
+    if (elapsed >= frameInterval) {
+        sender->send(1, ballPosition, bluePositions, yellowPositions);
+        elapsedTimer.restart();
+    }
 }
