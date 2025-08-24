@@ -45,7 +45,7 @@ Observer::Observer(QObject *parent) : QObject(parent), visionReceiver(new Vision
 
     loopTimer = new QTimer(this);
     connect(loopTimer, &QTimer::timeout, this, &Observer::updateSender);
-    loopTimer->start(1); // 1msごとに監視
+    loopTimer->start(0.1); // 1msごとに監視
     elapsedTimer.start();
 }
 
