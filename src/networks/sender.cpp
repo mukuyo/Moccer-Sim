@@ -245,3 +245,28 @@ SSL_GeometryData Sender::setGeometryInfo() {
 
     return geometry;
 }
+
+SenderWorker::SenderWorker(Sender *sender, QObject *parent)
+    : QObject(parent), sender(sender) {
+    timer = new QTimer(this);
+    timer->setInterval(17); // 60fps 相当
+    connect(timer, &QTimer::timeout, this, &SenderWorker::doSend);
+}
+
+void SenderWorker::start() {
+    timer->start();
+}
+
+void SenderWorker::stop() {
+    timer->stop();
+}
+
+void SenderWorker::updateData(QVector3D ball, QList<QVector3D> blue, QList<QVector3D> yellow) {
+    ballPosition = ball;
+    bluePositions = blue;
+    yellowPositions = yellow;
+}
+
+void SenderWorker::doSend() {
+    sender->send(1, ballPosition, bluePositions, yellowPositions);
+}

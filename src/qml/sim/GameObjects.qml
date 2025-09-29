@@ -27,33 +27,47 @@ Node {
     property real colorHeight: 0.15
 
     property var bBotsPos: [
-        Qt.vector3d(-500, 0, 0),
-        Qt.vector3d(-750, 0, 3000),
-        Qt.vector3d(-750, 0, -3000),
-        Qt.vector3d(-2000, 0, 1500),
-        Qt.vector3d(-2000, 0, -1500),
-        Qt.vector3d(-3500, 0, 0),
-        Qt.vector3d(-3500, 0, 4000),
-        Qt.vector3d(-3500, 0, -4000),
-        Qt.vector3d(-5000, 0, 3000),
-        Qt.vector3d(-5000, 0, -3000),
-        Qt.vector3d(-6000, 0, 0),
-    ]
-
-    property var yBotsPos: [
-        Qt.vector3d(500, 0, 0),
+        Qt.vector3d(500, 0, 2000),
+        Qt.vector3d(750, 0, 2000),
         Qt.vector3d(750, 0, 3000),
-        Qt.vector3d(750, 0, -3000),
         Qt.vector3d(2000, 0, 1500),
-        Qt.vector3d(2000, 0, -1500),
-        Qt.vector3d(3500, 0, 0),
+        Qt.vector3d(2000, 0, 1800),
+        Qt.vector3d(3500, 0, 2000),
         Qt.vector3d(3500, 0, 4000),
-        Qt.vector3d(3500, 0, -4000),
+        Qt.vector3d(3500, 0, 4500),
+        Qt.vector3d(5000, 0, 3500),
         Qt.vector3d(5000, 0, 3000),
-        Qt.vector3d(5000, 0, -3000),
         Qt.vector3d(6000, 0, 0),
     ]
 
+    // property var yBotsPos: [
+    //     Qt.vector3d(500, 0, 0),
+    //     Qt.vector3d(750, 0, 3000),
+    //     Qt.vector3d(750, 0, -3000),
+    //     Qt.vector3d(2000, 0, 1500),
+    //     Qt.vector3d(2000, 0, -1500),
+    //     Qt.vector3d(3500, 0, 0),
+    //     Qt.vector3d(3500, 0, 4000),
+    //     Qt.vector3d(3500, 0, -4000),
+    //     Qt.vector3d(5000, 0, 3000),
+    //     Qt.vector3d(5000, 0, -3000),
+    //     Qt.vector3d(6000, 0, 0),
+    // ]
+    property var yBotsPos: [
+        Qt.vector3d(-2000, 0, 0),
+        Qt.vector3d(-2000, 0, 2000),
+        Qt.vector3d(-2000, 0, -2000),
+        Qt.vector3d(-2000, 0, 1000),
+        Qt.vector3d(-2000, 0, -1000),
+        Qt.vector3d(-3600, 0, 0),
+        Qt.vector3d(-3600, 0, 2000),
+        Qt.vector3d(-3600, 0, -2000),
+        Qt.vector3d(-3000, 0, 2000),
+        Qt.vector3d(-3000, 0, -2000),
+        Qt.vector3d(-3000, 0, 0),
+        Qt.vector3d(-3000, 0, 1000),
+        Qt.vector3d(-3000, 0, -1000),
+    ]
     property var bBotRadians: new Array(16).fill(0.0)
     property var bBotVelNormals: new Array(16).fill(0.0)
     property var bBotVelTangents: new Array(16).fill(0.0)

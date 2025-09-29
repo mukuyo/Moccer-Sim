@@ -132,6 +132,7 @@ signals:
         const QList<QVector2D> &bBallCameraPositions,
         const QList<QVector2D> &yBallCameraPositions
     );
+    void updateSenderData(QVector3D ball, QList<QVector3D> blue, QList<QVector3D> yellow);
 
 private:
     QSettings config;

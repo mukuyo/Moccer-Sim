@@ -13,6 +13,7 @@
 #include <QVector3D>
 #include <QList>
 #include <QDebug>
+#include <QTimer>
 #include "ssl_vision_wrapper.pb.h"
 #include "ssl_simulation_robot_feedback.pb.h"
 
@@ -41,6 +42,27 @@ private:
 
     quint16 port;
     string address;
+};
+
+class SenderWorker : public QObject {
+    Q_OBJECT
+public:
+    SenderWorker(Sender *sender, QObject *parent = nullptr);
+
+public slots:
+    void start();
+    void stop();
+    void updateData(QVector3D ball, QList<QVector3D> blue, QList<QVector3D> yellow);
+
+private slots:
+    void doSend();
+
+private:
+    Sender *sender;
+    QTimer *timer;
+    QVector3D ballPosition;
+    QList<QVector3D> bluePositions;
+    QList<QVector3D> yellowPositions;
 };
 
 #endif // SENDER_H

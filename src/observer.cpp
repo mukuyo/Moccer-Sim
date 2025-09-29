@@ -43,10 +43,10 @@ Observer::Observer(QObject *parent) : QObject(parent), visionReceiver(new Vision
     
     frameInterval = 1000.0 / desiredFps;
 
-    loopTimer = new QTimer(this);
-    connect(loopTimer, &QTimer::timeout, this, &Observer::updateSender);
-    loopTimer->start(0.1); // 1msごとに監視
-    elapsedTimer.start();
+    QTimer *timer = new QTimer(this);
+    timer->setTimerType(Qt::PreciseTimer); // 高精度タイマー
+    connect(timer, &QTimer::timeout, this, &Observer::updateSender);
+    timer->start(17); // 17ms 間隔
 }
 
 Observer::~Observer() {
@@ -216,14 +216,14 @@ void Observer::updateObjects(
     emit sendBotBallContacts(bBotBallContacts, yBotBallContacts, blueBallCameraExists, yellowBallCameraExists, blueBallPixels, yellowBallPixels);
 }
 
-// void Observer::updateSender() {
-//     sender->send(1, ballPosition, bluePositions, yellowPositions);
-//     // sender->send(1, ballPosition, bluePositions, yellowPositions);
-// }
 void Observer::updateSender() {
-    qint64 elapsed = elapsedTimer.elapsed();
-    if (elapsed >= frameInterval) {
-        sender->send(1, ballPosition, bluePositions, yellowPositions);
-        elapsedTimer.restart();
-    }
+    sender->send(1, ballPosition, bluePositions, yellowPositions);
+    // sender->send(1, ballPosition, bluePositions, yellowPositions);
 }
+// void Observer::updateSender() {
+//     qint64 elapsed = elapsedTimer.elapsed();
+//     if (elapsed >= frameInterval) {
+//         sender->send(1, ballPosition, bluePositions, yellowPositions);
+//         elapsedTimer.restart();
+//     }
+// }

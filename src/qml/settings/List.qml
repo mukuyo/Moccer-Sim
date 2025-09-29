@@ -456,6 +456,43 @@ Item {
                             font.pixelSize: 14
                             color: "white"
                             horizontalAlignment: Text.AlignRight
+                            Component.onCompleted: {
+                                if (model.name === "Width") {
+                                    text = observer.windowWidth.toString();
+                                } else if (model.name === "Height") {
+                                    text = observer.windowHeight.toString();
+                                } else if (model.name === "Blue Robot Count") {
+                                    text = observer.blueRobotCount.toString();
+                                } else if (model.name === "Yellow Robot Count") {
+                                    text = observer.yellowRobotCount.toString();
+                                } else if (model.name === "Desired FPS") {
+                                    text = observer.desiredFps.toString();
+                                } else if (model.name === "Gravity") {
+                                    text = observer.gravity.toString();
+                                } else if (model.name === "Ball Static Friction") {
+                                    text = observer.ballStaticFriction.toString();
+                                } else if (model.name === "Ball Dynamic Friction") {
+                                    text = observer.ballDynamicFriction.toString();
+                                } else if (model.name === "Ball Restitution") {
+                                    text = observer.ballRestitution.toString();
+                                // } else if (model.name === "Line Thickness") {
+                                //     text = observer.lineThickness.toString();
+                                // } else if (model.name === "Field Width") {
+                                //     text = observer.fieldWidth.toString();
+                                // } else if (model.name === "Field Height") {
+                                //     text = observer.fieldHeight.toString();
+                                // } else if (model.name === "Goal Width") {
+                                //     text = observer.goalWidth.toString();
+                                // } else if (model.name === "Goal Depth") {
+                                //     text = observer.goalDepth.toString();
+                                // } else if (model.name === "Goal Height") {
+                                //     text = observer.goalHeight.toString();
+                                // } else if (model.name === "Penalty Area Width") {
+                                //     text = observer.penaltyAreaWidth.toString();
+                                // } else if (model.name === "Penalty Area Depth") {
+                                //     text = observer.penaltyAreaDepth.toString();
+                                }
+                            }
                             onEditingFinished: {
                                 let newValue = parseFloat(text)
                                 if (!isNaN(newValue) && newValue >= slider.from && newValue <= slider.to) {
