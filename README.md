@@ -24,7 +24,7 @@ brew install qt cmake boost@1.85 eigen protobuf@21 yaml-cpp vulkan-volk assimp b
 ### Ubuntu
 ```bash
 sudo apt update
-sudo apt install qt6-base-dev qt6-declarative-dev qt6-tools-dev qml6-module-* qt6-3d-dev qt6-quick3d-dev qt6-quick3d-dev-tools qt6-shadertools-dev libeigen3-dev protobuf-compiler libyaml-cpp-dev cmake build-essential libassimp-dev assimp-utils libbullet-dev
+sudo apt install libeigen3-dev protobuf-compiler libyaml-cpp-dev cmake build-essential libassimp-dev assimp-utils libbullet-dev libboost-all-dev
 ```
 
 ### 2. Preparing 3D Models

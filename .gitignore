@@ -5,5 +5,3 @@
 /assets/*
 !/assets/.gitkeep
 proto/pb_gen/*
-
-/config/config.ini
