@@ -1,0 +1,19 @@
+repos:
+  - repo: local
+    hooks:
+      - id: cppcheck
+        name: Run cppcheck
+        entry: cppcheck
+        language: system
+        types: [c, c++]
+        args:
+          [
+            "--enable=warning,style,performance,portability",
+            "--error-exitcode=1",
+            "--quiet",
+            "--suppress=missingIncludeSystem",
+            "src/",
+            "include/"
+          ]
+        exclude: "^(third_party/|external/|build/)"
+
