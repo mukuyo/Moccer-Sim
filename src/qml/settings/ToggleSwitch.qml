@@ -41,8 +41,6 @@ Item {
                     tempLightYellowRobotMode = !tempLightYellowRobotMode
                 } else if (model.name === "Stadium") {
                     tempLightStadiumMode = !tempLightStadiumMode
-                } else if (model.name === "Field") {
-                    tempLightFieldMode = !tempLightFieldMode
                 } else if (model.name === "Continuous Collision Detection") {
                     tempCCDMode = !tempCCDMode
                 }
@@ -57,8 +55,6 @@ Item {
                 switchState = tempLightYellowRobotMode
             } else if (model.name === "Stadium") {
                 switchState = tempLightStadiumMode
-            } else if (model.name === "Field") {
-                switchState = tempLightFieldMode
             } else if (model.name === "Continuous Collision Detection") {
                 switchState = tempCCDMode
             }

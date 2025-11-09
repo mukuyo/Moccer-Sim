@@ -32,7 +32,6 @@ Node {
             x: -3850
             y: 3100
             scale: Qt.vector3d(77, 62, 0.1)
-            visible: !observer.lightFieldMode
             materials: [ 
                 DefaultMaterial {
                     diffuseMap: Texture {
@@ -51,7 +50,6 @@ Node {
             x: 3850
             y: 3100
             scale: Qt.vector3d(77, 62, 0.1)
-            visible: !observer.lightFieldMode
             materials: [ 
                 DefaultMaterial {
                     diffuseMap: Texture {
@@ -67,7 +65,6 @@ Node {
             x: -3850
             y: -3100
             scale: Qt.vector3d(77, 62, 0.1)
-            visible: !observer.lightFieldMode
             materials: [ 
                 DefaultMaterial {
                     diffuseMap: Texture {
@@ -83,7 +80,6 @@ Node {
             x: 3850
             y: -3100
             scale: Qt.vector3d(77, 62, 0.1)
-            visible: !observer.lightFieldMode
             materials: [ 
                 DefaultMaterial {
                     diffuseMap: Texture {
@@ -92,7 +88,6 @@ Node {
                 }
             ]
         }
-        
     }
 
     Model {
@@ -442,29 +437,4 @@ Node {
         position: Qt.vector3d(0, 4, 0)
         eulerRotation: Qt.vector3d(90, 0, 0)
     }
-    // Model {
-    //     id: centerWhiteCircle
-    //     source: "#Cylinder"
-    //     scale: Qt.vector3d(10.2, 0.0001, 10.2)
-    //     position: Qt.vector3d(0, 4, 0)
-    //     materials: [
-    //         DefaultMaterial {
-    //             diffuseColor: "white"
-    //         }
-    //     ]
-    // }
-
-    // Model {
-    //     id: centerGreenCircle
-    //     source: "#Cylinder"
-    //     scale: Qt.vector3d(10, 0.01, 10)
-    //     position: Qt.vector3d(0, 10, 0)
-    //     materials: [ 
-    //         DefaultMaterial {
-    //             diffuseMap: Texture {
-    //                 source: "../../../assets/textures/field_texture.jpg"
-    //             }
-    //         }
-    //     ]
-    // }
 }
