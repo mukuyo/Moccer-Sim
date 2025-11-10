@@ -19,7 +19,6 @@ Item {
     property bool tempLightBlueRobotMode: observer.lightBlueRobotMode
     property bool tempLightYellowRobotMode: observer.lightYellowRobotMode
     property bool tempLightStadiumMode: observer.lightStadiumMode
-    property bool tempLightFieldMode: observer.lightFieldMode
     property int tempBlueRobotCount : observer.blueRobotCount
     property int tempYellowRobotCount : observer.yellowRobotCount
     property real tempDesiredFps: observer.desiredFps
@@ -144,7 +143,6 @@ Item {
                     observer.lightBlueRobotMode = tempLightBlueRobotMode;
                     observer.lightYellowRobotMode = tempLightYellowRobotMode;
                     observer.lightStadiumMode = tempLightStadiumMode;
-                    observer.lightFieldMode = tempLightFieldMode;
                     observer.blueRobotCount = tempBlueRobotCount;
                     observer.yellowRobotCount = tempYellowRobotCount;
                     observer.desiredFps = tempDesiredFps;

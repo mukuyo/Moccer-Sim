@@ -47,18 +47,28 @@ Window {
             scene: viewport.scene
             maximumTimestep: 1000.0 / observer.desiredFps
             minimumTimestep: 1000.0 / observer.desiredFps
-            enableCCD: observer.ccdMode
+            // enableCCD: observer.ccdMode
             gravity: Qt.vector3d(0, -observer.gravity*1000.0, 0)
             typicalLength: 100
             typicalSpeed: 1000
             defaultDensity: 1.0
             forceDebugDraw: observer.forceDebugDrawMode
-            onFrameDone: (timestep) => {
+            // onFrameDone: (timestep) => {
+            //     var now = Date.now();
+            //     runTime = (now - lastTime);
+            //     lastTime = now;
+            //     game_objects.updateGameObjects(0.01667);
+            // }
+        }
+        Timer {
+            interval: 1000.0 / observer.desiredFps
+            running: true
+            repeat: true
+            onTriggered: {
                 var now = Date.now();
                 runTime = (now - lastTime);
-                
-                game_objects.updateGameObjects(0.01667);
                 lastTime = now;
+                game_objects.updateGameObjects(runTime);
             }
         }
         Keys.onPressed: (event) => {

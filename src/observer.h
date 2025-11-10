@@ -31,7 +31,6 @@ class Observer : public QObject {
     Q_PROPERTY(bool lightBlueRobotMode READ getLightBlueRobotMode WRITE setLightBlueRobotMode NOTIFY settingChanged)
     Q_PROPERTY(bool lightYellowRobotMode READ getLightYellowRobotMode WRITE setLightYellowRobotMode NOTIFY settingChanged)
     Q_PROPERTY(bool lightStadiumMode READ getLightStadiumMode WRITE setLightStadiumMode NOTIFY settingChanged)
-    Q_PROPERTY(bool lightFieldMode READ getLightFieldMode WRITE setLightFieldMode NOTIFY settingChanged)
     Q_PROPERTY(int blueRobotCount READ getBlueRobotCount WRITE setBlueRobotCount NOTIFY settingChanged)
     Q_PROPERTY(int yellowRobotCount READ getYellowRobotCount WRITE setYellowRobotCount NOTIFY settingChanged)
     Q_PROPERTY(float ballStaticFriction READ getBallStaticFriction WRITE setBallStaticFriction NOTIFY settingChanged)
@@ -89,7 +88,6 @@ public:
     bool getLightBlueRobotMode() const { return lightBlueRobotMode; }
     bool getLightYellowRobotMode() const { return lightYellowRobotMode; }
     bool getLightStadiumMode() const { return lightStadiumMode; }
-    bool getLightFieldMode() const { return lightFieldMode; }
     int getBlueRobotCount() const { return blueRobotCount; }
     int getYellowRobotCount() const { return yellowRobotCount; }
     float getBallStaticFriction() const { return ballStaticFriction; }
@@ -110,7 +108,6 @@ public:
     void setLightBlueRobotMode(bool mode);
     void setLightYellowRobotMode(bool mode);
     void setLightStadiumMode(bool mode);
-    void setLightFieldMode(bool mode);
     void setBlueRobotCount(int count);
     void setYellowRobotCount(int count);
     void setBallStaticFriction(float friction);
@@ -160,7 +157,6 @@ private:
     bool lightBlueRobotMode;
     bool lightYellowRobotMode;
     bool lightStadiumMode;
-    bool lightFieldMode;
 
     int blueRobotCount;
     int yellowRobotCount;
