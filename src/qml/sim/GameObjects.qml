@@ -22,8 +22,6 @@ Node {
     property real ballStaticFriction: observer.ballStaticFriction
     property real ballDynamicFriction: observer.ballDynamicFriction
     property real ballRestitution: observer.ballRestitution
-
-    property real wheelRadius: 8.15
     property real colorHeight: 0.15
 
     property var bBotsPos: [
@@ -40,19 +38,6 @@ Node {
         Qt.vector3d(6000, 0, 0),
     ]
 
-    // property var yBotsPos: [
-    //     Qt.vector3d(500, 0, 0),
-    //     Qt.vector3d(750, 0, 3000),
-    //     Qt.vector3d(750, 0, -3000),
-    //     Qt.vector3d(2000, 0, 1500),
-    //     Qt.vector3d(2000, 0, -1500),
-    //     Qt.vector3d(3500, 0, 0),
-    //     Qt.vector3d(3500, 0, 4000),
-    //     Qt.vector3d(3500, 0, -4000),
-    //     Qt.vector3d(5000, 0, 3000),
-    //     Qt.vector3d(5000, 0, -3000),
-    //     Qt.vector3d(6000, 0, 0),
-    // ]
     property var yBotsPos: [
         Qt.vector3d(-2000, 0, 0),
         Qt.vector3d(-2000, 0, 2000),
@@ -393,7 +378,6 @@ Node {
                 source: "../../../assets/models/ball/meshes/ball.cooked.cvx"
             }
         ]
-        // Ball {}
     }
     Ball {
         id: tempBall
@@ -531,7 +515,7 @@ Node {
                 botBallContacts.push(false);
             }
             let frame2D = camera.projectToScreen(
-                Qt.vector3d(frame.position.x-15, frame.position.y + 128, frame.position.z-86.5), overviewCamera.position, overviewCamera.forward, overviewCamera.up, windowWidth, windowHeight, overviewCamera.fieldOfView, 1.0, 20000
+                Qt.vector3d(frame.position.x-15, frame.position.y + 128, frame.position.z-86.5), overviewCamera.position, overviewCamera.forward, overviewCamera.up, window.width, window.height, overviewCamera.fieldOfView, 1.0, 20000
             );
             if (i >= 10) {
                 botIDTexts.children[i].x = frame2D.x - 5;
@@ -566,9 +550,7 @@ Node {
         if (ball.position.x < 50000) {
             tempBall.position = Qt.vector3d(ball.position.x, ball.position.y, ball.position.z);
             ballPosition = Qt.vector3d(ball.position.x, -ball.position.z, ball.position.y);
-            console.log("Normal Mode");
         } else {
-            console.log("ballx: " + ballPosition.x + " bally: " + ballPosition.y + " ballz: " + ballPosition.z);
             tempBall.position = Qt.vector3d(ballPosition.x, ballPosition.z, -ballPosition.y);
         }
 

@@ -11,6 +11,7 @@ Observer::Observer(QObject *parent) : QObject(parent), visionReceiver(new Vision
     lightBlueRobotMode = config.value("LightMode/BlueRobot", true).toBool();
     lightYellowRobotMode = config.value("LightMode/YellowRobot", true).toBool();
     lightStadiumMode = config.value("LightMode/Stadium", true).toBool();
+    lightFieldMode = config.value("LightMode/Field", true).toBool();
     ballStaticFriction = config.value("Physics/BallStaticFriction", 0.5).toFloat();
     ballDynamicFriction = config.value("Physics/BallDynamicFriction", 0.3).toFloat();
     ballRestitution = config.value("Physics/BallRestitution", 0.5).toFloat();
@@ -144,6 +145,11 @@ void Observer::setLightYellowRobotMode(bool mode) {
 void Observer::setLightStadiumMode(bool mode) {
     lightStadiumMode = mode;
     config.setValue("LightMode/Stadium", mode);
+    emit settingChanged();
+}
+void Observer::setLightFieldMode(bool mode) {
+    lightFieldMode = mode;
+    config.setValue("LightMode/Field", mode);
     emit settingChanged();
 }
 void Observer::setBlueRobotCount(int count) {

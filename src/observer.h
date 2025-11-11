@@ -31,6 +31,7 @@ class Observer : public QObject {
     Q_PROPERTY(bool lightBlueRobotMode READ getLightBlueRobotMode WRITE setLightBlueRobotMode NOTIFY settingChanged)
     Q_PROPERTY(bool lightYellowRobotMode READ getLightYellowRobotMode WRITE setLightYellowRobotMode NOTIFY settingChanged)
     Q_PROPERTY(bool lightStadiumMode READ getLightStadiumMode WRITE setLightStadiumMode NOTIFY settingChanged)
+    Q_PROPERTY(bool lightFieldMode READ getLightFieldMode WRITE setLightFieldMode NOTIFY settingChanged)
     Q_PROPERTY(int blueRobotCount READ getBlueRobotCount WRITE setBlueRobotCount NOTIFY settingChanged)
     Q_PROPERTY(int yellowRobotCount READ getYellowRobotCount WRITE setYellowRobotCount NOTIFY settingChanged)
     Q_PROPERTY(float ballStaticFriction READ getBallStaticFriction WRITE setBallStaticFriction NOTIFY settingChanged)
@@ -39,6 +40,18 @@ class Observer : public QObject {
     Q_PROPERTY(float gravity READ getGravity WRITE setGravity NOTIFY settingChanged)
     Q_PROPERTY(float desiredFps READ getDesiredFps WRITE setDesiredFps NOTIFY settingChanged)
     Q_PROPERTY(bool ccdMode READ getCcdMode WRITE setCcdMode NOTIFY settingChanged)
+    // Q_PROPERTY(int fieldWidth READ getFieldWidth WRITE setFieldWidth NOTIFY settingChanged)
+    // Q_PROPERTY(int fieldHeight READ getFieldHeight WRITE setFieldHeight NOTIFY settingChanged)
+    // Q_PROPERTY(int lineThickness READ getLineThickness WRITE setLineThickness NOTIFY settingChanged)
+    // Q_PROPERTY(int centerCircleRadius READ getCenterCircleRadius WRITE setCenterCircleRadius NOTIFY settingChanged)
+    // Q_PROPERTY(int goalWidth READ getGoalWidth WRITE setGoalWidth NOTIFY settingChanged)
+    // Q_PROPERTY(int goalDepth READ getGoalDepth WRITE setGoalDepth NOTIFY settingChanged)
+    // Q_PROPERTY(int goalHeight READ getGoalHeight WRITE setGoalHeight NOTIFY settingChanged)
+    // Q_PROPERTY(int goalThickness READ getGoalThickness WRITE setGoalThickness NOTIFY settingChanged)
+    // Q_PROPERTY(int wallThickness READ getWallThickness WRITE setWallThickness NOTIFY settingChanged)
+    // Q_PROPERTY(int penaltyPoint READ getPenaltyPoint WRITE setPenaltyPoint NOTIFY settingChanged)
+    // Q_PROPERTY(int penaltyWidth READ getPenaltyWidth WRITE setPenaltyWidth NOTIFY settingChanged)
+    // Q_PROPERTY(int penaltyHeight READ getPenaltyHeight WRITE setPenaltyHeight NOTIFY settingChanged)
 
 public:
     explicit Observer(QObject *parent = nullptr);
@@ -88,6 +101,7 @@ public:
     bool getLightBlueRobotMode() const { return lightBlueRobotMode; }
     bool getLightYellowRobotMode() const { return lightYellowRobotMode; }
     bool getLightStadiumMode() const { return lightStadiumMode; }
+    bool getLightFieldMode() const { return lightFieldMode; }
     int getBlueRobotCount() const { return blueRobotCount; }
     int getYellowRobotCount() const { return yellowRobotCount; }
     float getBallStaticFriction() const { return ballStaticFriction; }
@@ -108,6 +122,7 @@ public:
     void setLightBlueRobotMode(bool mode);
     void setLightYellowRobotMode(bool mode);
     void setLightStadiumMode(bool mode);
+    void setLightFieldMode(bool mode);
     void setBlueRobotCount(int count);
     void setYellowRobotCount(int count);
     void setBallStaticFriction(float friction);
@@ -157,6 +172,7 @@ private:
     bool lightBlueRobotMode;
     bool lightYellowRobotMode;
     bool lightStadiumMode;
+    bool lightFieldMode;
 
     int blueRobotCount;
     int yellowRobotCount;

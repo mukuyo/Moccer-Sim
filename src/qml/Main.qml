@@ -47,7 +47,7 @@ Window {
             scene: viewport.scene
             maximumTimestep: 1000.0 / observer.desiredFps
             minimumTimestep: 1000.0 / observer.desiredFps
-            // enableCCD: observer.ccdMode
+            enableCCD: observer.ccdMode
             gravity: Qt.vector3d(0, -observer.gravity*1000.0, 0)
             typicalLength: 100
             typicalSpeed: 1000

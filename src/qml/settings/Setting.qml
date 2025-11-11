@@ -19,6 +19,7 @@ Item {
     property bool tempLightBlueRobotMode: observer.lightBlueRobotMode
     property bool tempLightYellowRobotMode: observer.lightYellowRobotMode
     property bool tempLightStadiumMode: observer.lightStadiumMode
+    property bool tempLightFieldMode: observer.lightFieldMode
     property int tempBlueRobotCount : observer.blueRobotCount
     property int tempYellowRobotCount : observer.yellowRobotCount
     property real tempDesiredFps: observer.desiredFps
@@ -46,6 +47,7 @@ Item {
 
 
     property var cameraModel: ["Overview Camera", "Selected Robot"]
+    property bool isMenuRunning: false
 
     ListModel {
         id: menuModel
@@ -65,7 +67,7 @@ Item {
         width: windowWidth / 3
         height: windowHeight
         color: "black"
-        opacity: 0.8
+        opacity: 0.72
         x: windowWidth
 
         CrossMenu {}
@@ -94,7 +96,15 @@ Item {
                 }
             }
         }
-
+        onWidthChanged: {
+            if (isMenuRunning) {
+                rightRect.x = windowWidth * 2 / 3;
+                leftShadowRect.x = 0;
+            } else {
+                rightRect.x = windowWidth;
+                leftShadowRect.x = -windowWidth;
+            }
+        }
         SequentialAnimation on x {
             id: rightAnim
             running: false
@@ -102,6 +112,10 @@ Item {
                 to: windowWidth * 2 / 3
                 duration: 1000
                 easing.type: Easing.OutCubic
+            }
+            onStopped: {
+                isMenuRunning = true;
+                rightRect.x = windowWidth * 2 / 3;
             }
         }
         SequentialAnimation on x {
@@ -111,6 +125,10 @@ Item {
                 to: windowWidth
                 duration: 1000
                 easing.type: Easing.OutCubic
+            }
+            onStopped: {
+                isMenuRunning = false;
+                rightRect.x = windowWidth;
             }
         }
 
@@ -143,6 +161,7 @@ Item {
                     observer.lightBlueRobotMode = tempLightBlueRobotMode;
                     observer.lightYellowRobotMode = tempLightYellowRobotMode;
                     observer.lightStadiumMode = tempLightStadiumMode;
+                    observer.lightFieldMode = tempLightFieldMode;
                     observer.blueRobotCount = tempBlueRobotCount;
                     observer.yellowRobotCount = tempYellowRobotCount;
                     observer.desiredFps = tempDesiredFps;
@@ -162,6 +181,7 @@ Item {
         }
     }
 
+    // Left shadow rectangle
     Rectangle {
         id: leftShadowRect
         width: windowWidth * 2 / 3
@@ -178,6 +198,9 @@ Item {
                 duration: 1000
                 easing.type: Easing.OutCubic
             }
+            onStopped: {
+                leftShadowRect.x = 0;
+            }
         }
         SequentialAnimation on x {
             id: leftReverseAnim
@@ -186,6 +209,9 @@ Item {
                 to: -width
                 duration: 1000
                 easing.type: Easing.OutCubic
+            }
+            onStopped: {
+                leftShadowRect.x = -width;
             }
         }
     }

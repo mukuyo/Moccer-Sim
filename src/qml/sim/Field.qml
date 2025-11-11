@@ -24,34 +24,12 @@ Node {
         eulerRotation: Qt.vector3d(-90, 0, 0)
         physicsMaterial: fieldMaterial
         collisionShapes: PlaneShape {}
-        
         Model {
             source: "#Rectangle"
             objectName: "field"
             pickable: true
-            x: -3850
-            y: 3100
-            scale: Qt.vector3d(77, 62, 0.1)
-            visible: !observer.lightFieldMode
-            materials: [ 
-                DefaultMaterial {
-                    diffuseMap: Texture {
-                        source: "../../../assets/textures/field_texture.jpg"
-                        generateMipmaps: false
-                        minFilter: Texture.Nearest
-                        magFilter: Texture.Nearest
-                    }
-                }
-            ]
-        }
-        Model {
-            source: "#Rectangle"
-            objectName: "field"
-            pickable: true
-            x: 3850
-            y: 3100
-            scale: Qt.vector3d(77, 62, 0.1)
-            visible: !observer.lightFieldMode
+            scale: Qt.vector3d(154, 124, 0.1)
+            opacity: observer.lightFieldMode
             materials: [ 
                 DefaultMaterial {
                     diffuseMap: Texture {
@@ -60,39 +38,6 @@ Node {
                 }
             ]
         }
-        Model {
-            source: "#Rectangle"
-            objectName: "field"
-            pickable: true
-            x: -3850
-            y: -3100
-            scale: Qt.vector3d(77, 62, 0.1)
-            visible: !observer.lightFieldMode
-            materials: [ 
-                DefaultMaterial {
-                    diffuseMap: Texture {
-                        source: "../../../assets/textures/field_texture.jpg"
-                    }
-                }
-            ]
-        }
-        Model {
-            source: "#Rectangle"
-            objectName: "field"
-            pickable: true
-            x: 3850
-            y: -3100
-            scale: Qt.vector3d(77, 62, 0.1)
-            visible: !observer.lightFieldMode
-            materials: [ 
-                DefaultMaterial {
-                    diffuseMap: Texture {
-                        source: "../../../assets/textures/field_texture.jpg"
-                    }
-                }
-            ]
-        }
-        
     }
 
     Model {
@@ -442,29 +387,4 @@ Node {
         position: Qt.vector3d(0, 4, 0)
         eulerRotation: Qt.vector3d(90, 0, 0)
     }
-    // Model {
-    //     id: centerWhiteCircle
-    //     source: "#Cylinder"
-    //     scale: Qt.vector3d(10.2, 0.0001, 10.2)
-    //     position: Qt.vector3d(0, 4, 0)
-    //     materials: [
-    //         DefaultMaterial {
-    //             diffuseColor: "white"
-    //         }
-    //     ]
-    // }
-
-    // Model {
-    //     id: centerGreenCircle
-    //     source: "#Cylinder"
-    //     scale: Qt.vector3d(10, 0.01, 10)
-    //     position: Qt.vector3d(0, 10, 0)
-    //     materials: [ 
-    //         DefaultMaterial {
-    //             diffuseMap: Texture {
-    //                 source: "../../../assets/textures/field_texture.jpg"
-    //             }
-    //         }
-    //     ]
-    // }
 }
