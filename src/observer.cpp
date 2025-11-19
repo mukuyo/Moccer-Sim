@@ -218,7 +218,6 @@ void Observer::updateObjects(
 
 void Observer::updateSender() {
     sender->send(1, ballPosition, bluePositions, yellowPositions);
-    // sender->send(1, ballPosition, bluePositions, yellowPositions);
 }
 // void Observer::updateSender() {
 //     qint64 elapsed = elapsedTimer.elapsed();
