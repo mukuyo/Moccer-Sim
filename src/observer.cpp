@@ -47,6 +47,7 @@ Observer::Observer(QObject *parent) : QObject(parent), visionReceiver(new Vision
     timer->setTimerType(Qt::PreciseTimer); // 高精度タイマー
     connect(timer, &QTimer::timeout, this, &Observer::updateSender);
     timer->start(17); // 17ms 間隔
+    int k;
 }
 
 Observer::~Observer() {
