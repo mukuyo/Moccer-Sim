@@ -1,6 +1,6 @@
 #include "receiver.h"
 
-VisionReceiver::VisionReceiver(QObject *parent) : QObject(parent), udpSocket(new QUdpSocket(this)) {
+VisionReceiver::VisionReceiver(QObject *parent) : QObject(parent), udpSocket(new QUdpSocket(this)), currentPort(0) {
 }
 
 VisionReceiver::~VisionReceiver() {
@@ -44,7 +44,7 @@ void VisionReceiver::setPort(quint16 newPort) {
 }
 
 ControlBlueReceiver::ControlBlueReceiver(QObject *parent)
-    : QObject(parent), udpSocket(new QUdpSocket(this)){}
+    : QObject(parent), udpSocket(new QUdpSocket(this)), currentPort(0){}
 
 ControlBlueReceiver::~ControlBlueReceiver() {
     stopListening();
@@ -119,7 +119,7 @@ void ControlBlueReceiver::stopListening() {
 }
 
 ControlYellowReceiver::ControlYellowReceiver(QObject *parent)
-    : QObject(parent), udpSocket(new QUdpSocket(this)){}
+    : QObject(parent), udpSocket(new QUdpSocket(this)), currentPort(0){}
 
 ControlYellowReceiver::~ControlYellowReceiver() {
     stopListening();

@@ -3,10 +3,18 @@
 #include <thread>
 #include <chrono>
 
-Sender::Sender(string address, quint16 port, QObject *parent) :
+Sender::Sender(const &string address, quint16 port, QObject *parent) :
     ioContext_(),
     socket_(ioContext_),
-    endpoint_(boost::asio::ip::make_address(address), port) {
+    endpoint_(boost::asio::ip::make_address(address), port),
+    address(address),
+    port(port),
+    captureCount(0),
+    geometryCount(0),
+    t_capture(0),
+    start_time(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()),
+    loop_time(0)
+{
     socket_.open(boost::asio::ip::udp::v4());
 
     captureCount = 0;
