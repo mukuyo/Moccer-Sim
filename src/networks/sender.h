@@ -22,7 +22,7 @@ using namespace std;
 class Sender : public QObject{
     Q_OBJECT
 public:
-    Sender(string address, quint16 port, QObject *parent = nullptr);
+    explicit Sender(string address, quint16 port, QObject *parent = nullptr);
     ~Sender();
     void send(int camera_id, QVector3D ball_position, QList<QVector3D> blue_positions, QList<QVector3D> yellow_positions);
     void setPort(string address, quint16 newPort);
