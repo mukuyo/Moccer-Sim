@@ -63,7 +63,7 @@ Item {
     HBMenu {}
 
     Rectangle {
-        id: rightRect
+        id: rightShadowRect
         width: windowWidth / 3
         height: windowHeight
         color: "black"
@@ -98,10 +98,10 @@ Item {
         }
         onWidthChanged: {
             if (isMenuRunning) {
-                rightRect.x = windowWidth * 2 / 3;
+                rightShadowRect.x = windowWidth * 2 / 3;
                 leftShadowRect.x = 0;
             } else {
-                rightRect.x = windowWidth;
+                rightShadowRect.x = windowWidth;
                 leftShadowRect.x = -windowWidth;
             }
         }
@@ -115,7 +115,7 @@ Item {
             }
             onStopped: {
                 isMenuRunning = true;
-                rightRect.x = windowWidth * 2 / 3;
+                rightShadowRect.x = windowWidth * 2 / 3;
             }
         }
         SequentialAnimation on x {
@@ -128,7 +128,7 @@ Item {
             }
             onStopped: {
                 isMenuRunning = false;
-                rightRect.x = windowWidth;
+                rightShadowRect.x = windowWidth;
             }
         }
 
@@ -176,6 +176,7 @@ Item {
                     // observer.goalDepth = tempGoalDepth;
                     // observer.penaltyAreaWidth = tempPenaltyAreaWidth;
                     // observer.penaltyAreaDepth = tempPenaltyAreaDepth;
+                    menuContainer.reverseAnimation();
                 }
             }
         }

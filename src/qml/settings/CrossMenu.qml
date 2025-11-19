@@ -1,7 +1,7 @@
 import QtQuick
 
 Item {
-    x: rightRect.width - 40
+    x: rightShadowRect.width - 40
     width: 40
     height: 40
 

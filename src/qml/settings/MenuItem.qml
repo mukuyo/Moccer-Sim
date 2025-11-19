@@ -69,24 +69,30 @@ Item {
         anchors.fill: parent
         onClicked: {
             if (leftShadowRect.x === 0) {
-                upLine.opacity = 0.6;
-                centerLine.opacity = 0.6;
-                downLine.opacity = 0.6;
-
-                leftAnim.running = false;
-                rightAnim.running = false;
-                leftReverseAnim.running = true;
-                rightReverseAnim.running = true;
+                runAnimation();
             } else {
-                upLine.opacity = 0.0;
-                centerLine.opacity = 0.0;
-                downLine.opacity = 0.0;
-
-                leftAnim.running = true;
-                rightAnim.running = true;
-                leftReverseAnim.running = false;
-                rightReverseAnim.running = false;
+                reverseAnimation();
             }
         }
+    }
+    function runAnimation() {
+        upLine.opacity = 0.6;
+        centerLine.opacity = 0.6;
+        downLine.opacity = 0.6;
+
+        leftAnim.running = false;
+        rightAnim.running = false;
+        leftReverseAnim.running = true;
+        rightReverseAnim.running = true;
+    }
+    function reverseAnimation() {
+        upLine.opacity = 0.0;
+        centerLine.opacity = 0.0;
+        downLine.opacity = 0.0;
+
+        leftAnim.running = true;
+        rightAnim.running = true;
+        leftReverseAnim.running = false;
+        rightReverseAnim.running = false;
     }
 }
