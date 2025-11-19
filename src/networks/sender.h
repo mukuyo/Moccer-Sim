@@ -47,7 +47,7 @@ private:
 class SenderWorker : public QObject {
     Q_OBJECT
 public:
-    SenderWorker(Sender *sender, QObject *parent = nullptr);
+    explicit SenderWorker(Sender *sender, QObject *parent = nullptr);
 
 public slots:
     void start();
