@@ -3,7 +3,7 @@
 #include <thread>
 #include <chrono>
 
-Sender::Sender(const &string address, quint16 port, QObject *parent) :
+Sender::Sender(const string address, quint16 port, QObject *parent) :
     ioContext_(),
     socket_(ioContext_),
     endpoint_(boost::asio::ip::make_address(address), port),

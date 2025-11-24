@@ -176,7 +176,6 @@ Item {
                     // observer.goalDepth = tempGoalDepth;
                     // observer.penaltyAreaWidth = tempPenaltyAreaWidth;
                     // observer.penaltyAreaDepth = tempPenaltyAreaDepth;
-                    menuContainer.reverseAnimation();
                 }
             }
         }
