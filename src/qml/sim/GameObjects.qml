@@ -495,8 +495,7 @@ Node {
             if (frame.eulerRotation.x > 0 || frame.eulerRotation.z > 0)
                 frame.eulerRotation = Qt.vector3d(0, frame.eulerRotation.y, 0);
 
-            bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
-            bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
+
             botPositions.push(Qt.vector3d(frame.position.x, -frame.position.z, frame.eulerRotation.y+90));
 
             if (dribbleNum == (isYellow ? i + 10 : i) && botSpinners[i] == 0) {
@@ -530,14 +529,14 @@ Node {
                     //     botKickspeeds[i].y,
                     //     -botKickspeeds[i].x * Math.sin(radian)
                     // ));
-                    let rg =43000;
+                    let rg =40000;
                     if (!kick_flag) {
                         kick_flag = true;
-                    ball.applyCentralImpulse(Qt.vector3d(
-                        botKickspeeds[i].x * Math.cos(radian)*rg,
-                        botKickspeeds[i].y*rg,
-                        -botKickspeeds[i].x * Math.sin(radian)*rg
-                    ));
+                        ball.applyCentralImpulse(Qt.vector3d(
+                            botKickspeeds[i].x * Math.cos(radian)*rg,
+                            botKickspeeds[i].y*rg,
+                            -botKickspeeds[i].x * Math.sin(radian)*rg
+                        ));
                     }
                     console.log("Kick: ", botKickspeeds[i].x, botKickspeeds[i].y);
                 }
@@ -577,12 +576,12 @@ Node {
         isDribble = false;
         let blueBotData = botMovement(false, timestep);
         let yellowBotData = botMovement(true, timestep);
-        if (ball.position.x < 50000) {
-            tempBall.position = Qt.vector3d(ball.position.x, ball.position.y, ball.position.z);
-            ballPosition = Qt.vector3d(ball.position.x, -ball.position.z, ball.position.y);
-        } else {
-            tempBall.position = Qt.vector3d(ballPosition.x, ballPosition.z, -ballPosition.y);
-        }
+        // if (ball.position.x < 50000) {
+        //     tempBall.position = Qt.vector3d(ball.position.x, ball.position.y, ball.position.z);
+        //     ballPosition = Qt.vector3d(ball.position.x, -ball.position.z, ball.position.y);
+        // } else {
+        //     tempBall.position = Qt.vector3d(ballPosition.x, ballPosition.z, -ballPosition.y);
+        // }
         if(!isDribble){
             kick_flag = false;
         }
@@ -606,6 +605,27 @@ Node {
             } else {
                 teleopVelocity = Qt.vector3d(0, 0, 0);
             }
+        }
+    }
+
+    function syncGameObjects() {
+        for (let i = 0; i < bBotNum; i++) {
+            let frame = bBotsFrame.children[i];
+            let bot = bBotsRepeater.children[i];
+            bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
+            bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
+        }
+        for (let i = 0; i < yBotNum; i++) {
+            let frame = yBotsFrame.children[i];
+            let bot = yBotsRepeater.children[i];
+            bot.position = Qt.vector3d(frame.position.x, frame.position.y, frame.position.z);
+            bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
+        }
+        if (ball.position.x < 50000) {
+            tempBall.position = Qt.vector3d(ball.position.x, ball.position.y, ball.position.z);
+            ballPosition = Qt.vector3d(ball.position.x, -ball.position.z, ball.position.y);
+        } else {
+            tempBall.position = Qt.vector3d(ballPosition.x, ballPosition.z, -ballPosition.y);
         }
     }
         

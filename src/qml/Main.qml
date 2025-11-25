@@ -53,21 +53,17 @@ Window {
             typicalSpeed: 1000
             defaultDensity: 1.0
             forceDebugDraw: observer.forceDebugDrawMode
-            // onFrameDone: (timestep) => {
-            //     var now = Date.now();
-            //     runTime = (now - lastTime);
-            //     lastTime = now;
-            //     game_objects.updateGameObjects(0.01667);
-            // }
+            onFrameDone: (timestep) => {
+                game_objects.syncGameObjects();
+            }
         }
         Timer {
             interval: 1000.0 / observer.desiredFps
             running: true
             repeat: true
             onTriggered: {
-                var now = Date.now();
-                runTime = (now - lastTime);
-                lastTime = now;
+                runTime = (Date.now() - lastTime);
+                lastTime = Date.now();
                 game_objects.updateGameObjects(runTime);
             }
         }
