@@ -468,7 +468,6 @@ Node {
             }
             let botRadianBall = normalizeRadian(Math.atan2(frame.position.z - ball.position.z, frame.position.x - ball.position.x) - Math.PI + radian);
             if (ball.position.x > 50000) {
-                // botRadianBall = 0;
                 botRadianBall = normalizeRadian(Math.atan2(frame.position.z - tempBall.position.z, frame.position.x - tempBall.position.x) - Math.PI + radian);
                 if (dribbleNum == (isYellow ? i + 10 : i)) {
                     botRadianBall = dribbleRadian;
@@ -500,12 +499,6 @@ Node {
             bot.eulerRotation = Qt.vector3d(frame.eulerRotation.x, frame.eulerRotation.y, frame.eulerRotation.z);
             botPositions.push(Qt.vector3d(frame.position.x, -frame.position.z, frame.eulerRotation.y+90));
 
-            // if (ball.position.x > 50000 && dribbleNum == (isYellow ? i + 10 : i)  && (botKickspeeds[i].x == 0 && botKickspeeds[i].y == 0)) {
-            //     ball.reset(Qt.vector3d(100000, 0, 100000), Qt.vector3d(0, 0, 0)); 
-            //     frame.collisionShapes[5].position = Qt.vector3d(0, 25, -95);
-            //     // ballPosition = Qt.vector3d(bot.position.x + (95 * Math.cos(-radian+dribbleRadian)), -(bot.position.z + (95 * Math.sin(-radian+dribbleRadian))), 25);
-            //     ballPosition = Qt.vector3d(bot.position.x + (95 * Math.cos(botRadianBall)), -(bot.position.z + (95 * Math.sin(botRadianBall))), 25);
-            // }
             if (dribbleNum == (isYellow ? i + 10 : i) && botSpinners[i] == 0) {
                 frame.collisionShapes[5].position = Qt.vector3d(0, 5000, 0);
                 if (ball.position.x > 50000) {
@@ -516,6 +509,7 @@ Node {
 
             if ((botDistanceBall < 105 * Math.cos(Math.abs(botRadianBall)) && Math.abs(botRadianBall) < Math.PI/15.0)) {
                 botBallContacts.push(true);
+                isDribble = true;
                 if (botSpinners[i] > 0 && (botKickspeeds[i].x == 0 && botKickspeeds[i].y == 0)) {
                     if (dribbleNum == (isYellow ? i + 10 : i) || dribbleNum == -1) {
                         dribbleNum = isYellow ? i + 10 : i;
@@ -531,12 +525,21 @@ Node {
                         ball.reset(Qt.vector3d(frame.position.x + (95 * Math.cos(-radian)), 25, (frame.position.z + (95 * Math.sin(-radian)))), Qt.vector3d(0, 0, 0));
                     }
                     dribbleNum = -1;
-                    ball.setLinearVelocity(Qt.vector3d(
-                        botKickspeeds[i].x * Math.cos(radian),
-                        botKickspeeds[i].y,
-                        -botKickspeeds[i].x * Math.sin(radian)
+                    // ball.setLinearVelocity(Qt.vector3d(
+                    //     botKickspeeds[i].x * Math.cos(radian),
+                    //     botKickspeeds[i].y,
+                    //     -botKickspeeds[i].x * Math.sin(radian)
+                    // ));
+                    let rg =43000;
+                    if (!kick_flag) {
+                        kick_flag = true;
+                    ball.applyCentralImpulse(Qt.vector3d(
+                        botKickspeeds[i].x * Math.cos(radian)*rg,
+                        botKickspeeds[i].y*rg,
+                        -botKickspeeds[i].x * Math.sin(radian)*rg
                     ));
-
+                    }
+                    console.log("Kick: ", botKickspeeds[i].x, botKickspeeds[i].y);
                 }
             } else {
                 botBallContacts.push(false);
@@ -580,7 +583,9 @@ Node {
         } else {
             tempBall.position = Qt.vector3d(ballPosition.x, ballPosition.z, -ballPosition.y);
         }
-
+        if(!isDribble){
+            kick_flag = false;
+        }
         observer.updateObjects(
             blueBotData.positions, 
             yellowBotData.positions, 

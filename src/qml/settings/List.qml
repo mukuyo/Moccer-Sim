@@ -408,22 +408,31 @@ Item {
                             Component.onCompleted: {
                                 if (model.name === "Width") {
                                     value = observer.windowWidth;
+                                    tempWindowWidth = value;
                                 } else if (model.name === "Height") {
                                     value = observer.windowHeight;
+                                    tempWindowHeight = value;
                                 } else if (model.name === "Blue Robot Count") {
                                     value = observer.blueRobotCount;
+                                    tempBlueRobotCount = value;
                                 } else if (model.name === "Yellow Robot Count") {
                                     value = observer.yellowRobotCount;
+                                    tempYellowRobotCount = value;
                                 } else if (model.name === "Desired FPS") {
                                     value = observer.desiredFps;
+                                    tempDesiredFps = value;
                                 } else if (model.name === "Gravity") {
                                     value = observer.gravity;
+                                    tempGravity = value.toFixed(2);
                                 } else if (model.name === "Ball Static Friction") {
                                     value = observer.ballStaticFriction;
+                                    tempBallStaticFriction = value.toFixed(2);
                                 } else if (model.name === "Ball Dynamic Friction") {
                                     value = observer.ballDynamicFriction;
+                                    tempBallDynamicFriction = value.toFixed(2);
                                 } else if (model.name === "Ball Restitution") {
                                     value = observer.ballRestitution;
+                                    tempBallRestitution = value.toFixed(2);
                                 // } else if (model.name === "Line Thickness") {
                                 //     value = observer.lineThickness;
                                 // } else if (model.name === "Field Width") {
