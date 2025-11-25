@@ -22,7 +22,6 @@ QVector3D MotionControl::calcSpeed(QVector3D velocity, QVector3D botVelocity, QV
 
     float pbx = botPreVelocity.x();
     float pby = botPreVelocity.y();
-    float pbw = botPreVelocity.z();
 
     // ノイズ制限（異常値カット）
     if (fabs(bx) > 5000) bx = 0;

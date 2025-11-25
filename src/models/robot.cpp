@@ -38,7 +38,7 @@ void Robot::controlUpdate(RobotCommand robotCommand) {
 
     if (robotCommand.has_kick_speed() && robotCommand.kick_speed() > 0) {
         double kickSpeed = robotCommand.kick_speed();
-        double limit = robotCommand.kick_angle() > 0 ? 10000 : 10000;
+        double limit = robotCommand.kick_angle() > 0 ? 10000 : 10001;
         kickSpeed = kickSpeed * 1000.0;
         if (kickSpeed > limit) {
             kickSpeed = limit;

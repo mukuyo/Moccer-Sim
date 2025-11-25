@@ -40,6 +40,18 @@ class Observer : public QObject {
     Q_PROPERTY(float gravity READ getGravity WRITE setGravity NOTIFY settingChanged)
     Q_PROPERTY(float desiredFps READ getDesiredFps WRITE setDesiredFps NOTIFY settingChanged)
     Q_PROPERTY(bool ccdMode READ getCcdMode WRITE setCcdMode NOTIFY settingChanged)
+    // Q_PROPERTY(int fieldWidth READ getFieldWidth WRITE setFieldWidth NOTIFY settingChanged)
+    // Q_PROPERTY(int fieldHeight READ getFieldHeight WRITE setFieldHeight NOTIFY settingChanged)
+    // Q_PROPERTY(int lineThickness READ getLineThickness WRITE setLineThickness NOTIFY settingChanged)
+    // Q_PROPERTY(int centerCircleRadius READ getCenterCircleRadius WRITE setCenterCircleRadius NOTIFY settingChanged)
+    // Q_PROPERTY(int goalWidth READ getGoalWidth WRITE setGoalWidth NOTIFY settingChanged)
+    // Q_PROPERTY(int goalDepth READ getGoalDepth WRITE setGoalDepth NOTIFY settingChanged)
+    // Q_PROPERTY(int goalHeight READ getGoalHeight WRITE setGoalHeight NOTIFY settingChanged)
+    // Q_PROPERTY(int goalThickness READ getGoalThickness WRITE setGoalThickness NOTIFY settingChanged)
+    // Q_PROPERTY(int wallThickness READ getWallThickness WRITE setWallThickness NOTIFY settingChanged)
+    // Q_PROPERTY(int penaltyPoint READ getPenaltyPoint WRITE setPenaltyPoint NOTIFY settingChanged)
+    // Q_PROPERTY(int penaltyWidth READ getPenaltyWidth WRITE setPenaltyWidth NOTIFY settingChanged)
+    // Q_PROPERTY(int penaltyHeight READ getPenaltyHeight WRITE setPenaltyHeight NOTIFY settingChanged)
 
 public:
     explicit Observer(QObject *parent = nullptr);

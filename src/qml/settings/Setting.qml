@@ -47,6 +47,7 @@ Item {
 
 
     property var cameraModel: ["Overview Camera", "Selected Robot"]
+    property bool isMenuRunning: false
 
     ListModel {
         id: menuModel
@@ -62,11 +63,11 @@ Item {
     HBMenu {}
 
     Rectangle {
-        id: rightRect
+        id: rightShadowRect
         width: windowWidth / 3
         height: windowHeight
         color: "black"
-        opacity: 0.8
+        opacity: 0.72
         x: windowWidth
 
         CrossMenu {}
@@ -95,7 +96,15 @@ Item {
                 }
             }
         }
-
+        onWidthChanged: {
+            if (isMenuRunning) {
+                rightShadowRect.x = windowWidth * 2 / 3;
+                leftShadowRect.x = 0;
+            } else {
+                rightShadowRect.x = windowWidth;
+                leftShadowRect.x = -windowWidth;
+            }
+        }
         SequentialAnimation on x {
             id: rightAnim
             running: false
@@ -103,6 +112,10 @@ Item {
                 to: windowWidth * 2 / 3
                 duration: 1000
                 easing.type: Easing.OutCubic
+            }
+            onStopped: {
+                isMenuRunning = true;
+                rightShadowRect.x = windowWidth * 2 / 3;
             }
         }
         SequentialAnimation on x {
@@ -112,6 +125,10 @@ Item {
                 to: windowWidth
                 duration: 1000
                 easing.type: Easing.OutCubic
+            }
+            onStopped: {
+                isMenuRunning = false;
+                rightShadowRect.x = windowWidth;
             }
         }
 
@@ -164,6 +181,7 @@ Item {
         }
     }
 
+    // Left shadow rectangle
     Rectangle {
         id: leftShadowRect
         width: windowWidth * 2 / 3
@@ -180,6 +198,9 @@ Item {
                 duration: 1000
                 easing.type: Easing.OutCubic
             }
+            onStopped: {
+                leftShadowRect.x = 0;
+            }
         }
         SequentialAnimation on x {
             id: leftReverseAnim
@@ -188,6 +209,9 @@ Item {
                 to: -width
                 duration: 1000
                 easing.type: Easing.OutCubic
+            }
+            onStopped: {
+                leftShadowRect.x = -width;
             }
         }
     }
