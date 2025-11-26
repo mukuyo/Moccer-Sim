@@ -371,6 +371,8 @@ Node {
     DynamicRigidBody {
         id: ball
         objectName: "ball"
+        massMode: DynamicRigidBody.Mass
+        mass: 0.043
         position: Qt.vector3d(0, 500, 0)
         physicsMaterial: ballMaterial
         collisionShapes: [
@@ -529,7 +531,7 @@ Node {
                     //     botKickspeeds[i].y,
                     //     -botKickspeeds[i].x * Math.sin(radian)
                     // ));
-                    let rg =40000;
+                    let rg =0.043;
                     if (!kick_flag) {
                         kick_flag = true;
                         ball.applyCentralImpulse(Qt.vector3d(
@@ -538,7 +540,6 @@ Node {
                             -botKickspeeds[i].x * Math.sin(radian)*rg
                         ));
                     }
-                    console.log("Kick: ", botKickspeeds[i].x, botKickspeeds[i].y);
                 }
             } else {
                 botBallContacts.push(false);

@@ -65,6 +65,7 @@ Window {
                 runTime = (Date.now() - lastTime);
                 lastTime = Date.now();
                 game_objects.updateGameObjects(runTime);
+                console.log("RunTime:", runTime);
             }
         }
         Keys.onPressed: (event) => {
