@@ -1,18 +1,18 @@
-# Moccer-Sim
+# m2-sim
 
 ## Introduction
-Welcome to Moccer-Sim, a simulation tool designed for the [RoboCup Soccer Small Size League (SSL)](https://ssl.robocup.org/).
+Welcome to m2-sim, a simulation tool designed for the [RoboCup Soccer Small Size League (SSL)](https://ssl.robocup.org/).
 
-![Moccer Simulation Image](docs/images/readme.png)
+![M2 Simulation Image](docs/images/readme.png)
 
 ## System Requirements
-Before diving into the exciting world of RoboCup Soccer SSL with `Moccer-Sim`, ensure your system meets the following requirements:
+Before diving into the exciting world of RoboCup Soccer SSL with `m2-sim`, ensure your system meets the following requirements:
 
 - **Qt6**: Version 6.8 is supported.
 - **Protocol Buffer Compiler**: `protoc` is essential for compiling protocol buffers.
 
 ## Getting Started
-To get started with `Moccer-Sim`, follow these steps:
+To get started with `m2-sim`, follow these steps:
 
 ### 1. Install Dependencies
 Make sure all necessary packages are installed. Open your terminal and run:
@@ -47,7 +47,7 @@ chmod +x generate_mesh.sh
 Set up and build the project using the following steps:
 
 ```bash
-cd ~/ws/Moccer-Sim/
+cd ~/ws/m2-sim/
 mkdir build && cd build
 cmake ..
 make
@@ -58,7 +58,7 @@ Run the main application to start the GUI:
 ```bash
 make run
 ```
-This command executes the compiled binary and launches the graphical user interface. You can now start interacting with `Moccer-Sim`.
+This command executes the compiled binary and launches the graphical user interface. You can now start interacting with `m2-sim`.
 
 ### 6. Additional Notes
 If you encounter errors during the build process, ensure all dependencies are installed and up-to-date. For troubleshooting, refer to the [official documentation](https://github.com/RoboCup-SSL/).
