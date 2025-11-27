@@ -3,7 +3,7 @@
 ## Introduction
 Welcome to m2-sim, a simulation tool designed for the [RoboCup Soccer Small Size League (SSL)](https://ssl.robocup.org/).
 
-![M2 Simulation Image](docs/images/readme.png)
+![M2 Simulation Image](docs/images/readme_v3.png)
 
 ## System Requirements
 Before diving into the exciting world of RoboCup Soccer SSL with `m2-sim`, ensure your system meets the following requirements:
