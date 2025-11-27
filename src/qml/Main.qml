@@ -17,7 +17,7 @@ import "viz/"
 
 Window {
     id: window
-    title: "Moccer-Sim"
+    title: "m2-sim"
     width: windowWidth
     height: windowHeight
     visible: true

@@ -30,7 +30,7 @@ sudo apt install libeigen3-dev protobuf-compiler libyaml-cpp-dev cmake build-ess
 ### 2. Preparing 3D Models
 To properly visualize the simulation, download the required 3D models and place them in the following directory:
 ```
-~/ws/Moccer-Sim/assets/
+~/ws/m2-sim/assets/
 ```
 
 You can download sample 3D models from the following link:  
